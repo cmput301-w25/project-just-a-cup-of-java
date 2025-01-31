@@ -7,7 +7,7 @@
 | Heena Kamani | hkamani | @Heena-Kamani     |
 | Matthew McGarvey | mmcgarve | @mmcgarvey1     |
 | Garrick Wong | gwwong | @baconeggsrice     |
-| [Full Name] | [CCID] | [@username]     |
+| Iqra Amlani | iamlani | @IqraAmlani     |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
 
