@@ -8,7 +8,7 @@
 | Matthew McGarvey | mmcgarve | @mmcgarvey1     |
 | Garrick Wong | gwwong | @baconeggsrice     |
 | Iqra Amlani | iamlani | @IqraAmlani     |
-| [Full Name] | [CCID] | [@username]     |
+| [Simbarashe Kandemiri] | [skandemi] | [@simbakandemiri]     |
 | [Full Name] | [CCID] | [@username]     |
 
 ## Project Description
