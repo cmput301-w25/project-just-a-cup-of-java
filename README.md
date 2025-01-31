@@ -9,7 +9,7 @@
 | Garrick Wong | gwwong | @baconeggsrice     |
 | Iqra Amlani | iamlani | @IqraAmlani     |
 | [Simbarashe Kandemiri] | skandemi | @simbakandemiri     |
-| [Full Name] | [CCID] | [@username]     |
+| Tinashe Masoka | masoka | @Tinashe-Masoka   |
 
 ## Project Description
 
