@@ -4,7 +4,7 @@
 
 | Name        | CCID   | GitHub Username |
 | ----------- | ------ | --------------- |
-| [Full Name] | [CCID] | [@username]     |
+| Heena Kamani | hkamani | @Heena-Kamani     |
 | Matthew McGarvey | mmcgarve | @mmcgarvey1     |
 | Garrick Wong | gwwong | @baconeggsrice     |
 | [Full Name] | [CCID] | [@username]     |
