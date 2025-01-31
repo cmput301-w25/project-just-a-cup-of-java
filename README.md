@@ -6,7 +6,7 @@
 | ----------- | ------ | --------------- |
 | [Full Name] | [CCID] | [@username]     |
 | Matthew McGarvey | mmcgarve | @mmcgarvey1     |
-| [Full Name] | [CCID] | [@username]     |
+| Garrick Wong | gwwong | @baconeggsrice     |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
