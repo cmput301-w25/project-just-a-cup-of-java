@@ -6,9 +6,9 @@ import java.util.Date;
 
 public class Mood {
 
-    private Integer moodID; // Immutable: Unique ID for the mood event
+    private final Integer moodID; // Immutable: Unique ID for the mood event
     private String username; // Mutable: Unique username, with setter
-    private Date postDate; // Immutable: Date and time of the mood event
+    private final Date postDate; // Immutable: Date and time of the mood event
     private String trigger; //max 20 characters and is optional
     private byte[] photo; //optional
     private EmotionalState state; //Mutable inorder to provide the user a chance to correct a mistake
@@ -17,10 +17,28 @@ public class Mood {
 
 
     public Mood(Integer moodID, String username, EmotionalState state, Date postDate) {
+        if (moodID == null) {
+            throw new IllegalArgumentException("Mood ID is required.");
+        }
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username is required.");
+        }
+        if (state == null) {
+            throw new IllegalArgumentException("Emotional state is required.");
+        }
+        if (postDate == null) {
+            throw new IllegalArgumentException("Post date is required.");
+        }
         this.moodID = moodID;
         this.username = username;
         this.state = state;
         this.postDate = postDate;
+
+        // Optional fields default to null
+        this.trigger = null;
+        this.photo = null;
+        this.socialSituation = null;
+        this.location = null;
     }
 
     public SocialSituation getSocialSituation() {
@@ -50,8 +68,6 @@ public class Mood {
         }
         this.trigger = trigger;
     }
-
-
 
     public Date getPostDate() {
         return postDate;
@@ -88,5 +104,20 @@ public class Mood {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() { //useful for debugging purposes. Doesn't include photo
+        return "Mood{" +
+                "moodID=" + moodID +
+                ", username='" + username + '\'' +
+                ", postDate=" + postDate +
+                ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
+                ", emotionalState=" + state +
+                ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
+                ", photo=" + (photo == null ? "None" : "Available") +
+                ", location=" + (location == null ? "None" : location.toString()) +
+                '}';
+    }
+
 
 }
