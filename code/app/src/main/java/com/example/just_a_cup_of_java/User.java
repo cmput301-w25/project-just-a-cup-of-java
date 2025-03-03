@@ -2,11 +2,10 @@ package com.example.just_a_cup_of_java;
 
 public class User {
 
-    String Name = "";
-    String Email = "";
-    String Password = "";
-    String Bio = "";
-    String ProfilePic = "";
-
-    String Username = "";
+    private String Name = "";
+    private String Email = "";
+    private String Password = "";
+    private String Bio = "";
+    private String ProfilePic = ""; 
+    private String Username = "";
 }
