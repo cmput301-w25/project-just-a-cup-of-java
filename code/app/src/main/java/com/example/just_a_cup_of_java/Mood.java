@@ -7,7 +7,7 @@ import java.util.Date;
 public class Mood {
 
     private final Integer moodID; // Immutable: Unique ID for the mood event
-    private String username; // Mutable: Unique username, with setter
+    private User user; // Mutable: Unique username, with setter
     private final Date postDate; // Immutable: Date and time of the mood event
     private String trigger; //max 20 characters and is optional
     private byte[] photo; //optional
@@ -16,11 +16,11 @@ public class Mood {
     private Location location; //optional
 
 
-    public Mood(Integer moodID, String username, EmotionalState state, Date postDate) {
+    public Mood(Integer moodID, User user, EmotionalState state, Date postDate) {
         if (moodID == null) {
             throw new IllegalArgumentException("Mood ID is required.");
         }
-        if (username == null || username.isEmpty()) {
+        if (user == null) {
             throw new IllegalArgumentException("Username is required.");
         }
         if (state == null) {
@@ -30,7 +30,7 @@ public class Mood {
             throw new IllegalArgumentException("Post date is required.");
         }
         this.moodID = moodID;
-        this.username = username;
+        this.user = user;
         this.state = state;
         this.postDate = postDate;
 
@@ -74,12 +74,12 @@ public class Mood {
     }
 
 
-    public String getUsername() {
-        return username;
+    public User getUsername() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(User user) {
+        this.user = user;
     }
 
     public Integer getMoodID() {
@@ -109,7 +109,7 @@ public class Mood {
     public String toString() { //useful for debugging purposes. Doesn't include photo
         return "Mood{" +
                 "moodID=" + moodID +
-                ", username='" + username + '\'' +
+                ", username='" + user.getUsername() + '\'' +
                 ", postDate=" + postDate +
                 ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
                 ", emotionalState=" + state +
