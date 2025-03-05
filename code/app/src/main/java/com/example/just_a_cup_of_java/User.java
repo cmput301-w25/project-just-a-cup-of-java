@@ -16,6 +16,7 @@ public class User implements Serializable {
     public User() {
         //Empty constructor for firebase
     }
+    
     public User(String name, String email, String password, String bio, String profilePic, String username, String uid) {
         this.name = name;
         this.uid = uid;
@@ -87,4 +88,5 @@ public class User implements Serializable {
     public void setUid(String uid) {
         this.uid = uid;
     }
+  
 }
