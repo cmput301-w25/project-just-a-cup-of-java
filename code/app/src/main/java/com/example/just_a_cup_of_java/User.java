@@ -1,13 +1,37 @@
 package com.example.just_a_cup_of_java;
 
-public class User {
+import java.io.Serializable;
 
-    private String name = "";
-    private String email = "";
-    private String password = "";
-    private String bio = "";
-    private String profilePic = "";
-    private String username = "";
+public class User implements Serializable {
+
+    private String name;
+    private String email;
+    private String password;
+    private String bio;
+    private String profilePic;
+    private String username;
+
+    private String uid;
+
+    public User() {
+        //Empty constructor for firebase
+    }
+    
+    public User(String name, String email, String password, String bio, String profilePic, String username, String uid) {
+        this.name = name;
+        this.uid = uid;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.profilePic = profilePic;
+        this.username = username;
+    }
+
+    public User(String email, String username, String uid) {
+        this.email = email;
+        this.username = username;
+        this.uid = uid;
+    }
 
     public String getName() {
         return name;
@@ -56,4 +80,13 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+  
 }
