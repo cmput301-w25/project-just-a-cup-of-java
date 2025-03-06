@@ -1,17 +1,24 @@
 package com.example.just_a_cup_of_java;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void createUserWithEmailPassword(String username, String email, String password) {
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = auth.getCurrentUser();
-                        if (firebaseUser != null) {
-                            saveUserToFirestore(firebaseUser.getUid(), username, email);
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            saveUserToFirestore(user.getUid(), username, email);
+                        } else {
+                            //Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -57,15 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).set(user)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Account Created Sucessfully", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "Account Created Sucessfully", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to Create Account", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Failed to Create Account", Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    private void populateDb() {
-        createUserWithEmailPassword("tester", "Test", "tester@gmail.com");
     }
 
     @Override
@@ -82,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         editPassword = findViewById(R.id.edit_signup_password);
         signup = findViewById(R.id.signup_button);
 
-        populateDb();
         //Create event binder to create new account
         signup.setOnClickListener(view -> {
             String email = editEmail.getText().toString();
@@ -90,10 +95,24 @@ public class MainActivity extends AppCompatActivity {
             String password = editPassword.getText().toString();
 
             if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
-                checkUsernameAvailability(username, password, email);
+                Log.e("SetOnClickListener", "Empty checker ran");
+                auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    FirebaseUser user = auth.getCurrentUser();
+                                    saveUserToFirestore(user.getUid(), username, email);
+                                } else {
+                                    //Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
 
+        User user = new User("test", "test", "test");
+        db.collection("user").document("test").set(user);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
