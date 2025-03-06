@@ -4,12 +4,12 @@
 
 | Name        | CCID   | GitHub Username |
 | ----------- | ------ | --------------- |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
+| Heena Kamani | hkamani | @Heena-Kamani     |
+| Matthew McGarvey | mmcgarve | @mmcgarvey1     |
+| Garrick Wong | gwwong | @baconeggsrice     |
+| Iqra Amlani | iamlani | @IqraAmlani     |
+| Simbarashe Kandemiri | skandemi | @simbakandemiri     |
+| Tinashe Masoka | masoka | @Tinashe-Masoka   |
 
 ## Project Description
 

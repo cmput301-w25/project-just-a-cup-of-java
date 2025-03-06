@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727983894490",
+    "project_id": "justacupofjava301",
+    "storage_bucket": "justacupofjava301.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727983894490:android:b825414865336a92ad1ae3",
+        "android_client_info": {
+          "package_name": "com.example.just_a_cup_of_java"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjQFNvnxdjmorgGIec8Dsd9e0TLBJgmaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
