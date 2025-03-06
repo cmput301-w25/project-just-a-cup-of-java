@@ -1,10 +1,7 @@
 package com.example.just_a_cup_of_java;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +18,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).set(user)
                 .addOnSuccessListener(aVoid -> {
-                    //Toast.makeText(this, "Account Created Sucessfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Account Created Sucessfully", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
-                    //Toast.makeText(this, "Failed to Create Account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to Create Account", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -103,16 +99,14 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = auth.getCurrentUser();
                                     saveUserToFirestore(user.getUid(), username, email);
+                                    Log.d("Auth success", "User created");
                                 } else {
-                                    //Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
             }
         });
-
-        User user = new User("test", "test", "test");
-        db.collection("user").document("test").set(user);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
