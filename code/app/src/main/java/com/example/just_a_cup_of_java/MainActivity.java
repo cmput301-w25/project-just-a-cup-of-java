@@ -28,36 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText editEmail, editUsername, editPassword;
     private Button signup;
 
-    //Check username availability before creating account
-    private void checkUsernameAvailability(String username, String password, String email) {
-        db.collection("users")
-                .whereEqualTo("username", username)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult().isEmpty()) {
-                        createUserWithEmailPassword(username, email, password);
-                    } else {
-                        //Do something to say that the username is taken
-                        Toast.makeText(this, "Choose another username, this one is already taken", Toast.LENGTH_LONG);
-                    }
-                });
-    }
-
-    private void createUserWithEmailPassword(String username, String email, String password) {
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            saveUserToFirestore(user.getUid(), username, email);
-                        } else {
-                            //Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
     private void saveUserToFirestore(String uid, String username, String email) {
         User user = new User(uid, username, email);
 
@@ -92,17 +62,26 @@ public class MainActivity extends AppCompatActivity {
 
             if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
                 Log.e("SetOnClickListener", "Empty checker ran");
-                auth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = auth.getCurrentUser();
-                                    saveUserToFirestore(user.getUid(), username, email);
-                                    Log.d("Auth success", "User created");
-                                } else {
-                                    Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
-                                }
+                db.collection("users")
+                        .whereEqualTo("username", username)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && task.getResult().isEmpty()) {
+                                auth.createUserWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser user = auth.getCurrentUser();
+                                                    saveUserToFirestore(user.getUid(), username, email);
+                                                    Log.d("Auth success", "User created");
+                                                } else {
+                                                    Toast.makeText(MainActivity.this,"Authentication Failed", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(this, "Please choose another username, this one is already taken", Toast.LENGTH_LONG).show();
                             }
                         });
             }
