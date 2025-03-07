@@ -17,55 +17,99 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="104dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="84dp"
-        android:backgroundTint="#D37A65"
-        android:text="SUNDAY"
-        android:textColor="@android:color/black"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="64dp"
+        android:paddingEnd="64dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/addEmoStateButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="106dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="152dp"
-        android:layout_marginTop="84dp"
-        android:backgroundTint="#D37A65"
-        android:text="19-01-2025"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:backgroundTint="#D37A65"
+            android:text="SUNDAY"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:backgroundTint="#D37A65"
+            android:text="19-01-2025"
+            android:textAlignment="center" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button7"
         android:layout_width="92dp"
-        android:layout_height="39dp"
+        android:layout_height="48dp"
         android:layout_marginStart="276dp"
         android:layout_marginTop="596dp"
-        android:backgroundTint="#488685"
+        android:backgroundTint="#5A9999"
         android:text="Post"
-        android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
-        android:id="@+id/addEmoStateButton"
-        android:layout_width="160dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="176dp"
-        android:backgroundTint="#85BEC8"
-        android:text="Add Emotional State"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.151"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="64dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/triggerText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/addEmoStateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="53dp"
+            android:backgroundTint="#5A9999"
+            android:text="Change Emotional State" />
+
+        <!-- <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp">
+
+            <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#CACACA" />
+
+            <ImageView
+            android:id="@+id/moodIndicator"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:contentDescription="Mood Indicator"
+            android:src="@drawable/mood_happy" /> 
+        </FrameLayout>-->
+
+        <!-- i'll do smth with this later -->
+        
+    </LinearLayout>
 
     <TextView
         android:id = "@+id/triggerText"
