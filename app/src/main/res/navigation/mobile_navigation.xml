@@ -64,6 +64,10 @@
     android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
     android:label="Post Mood"
     tools:layout="@layout/fragment_post_mood"/>
+    <fragment
+        android:id="@+id/changePasswordFragment2"
+        android:name="com.example.justacupofjavapersonal.ui.userinfo.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" />
 
 
 </navigation>
