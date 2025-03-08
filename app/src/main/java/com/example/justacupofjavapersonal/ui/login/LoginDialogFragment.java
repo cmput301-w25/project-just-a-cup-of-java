@@ -3,9 +3,14 @@ package com.example.justacupofjavapersonal.ui.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -15,15 +20,25 @@ import com.example.justacupofjavapersonal.R;
 
 
 import com.example.justacupofjavapersonal.databinding.DialogLoginBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginDialogFragment extends DialogFragment {
 
     private DialogLoginBinding binding;
+    private FirebaseAuth auth;
+    private String email ="";
+    private String password ="";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogLoginBinding.inflate(inflater, container, false);
+        auth = FirebaseAuth.getInstance();
         return binding.getRoot();
     }
 
@@ -55,10 +70,9 @@ public class LoginDialogFragment extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String email = binding.emailEditText.getText().toString().trim();
-                String password = binding.passwordEditText.getText().toString().trim();
+                email = binding.emailEditText.getText().toString().trim();
+                password = binding.passwordEditText.getText().toString().trim();
                 binding.loginButton.setEnabled(!email.isEmpty() && !password.isEmpty());
-
             }
 
 
@@ -80,11 +94,33 @@ public class LoginDialogFragment extends DialogFragment {
             }
         });
 
-
         // Handle login button click
         binding.loginButton.setOnClickListener(v -> {
             // TODO: Firebase authentication will be added here later
-            dismiss(); // Close dialog for now
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("Sign in", "signInWithEmail:success");
+                                FirebaseUser user = auth.getCurrentUser();
+                                dismiss(); // Close dialog for now
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("Sign in", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                                dismiss(); // First, close the dialog
+
+                                // Ensure navigation back to login page
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                                if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != R.id.navigation_login) {
+                                    navController.navigate(R.id.navigation_login);
+                                }
+                            }
+                        }
+                    });
         });
     }
 
