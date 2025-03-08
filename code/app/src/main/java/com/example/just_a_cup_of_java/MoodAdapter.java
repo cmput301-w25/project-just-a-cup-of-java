@@ -40,10 +40,10 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MoodViewHolder
         if (mood.getUsername().getProfilePic() != null && !mood.getUsername().getProfilePic().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(mood.getUsername().getProfilePic())
-                    .placeholder(R.drawable.ic_profile_placeholder)
+                    .placeholder(R.drawable.baseline_account_circle_24)
                     .into(holder.profilePic);
         } else {
-            holder.profilePic.setImageResource(R.drawable.ic_profile_placeholder);
+            holder.profilePic.setImageResource(R.drawable.baseline_account_circle_24);
         }
 
         // Set username
