@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.just_a_cup_of_java.ui.moodhistory.MoodHistoryFragment;
 
 public class MoodHistoryActivity extends AppCompatActivity {
 
