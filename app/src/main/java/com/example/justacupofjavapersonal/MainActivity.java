@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         // Ensure the app starts on the login page
-        navController.navigate(R.id.navigation_login);
+        navController.navigate(R.id.navigation_feed);
 
         // Hide bottom navigation on the login screen
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
