@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
+import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.databinding.FragmentLoginBinding;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +33,7 @@ public class LoginFragment extends Fragment {
     private String confirmPassword = "";
     private FragmentLoginBinding binding;
 
-    private void saveUserToFirestore(String email, String uid) {
+    private void saveUserToFirestore(String uid, String email) {
         User user = new User(uid, email);
 
         db.collection("users").document(uid).set(user)
@@ -56,9 +58,15 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
 
+        binding.loginButton.setOnClickListener(v -> {
+            LoginDialogFragment loginDialog = new LoginDialogFragment();
+            loginDialog.show(getParentFragmentManager(), "login_dialog");
+            navController.navigate(R.id.navigation_home);
+        });
+
         binding.signupButton.setEnabled(false);
 
-        // Add text change listener to enable login button when email & password are entered
+        // Add text change listener to enable signup button when email & password are entered
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -91,7 +99,7 @@ public class LoginFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = auth.getCurrentUser();
-                                    saveUserToFirestore(email, user.getUid());
+                                    saveUserToFirestore(user.getUid(), email);
                                     Log.d("Auth success", "User created");
                                 } else {
                                     Toast.makeText(requireActivity(), "Authentication Failed, User not Created", Toast.LENGTH_LONG).show();
