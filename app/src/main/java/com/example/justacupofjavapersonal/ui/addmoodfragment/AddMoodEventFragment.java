@@ -59,14 +59,15 @@ public class AddMoodEventFragment extends Fragment {
         viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
             selectedDate = date;
             binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
+            weekDates = getWeekDates(selectedDate);
             setupWeekRecyclerView(); // Ensure RecyclerView updates
         });
 
 
 
-        weekDates = getWeekDates(selectedDate);
-        // Set up RecyclerView
-        setupWeekRecyclerView();
+//        weekDates = getWeekDates(selectedDate);
+//        // Set up RecyclerView
+//        setupWeekRecyclerView();
 
         view.findViewById(R.id.addingMood).setOnClickListener(v -> {
             // Get the current time
@@ -115,6 +116,11 @@ public class AddMoodEventFragment extends Fragment {
 private void setupWeekRecyclerView() {
     if (selectedDate == null || selectedDate.isEmpty()) {
         selectedDate = viewModel.getSelectedDate().getValue(); // Ensure it has a value
+    }
+    // ✅ Prevent crash if weekDates is null
+    if (weekDates == null || weekDates.isEmpty()) {
+        Log.e("AddMoodEventFragment", "weekDates is null or empty. Cannot setup RecyclerView.");
+        return;
     }
     // Find the position of the selected date in the week list
     int selectedPosition = -1;

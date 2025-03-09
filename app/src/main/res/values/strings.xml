@@ -3,8 +3,10 @@
     <string name="social_situation_one_other_person">With one other person</string>
     <string name="social_situation_two_or_several_people">With two to several people</string>
     <string name="social_situation_crowd">With a crowd</string>
+    <string name="select_social_prompt">Select an emotion</string>
 
     <string-array name="social_situation_options">
+        <item>Select a social situation</item>
         <item>@string/social_situation_alone</item>
         <item>@string/social_situation_one_other_person</item>
         <item>@string/social_situation_two_or_several_people</item>
