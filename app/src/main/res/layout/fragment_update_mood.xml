@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.postmood.UpdateMoodFragment">
+
+    <ImageView
+        android:layout_width="188dp"
+        android:layout_height="121dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/editDayButton"
+        android:layout_width="104dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="84dp"
+        android:backgroundTint="#D37A65"
+        android:text="SUNDAY"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/editDateButton"
+        android:layout_width="106dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="84dp"
+        android:backgroundTint="#D37A65"
+        android:text="19-01-2025"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Update Button replacing "Post" -->
+    <Button
+        android:id="@+id/updateMoodButton"
+        android:layout_width="92dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="276dp"
+        android:layout_marginTop="596dp"
+        android:backgroundTint="#488685"
+        android:text="Update"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/editEmoStateButton"
+        android:layout_width="160dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="176dp"
+        android:backgroundTint="#85BEC8"
+        android:text="Edit Emotional State"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.151"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTriggerInput"
+        android:layout_width="349dp"
+        android:layout_height="45dp"
+        android:hint="Optional trigger"
+        android:textColor="@color/light_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.387" />
+
+    <EditText
+        android:id="@+id/editSocialSituationInput"
+        android:layout_width="349dp"
+        android:layout_height="45dp"
+        android:hint="Optional social situation"
+        android:textColor="@color/light_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editWhyFeelInput"
+        android:layout_width="167dp"
+        android:layout_height="117dp"
+        android:hint="Why are you feeling this way?"
+        android:textColor="@color/light_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.695" />
+
+    <TextView
+        android:id="@+id/editAddPhoto"
+        android:layout_width="153dp"
+        android:layout_height="118dp"
+        android:text="Add a photo"
+        android:textColor="@color/light_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.844"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.696" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

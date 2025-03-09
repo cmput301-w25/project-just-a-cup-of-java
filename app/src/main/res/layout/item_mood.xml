@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/moodText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:gravity="center"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:background="@drawable/mood_item_background"
+    android:textColor="@android:color/black"/>
+
+
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:orientation="horizontal"-->
+<!--android:padding="10dp"-->
+<!--android:background="@android:color/white">-->
+
+<!--<TextView-->
+<!--    android:id="@+id/moodText"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:padding="12dp"-->
+<!--    android:gravity="center"-->
+<!--    android:textSize="18sp"-->
+<!--    android:textStyle="bold"-->
+<!--    android:background="@drawable/mood_item_background"-->
+<!--    android:textColor="@android:color/black"/>-->
+
+<!--<Button-->
+<!--    android:id="@+id/deleteButton"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:text="Delete"-->
+<!--    android:backgroundTint="@android:color/holo_red_dark"-->
+<!--    android:textColor="@android:color/white"/>-->
+<!--</LinearLayout>-->
