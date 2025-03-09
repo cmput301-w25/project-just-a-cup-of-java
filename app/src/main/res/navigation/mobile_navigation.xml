@@ -13,16 +13,17 @@
         <action
             android:id="@+id/action_navigation_login_to_home"
             app:destination="@id/navigation_home"/>
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_user_info2"
+            app:destination="@id/navigation_user_info" />
     </fragment>
-
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.justacupofjavapersonal.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
-<!--        //correct-->
-<!--         Action to navigate to AddMoodEventFragment -->
+        <!-- Action to navigate to AddMoodEventFragment -->
         <action
             android:id="@+id/action_navigation_home_to_addMoodEventFragment"
             app:destination="@id/navigation_add_mood"
@@ -55,7 +56,21 @@
         android:id="@+id/navigation_user_info"
         android:name="com.example.justacupofjavapersonal.ui.userinfo.UserInfoFragment"
         android:label="User Info"
-        tools:layout="@layout/fragment_userinfo" />
+        tools:layout="@layout/fragment_userinfo" >
+        <action
+            android:id="@+id/action_navigation_user_info_to_navigation_change_password"
+            app:destination="@id/navigation_change_password" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_change_password"
+        android:name="com.example.justacupofjavapersonal.ui.userinfo.ChangePasswordFragment"
+        android:label="Change Password"
+        tools:layout="@layout/change_password" >
+        <action
+            android:id="@+id/action_navigation_change_password_to_navigation_user_info"
+            app:destination="@id/navigation_user_info" />
+    </fragment>
 
 
     <fragment
@@ -81,14 +96,11 @@
 
     </fragment>
 
-
-
 <fragment
     android:id="@+id/navigation_post_mood"
     android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
     android:label="Post Mood"
     tools:layout="@layout/fragment_post_mood"/>
-
 
 
 </navigation>
