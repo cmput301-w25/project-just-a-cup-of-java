@@ -58,22 +58,23 @@ public class AddMoodEventFragment extends Fragment {
         // Set up RecyclerView
         setupWeekRecyclerView();
 
-
+        view.findViewById(R.id.addingMood).setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.navigation_post_mood);
+        });
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//        // Get NavController for navigating between fragments
 
-        // Get NavController for navigating between fragments
-        NavController navController = Navigation.findNavController(view);
-
+//
         // Set click listener on the plus image (addingMood)
-        view.findViewById(R.id.addingMood).setOnClickListener(v -> {
-            navController.navigate(R.id.navigation_post_mood);
-        });
-    }
+
+//    }
 
     private ArrayList<String> getWeekDates(String selectedDate) {
         ArrayList<String> weekList = new ArrayList<>();
@@ -108,14 +109,44 @@ public class AddMoodEventFragment extends Fragment {
         }
         return weekList;
     }
+//PREVIOUS
+//    private void setupWeekRecyclerView() {
+//        weekAdapter = new WeekAdapter(weekDates);
+//        binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+//        binding.weekRecyclerView.setAdapter(weekAdapter);
+//    }
+private void setupWeekRecyclerView() {
+    // Find the position of the selected date in the week list
+    int selectedPosition = -1;
 
-    private void setupWeekRecyclerView() {
-        weekAdapter = new WeekAdapter(weekDates);
-        binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.weekRecyclerView.setAdapter(weekAdapter);
+    // Format selectedDate into "EEE dd" format to match the week dates
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE dd", Locale.getDefault());
+    String formattedSelectedDate = "";
+
+    try {
+        // Parse the selected date to the desired format
+        Date date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(selectedDate);
+        formattedSelectedDate = sdf.format(date);
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 
+    // Now compare formattedSelectedDate with each date in the week list
+    for (int i = 0; i < weekDates.size(); i++) {
+        if (weekDates.get(i).equals(formattedSelectedDate)) { // Compare full date string
+            selectedPosition = i;
+            break;
+        }
+    }
 
+    // Initialize adapter with selected position
+    weekAdapter = new WeekAdapter(weekDates, selectedPosition, (position, date) -> {
+        binding.selectedDateTextView.setText("Selected Date: " + date);
+    });
+
+    binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    binding.weekRecyclerView.setAdapter(weekAdapter);
+}
     @Override
     public void onDestroyView() {
         super.onDestroyView();

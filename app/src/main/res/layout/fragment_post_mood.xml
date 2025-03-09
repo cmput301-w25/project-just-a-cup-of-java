@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/datebutton"
         android:layout_width="106dp"
         android:layout_height="35dp"
         android:layout_marginStart="152dp"
@@ -41,83 +41,121 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/postmoodbutton"
         android:layout_width="92dp"
         android:layout_height="39dp"
-        android:layout_marginStart="276dp"
-        android:layout_marginTop="596dp"
         android:backgroundTint="#488685"
         android:text="Post"
         android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.94" />
 
     <Button
         android:id="@+id/addEmoStateButton"
         android:layout_width="160dp"
         android:layout_height="53dp"
-        android:layout_marginTop="176dp"
+        android:layout_marginTop="132dp"
         android:backgroundTint="#85BEC8"
         android:text="Add Emotional State"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.151"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id = "@+id/triggerText"
-        android:layout_width="349dp"
-        android:layout_height="45dp"
-        android:text="Optional trigger"
-        android:textColor="@color/light_gray"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
+     <!-- Optional Trigger TextField -->
+    <!--     app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.99"app:layout_constraintBottom_toTopOf="@+id/socialSituationSpinner"-->
 
-    <TextView
-        android:id="@+id/socialSituation"
-        android:layout_width="349dp"
-        android:layout_height="45dp"
-        android:text="Add Mood Event"
-        android:textColor="@color/light_gray"
+
+<!--    -->
+    <!-- Social Situation Spinner -->
+
+    <!-- Why are you feeling this way TextField -->
+    <EditText
+        android:id="@+id/triggerText"
+        android:layout_width="411dp"
+        android:layout_height="79dp"
+        android:layout_marginTop="16dp"
+        android:hint="Optional trigger"
+        android:maxLength="100"
+        android:padding="12dp"
+        android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addEmoStateButton" />
+
+    <Spinner
+        android:id="@+id/socialSituationSpinner"
+        android:layout_width="405dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/triggerText" />
 
     <TextView
         android:id="@+id/addPhoto"
         android:layout_width="153dp"
         android:layout_height="118dp"
+        android:layout_marginBottom="92dp"
         android:text="Add a photo"
         android:textColor="@color/light_gray"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.844"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.696" />
+        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <EditText
         android:id="@+id/whyFeel"
-        android:layout_width="167dp"
-        android:layout_height="117dp"
-        android:text="Add Mood Event"
-        android:textColor="@color/light_gray"
+        android:layout_width="406dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="64dp"
+        android:hint="Why are you feeling this way?"
+        android:maxLength="20"
+        android:padding="12dp"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.695" />
+        app:layout_constraintTop_toBottomOf="@id/socialSituationSpinner" />
+    <!--    <EditText-->
+<!--        android:id="@+id/whyFeel"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="40dp"-->
+<!--        android:hint="Why are you feeling this way?"-->
+<!--        android:inputType="text"-->
+<!--        android:maxLength="20"-->
+<!--        android:padding="16dp"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/addPhoto"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.46"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <!--    <TextView-->
+<!--        android:id="@+id/whyFeel"-->
+<!--        android:layout_width="167dp"-->
+<!--        android:layout_height="117dp"-->
+<!--        android:text="Add Mood Event"-->
+<!--        android:textColor="@color/light_gray"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.127"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.695" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

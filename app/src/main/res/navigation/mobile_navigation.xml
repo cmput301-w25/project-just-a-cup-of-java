@@ -15,19 +15,28 @@
             app:destination="@id/navigation_home"/>
     </fragment>
 
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.justacupofjavapersonal.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
-        <!-- Action to navigate to AddMoodEventFragment -->
+<!--        //correct-->
+<!--         Action to navigate to AddMoodEventFragment -->
         <action
             android:id="@+id/action_navigation_home_to_addMoodEventFragment"
             app:destination="@id/navigation_add_mood"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false"/>
+
+        <action
+            android:id="@+id/action_navigation_home_to_moodHistory"
+            app:destination="@id/navigation_moodhistory" />
+
     </fragment>
 
     <fragment
@@ -57,13 +66,29 @@
         <argument
             android:name="selectedDate"
             app:argType="string" />
+
     </fragment>
+
+    <fragment
+        android:id="@id/navigation_moodhistory"
+        android:name="com.example.justacupofjavapersonal.ui.moodhistory.MoodHistoryFragment"
+        android:label="Mood History"
+        tools:layout="@layout/mood_history">
+
+    <action
+        android:id="@+id/action_navigation_moodHistory_to_home"
+        app:destination="@id/navigation_home" />
+
+    </fragment>
+
+
 
 <fragment
     android:id="@+id/navigation_post_mood"
     android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
     android:label="Post Mood"
     tools:layout="@layout/fragment_post_mood"/>
+
 
 
 </navigation>

@@ -1,4 +1,36 @@
 <resources>
+    <string name="social_situation_alone">Alone</string>
+    <string name="social_situation_one_other_person">With one other person</string>
+    <string name="social_situation_two_or_several_people">With two to several people</string>
+    <string name="social_situation_crowd">With a crowd</string>
+
+    <string-array name="social_situation_options">
+        <item>@string/social_situation_alone</item>
+        <item>@string/social_situation_one_other_person</item>
+        <item>@string/social_situation_two_or_several_people</item>
+        <item>@string/social_situation_crowd</item>
+    </string-array>
+
+    <string name="emotion_anger">Anger</string>
+    <string name="emotion_confusion">Confusion</string>
+    <string name="emotion_disgust">Disgust</string>
+    <string name="emotion_fear">Fear</string>
+    <string name="emotion_happiness">Happiness</string>
+    <string name="emotion_sadness">Sadness</string>
+    <string name="emotion_shame">Shame</string>
+    <string name="emotion_surprise">Surprise</string>
+
+    <string-array name="emotion_options">
+        <item>@string/emotion_anger</item>
+        <item>@string/emotion_confusion</item>
+        <item>@string/emotion_disgust</item>
+        <item>@string/emotion_fear</item>
+        <item>@string/emotion_happiness</item>
+        <item>@string/emotion_sadness</item>
+        <item>@string/emotion_shame</item>
+        <item>@string/emotion_surprise</item>
+    </string-array>
+
     <string name="app_name">just a cup of java personal</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

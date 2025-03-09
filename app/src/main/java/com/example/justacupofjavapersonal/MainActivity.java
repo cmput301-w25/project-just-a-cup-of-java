@@ -43,7 +43,20 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
         NavigationUI.setupWithNavController(binding.topAppBar, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+//        NavigationUI.setupWithNavController(binding.navView, navController);
+        binding.navView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navigation_home) {
+                // If already on home, clear the back stack and go to home
+                navController.popBackStack(R.id.navigation_home, false);
+                navController.navigate(R.id.navigation_home);
+                return true;
+            }
+
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
+
 
         // Ensure the app starts on the login page
         navController.navigate(R.id.navigation_login);

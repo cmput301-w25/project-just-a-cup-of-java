@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.databinding.FragmentHomeBinding;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -43,8 +44,23 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         return root;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Get NavController for navigating between fragments
+        NavController navController = Navigation.findNavController(view);
+
+        // Add click listener for mood history button
+        binding.button2.setOnClickListener(v ->
+                navController.navigate(R.id.action_navigation_home_to_moodHistory)
+        );
+    }
+
 
     @Override
     public void onDestroyView() {
