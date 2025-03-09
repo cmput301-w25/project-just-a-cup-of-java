@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
 
         // Add click listener for mood history button
-        binding.button2.setOnClickListener(v ->
+        binding.btnMoodhistory.setOnClickListener(v ->
                 navController.navigate(R.id.action_navigation_home_to_moodHistory)
         );
     }
