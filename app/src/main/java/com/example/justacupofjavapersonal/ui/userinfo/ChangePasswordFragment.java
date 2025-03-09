@@ -2,6 +2,7 @@ package com.example.justacupofjavapersonal.ui.userinfo;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class ChangePasswordFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        Log.e("ChangePasswordFragment", "onCreateView started");
         View view = inflater.inflate(R.layout.change_password, container, false);
 
         mAuth = FirebaseAuth.getInstance();
@@ -35,10 +36,24 @@ public class ChangePasswordFragment extends Fragment {
         changePasswordButton = view.findViewById(R.id.changePasswordButton);
 
         // Set up button listener
-        changePasswordButton.setOnClickListener(v -> changePassword());
+        changePasswordButton.setOnClickListener(v -> {
+            Log.e("ChangePasswordFragment", "Change password button clicked");
+            changePassword();
+        });
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        NavController navController = Navigation.findNavController(view);
+        view.findViewById(R.id.back_arrow).setOnClickListener(v -> {
+            Log.e("ChangePasswordFragment", "Back arrow clicked");
+            navController.navigate(R.id.navigation_user_info);
+        });
+    }
+
 
 
     private void changePassword() {

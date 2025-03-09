@@ -101,6 +101,8 @@ public class LoginFragment extends Fragment {
                                     FirebaseUser user = auth.getCurrentUser();
                                     saveUserToFirestore(user.getUid(), email);
                                     Log.d("Auth success", "User created");
+
+                                    navController.navigate(R.id.navigation_user_info);
                                 } else {
                                     Toast.makeText(requireActivity(), "Authentication Failed, User not Created", Toast.LENGTH_LONG).show();
                                 }
