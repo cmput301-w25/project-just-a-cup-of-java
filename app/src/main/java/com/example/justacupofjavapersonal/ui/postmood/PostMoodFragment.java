@@ -1,8 +1,5 @@
 package com.example.justacupofjavapersonal.ui.postmood;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -75,14 +72,36 @@ public class PostMoodFragment extends Fragment {
         }
 
 
-        // Set up the Spinner (dropdown) for Social Situation
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getContext(),
-                R.array.social_situation_options, // This is the array from strings.xml
-                android.R.layout.simple_spinner_item
-        );
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.social_situation_options)
+        ) {
+            @Override
+            public boolean isEnabled(int position) {
+                // Disable the first item ("Select a social situation") to prevent selection
+                return position != 0;
+            }
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    // Grey out the first item
+                    textView.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                } else {
+                    textView.setTextColor(getResources().getColor(android.R.color.black));
+                }
+                return view;
+            }
+        };
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         socialSituationSpinner.setAdapter(adapter);
+        socialSituationSpinner.setSelection(0);
+
+
+
         // Add Photo Click Event
 //        addPhotoImageView.setOnClickListener(v -> openGallery());
 
