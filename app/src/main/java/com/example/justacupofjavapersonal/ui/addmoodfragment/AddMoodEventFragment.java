@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavArgs;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -32,6 +33,8 @@ import java.util.Locale;
 public class AddMoodEventFragment extends Fragment {
 
     private FragmentAddMoodBinding binding;
+    private AddMoodEventViewModel viewModel;
+
     private String selectedDate;
 
     private ArrayList<String> weekDates;
@@ -44,14 +47,21 @@ public class AddMoodEventFragment extends Fragment {
         // Initialize View Binding
         binding = FragmentAddMoodBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        viewModel = new ViewModelProvider(this).get(AddMoodEventViewModel.class);
 
         // Retrieve selected date from arguments
         if (getArguments() != null) {
-            selectedDate = AddMoodEventFragmentArgs.fromBundle(getArguments()).getSelectedDate();
+            String calendarSelectedDate = AddMoodEventFragmentArgs.fromBundle(getArguments()).getSelectedDate();
+            viewModel.initializeSelectedDate(calendarSelectedDate); // Ensure ViewModel has an initial value
         }
 
-        // Display selected date in TextView
-        //binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
+        // Observe changes in ViewModel to update UI
+        viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
+            selectedDate = date;
+            binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
+            setupWeekRecyclerView(); // Ensure RecyclerView updates
+        });
+
 
 
         weekDates = getWeekDates(selectedDate);
@@ -103,6 +113,9 @@ public class AddMoodEventFragment extends Fragment {
     }
 
 private void setupWeekRecyclerView() {
+    if (selectedDate == null || selectedDate.isEmpty()) {
+        selectedDate = viewModel.getSelectedDate().getValue(); // Ensure it has a value
+    }
     // Find the position of the selected date in the week list
     int selectedPosition = -1;
 
@@ -129,7 +142,11 @@ private void setupWeekRecyclerView() {
     // Initialize adapter with selected position
     weekAdapter = new WeekAdapter(weekDates, selectedPosition, (position, date) -> {
         selectedDate = convertToFullDate(date);
+        viewModel.setSelectedDate(selectedDate); // Save the updated date
+
         binding.selectedDateTextView.setText("Selected Date: " + date);
+        Log.d("AddMoodEventFragment", "Updated Selected Date: " + selectedDate);
+
 
     });
 
@@ -146,7 +163,6 @@ private void setupWeekRecyclerView() {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
 
-            // Ensure the correct month & year are applied
             calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
             calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
 
