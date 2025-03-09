@@ -63,10 +63,6 @@ public class AddMoodEventFragment extends Fragment {
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
             String currentTime = timeFormat.format(new Date());
 
-            // Debugging: Log the date and time being sent
-            Log.d("AddMoodEventFragment", "Selected Date: " + selectedDate);
-            Log.d("AddMoodEventFragment", "Current Time: " + currentTime);
-
 
             Bundle bundle = new Bundle();
             bundle.putString("selectedDate", selectedDate); // Ensure selectedDate is stored correctly
@@ -90,51 +86,39 @@ public class AddMoodEventFragment extends Fragment {
             // Move to the start of the week (Sunday)
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
-            // Debugging: Print the start date
-            Log.d("WeekDebug", "Start of Week: " + sdf.format(calendar.getTime()));
-
-            // Loop 7 times to ensure a full week is added
             for (int i = 0; i < 7; i++) {
                 String formattedDate = new SimpleDateFormat("EEE dd", Locale.getDefault()).format(calendar.getTime());
                 weekList.add(formattedDate);
 
-                // Debugging: Print each day's value
-                Log.d("WeekDebug", "Added Day: " + formattedDate);
+
 
                 calendar.add(Calendar.DATE, 1); // Move to the next day
             }
 
-            // Debugging: Print final week list
-            Log.d("WeekDebug", "Final Week List: " + weekList.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return weekList;
     }
-//PREVIOUS
-//    private void setupWeekRecyclerView() {
-//        weekAdapter = new WeekAdapter(weekDates);
-//        binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-//        binding.weekRecyclerView.setAdapter(weekAdapter);
-//    }
+
 private void setupWeekRecyclerView() {
     // Find the position of the selected date in the week list
     int selectedPosition = -1;
 
-    // Format selectedDate into "EEE dd" format to match the week dates
+
     SimpleDateFormat sdf = new SimpleDateFormat("EEE dd", Locale.getDefault());
     String formattedSelectedDate = "";
 
     try {
-        // Parse the selected date to the desired format
+
         Date date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(selectedDate);
         formattedSelectedDate = sdf.format(date);
     } catch (Exception e) {
         e.printStackTrace();
     }
 
-    // Now compare formattedSelectedDate with each date in the week list
+
     for (int i = 0; i < weekDates.size(); i++) {
         if (weekDates.get(i).equals(formattedSelectedDate)) { // Compare full date string
             selectedPosition = i;
@@ -144,12 +128,34 @@ private void setupWeekRecyclerView() {
 
     // Initialize adapter with selected position
     weekAdapter = new WeekAdapter(weekDates, selectedPosition, (position, date) -> {
+        selectedDate = convertToFullDate(date);
         binding.selectedDateTextView.setText("Selected Date: " + date);
+
     });
 
     binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     binding.weekRecyclerView.setAdapter(weekAdapter);
 }
+    private String convertToFullDate(String weekDayAndDate) {
+        try {
+            // Convert "Mon 12" → "12-03-2025"
+            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE dd", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+            Date date = inputFormat.parse(weekDayAndDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // Ensure the correct month & year are applied
+            calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
+            calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+
+            return outputFormat.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Invalid Date";
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
