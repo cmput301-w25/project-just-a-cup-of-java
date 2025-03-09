@@ -76,9 +76,13 @@ public class UserInfoFragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
 
 
-//        backArrow.setOnClickListener(v -> requireActivity().onBackPressed());
 
-        btnSave.setOnClickListener(v -> saveProfileChanges());
+
+
+        btnSave.setOnClickListener(v -> {
+            saveProfileChanges();
+            navController.navigate(R.id.navigation_home);
+        });
 
         btnChangePassword.setOnClickListener(v -> {
             navController.navigate(R.id.navigation_change_password);
@@ -87,6 +91,7 @@ public class UserInfoFragment extends Fragment {
 
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
+            navController.navigate(R.id.navigation_login);
             Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
         });
 
