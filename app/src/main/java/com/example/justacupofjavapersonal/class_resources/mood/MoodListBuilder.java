@@ -13,7 +13,7 @@ public class MoodListBuilder {
         if (moods == null || moods.isEmpty()) return finalList;
         moods.sort((m1, m2) -> {
             if (m1.getPostDate() == null || m2.getPostDate() == null) return 0;
-            return m1.getPostDate().compareTo(m2.getPostDate());
+            return m2.getPostDate().compareTo(m1.getPostDate());
         });
 
         String lastDate = null;
@@ -27,7 +27,6 @@ public class MoodListBuilder {
                 finalList.add(new FeedItem(currentDate));
                 lastDate = currentDate;
             }
-
             finalList.add(new FeedItem(mood));
         }
 
