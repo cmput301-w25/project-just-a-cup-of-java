@@ -2,7 +2,6 @@ package com.example.justacupofjavapersonal.ui.postmood;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,8 +19,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
-
-import java.io.IOException;
 
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -105,11 +100,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         socialSituationSpinner.setAdapter(adapter);
         socialSituationSpinner.setSelection(0);
 
-
-
-        // Add Photo Click Event
-//        addPhotoImageView.setOnClickListener(v -> openGallery());
-
         // Find the "Add Emotional State" button
         View addMoodButton = view.findViewById(R.id.addEmoStateButton);
 
@@ -126,10 +116,16 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
         postButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
+
+            // Retrieve selected date and mood
+            String selectedDate = dateTextView.getText().toString();
+            bundle.putString("selectedDate", selectedDate);
             bundle.putString("selectedMood", selectedMood);
+
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.navigation_add_mood, bundle);
         });
+
     }
 
     @Override
