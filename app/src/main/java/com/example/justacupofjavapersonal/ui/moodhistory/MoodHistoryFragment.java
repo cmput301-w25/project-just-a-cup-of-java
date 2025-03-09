@@ -11,6 +11,9 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.example.justacupofjavapersonal.R;
 
 public class MoodHistoryFragment extends Fragment {
@@ -20,6 +23,15 @@ public class MoodHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mood_history, container, false);
+        // Find the Calendar button
+        Button calendarButton = view.findViewById(R.id.button);
+
+
+        // Navigate to HomeFragment (Calendar) when clicked
+        calendarButton.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_navigation_moodHistory_to_home);
+        });
 
 
         // Find the filter button
@@ -37,5 +49,7 @@ public class MoodHistoryFragment extends Fragment {
 
         return view;
     }
+
+
 
 }

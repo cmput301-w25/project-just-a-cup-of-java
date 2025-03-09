@@ -65,16 +65,6 @@ public class AddMoodEventFragment extends Fragment {
         return view;
     }
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//        // Get NavController for navigating between fragments
-
-//
-        // Set click listener on the plus image (addingMood)
-
-//    }
 
     private ArrayList<String> getWeekDates(String selectedDate) {
         ArrayList<String> weekList = new ArrayList<>();

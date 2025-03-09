@@ -101,17 +101,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/triggerText" />
 
-    <TextView
+    <ImageView
         android:id="@+id/addPhoto"
-        android:layout_width="153dp"
-        android:layout_height="118dp"
-        android:layout_marginBottom="92dp"
-        android:text="Add a photo"
-        android:textColor="@color/light_gray"
-        android:textSize="16sp"
+        android:layout_width="95dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="112dp"
+        android:clickable="true"
+        android:contentDescription="Add a photo"
+        android:focusable="true"
+        android:src="@drawable/ic_add_photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintHorizontal_bias="0.844"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -128,33 +129,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/socialSituationSpinner" />
-    <!--    <EditText-->
-<!--        android:id="@+id/whyFeel"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="40dp"-->
-<!--        android:hint="Why are you feeling this way?"-->
-<!--        android:inputType="text"-->
-<!--        android:maxLength="20"-->
-<!--        android:padding="16dp"-->
-<!--        android:textColor="@android:color/black"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/addPhoto"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.46"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <!--    <TextView-->
-<!--        android:id="@+id/whyFeel"-->
-<!--        android:layout_width="167dp"-->
-<!--        android:layout_height="117dp"-->
-<!--        android:text="Add Mood Event"-->
-<!--        android:textColor="@color/light_gray"-->
-<!--        android:textSize="16sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.127"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.695" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,9 +33,8 @@ public class HomeFragment extends Fragment {
         // Set up a listener for when a date is selected
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
             if (selected) {
-                // Convert the selected date into a String (yyyy-MM-dd)
-                String selectedDate = date.getYear() + "-" + (date.getMonth() + 1) + "-" + date.getDay();
-
+                    // Convert selected date into "dd-MM-yyyy" format
+                    String selectedDate = String.format("%02d-%02d-%d", date.getDay(), date.getMonth() + 1, date.getYear());
                 // Navigate to AddMoodEventFragment and pass the selected date
                 NavController navController = Navigation.findNavController(requireView());
                 HomeFragmentDirections.ActionNavigationHomeToAddMoodEventFragment action =
@@ -56,7 +55,7 @@ public class HomeFragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
 
         // Add click listener for mood history button
-        binding.button2.setOnClickListener(v ->
+        binding.btnMoodhistory.setOnClickListener(v ->
                 navController.navigate(R.id.action_navigation_home_to_moodHistory)
         );
     }
