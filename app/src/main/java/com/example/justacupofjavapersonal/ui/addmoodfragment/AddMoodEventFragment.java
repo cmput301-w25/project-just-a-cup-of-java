@@ -59,8 +59,21 @@ public class AddMoodEventFragment extends Fragment {
         setupWeekRecyclerView();
 
         view.findViewById(R.id.addingMood).setOnClickListener(v -> {
+            // Get the current time
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            String currentTime = timeFormat.format(new Date());
+
+            // Debugging: Log the date and time being sent
+            Log.d("AddMoodEventFragment", "Selected Date: " + selectedDate);
+            Log.d("AddMoodEventFragment", "Current Time: " + currentTime);
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString("selectedDate", selectedDate); // Ensure selectedDate is stored correctly
+            bundle.putString("selectedTime", currentTime);
+
             NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.navigation_post_mood);
+            navController.navigate(R.id.navigation_post_mood,bundle);
         });
         return view;
     }

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,8 @@ public class PostMoodFragment extends Fragment {
     private Button postButton;
     private ImageView addPhotoImageView;
     private Uri selectedImageUri;
+    private TextView dateTextView;
+    private TextView timeTextView;
 
     @Nullable
     @Override
@@ -49,7 +52,28 @@ public class PostMoodFragment extends Fragment {
         socialSituationSpinner = view.findViewById(R.id.socialSituationSpinner);
         whyFeelEditText = view.findViewById(R.id.whyFeel);
         addPhotoImageView = view.findViewById(R.id.addPhoto);
+        dateTextView = view.findViewById(R.id.dateTextView);
+        timeTextView = view.findViewById(R.id.timeTextView);
         //postButton = view.findViewById(R.id.button7);
+
+        // Get arguments passed from AddMoodEventFragment
+        Bundle args = getArguments();
+        if (args != null) {
+            String selectedDate = args.getString("selectedDate", "No date passed");
+            String selectedTime = args.getString("selectedTime", "No time passed");
+
+            // Debugging: Print values to Logcat
+            Log.d("PostMoodFragment", "Received Date: " + selectedDate);
+            Log.d("PostMoodFragment", "Received Time: " + selectedTime);
+
+            // Set date and time in UI
+            dateTextView.setText(selectedDate);
+            timeTextView.setText(selectedTime);
+        }
+        else {
+            Log.e("PostMoodFragment", "No arguments received!");
+        }
+
 
         // Set up the Spinner (dropdown) for Social Situation
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
