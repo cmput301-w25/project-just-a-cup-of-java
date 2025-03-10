@@ -51,7 +51,6 @@ public class UserInfoFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        backArrow = view.findViewById(R.id.back_arrow);
         profileImage = view.findViewById(R.id.profile_image);   //Still need to add this
         changePicture = view.findViewById(R.id.change_picture);
         editName = view.findViewById(R.id.edit_name);
