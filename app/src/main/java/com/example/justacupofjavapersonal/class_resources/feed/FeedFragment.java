@@ -1,4 +1,4 @@
-package com.example.justacupofjavapersonal.ui.feed;
+package com.example.justacupofjavapersonal.class_resources.feed;
 
 import android.location.Location;
 import android.os.Bundle;
