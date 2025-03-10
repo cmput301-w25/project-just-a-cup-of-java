@@ -170,8 +170,9 @@ public class FirebaseDB {
             }
             if (value != null && !value.isEmpty()) {
                 for (QueryDocumentSnapshot snapshot : value) {
-                    //String moodID, String uid, Date postDate, String trigger, byte[] photo, EmotionalState state, SocialSituation socialSituation, Location location
-                    String moodID = snapshot.getString("moodID");
+                    String moodID = snapshot.getString("moodID"); // Keep as String
+                    if (moodID == null) { throw new IllegalArgumentException("Mood ID cannot be null"); }
+
                     String userID = snapshot.getString("uid");
                     Date postDate = snapshot.getDate("postDate");
                     String trigger = snapshot.getString("trigger");
@@ -183,12 +184,12 @@ public class FirebaseDB {
                     if (userID.equals(uid)) {
                         userMoods.add(new Mood(moodID, userID, state, postDate, trigger, photo, socialSituation, location));
                     }
-
                 }
             }
         });
         return userMoods;
     }
+
 
     /**
      * To be implemented
