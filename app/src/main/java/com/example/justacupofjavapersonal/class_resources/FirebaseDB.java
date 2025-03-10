@@ -34,10 +34,12 @@ public class FirebaseDB {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     /**
-     * Updates the user information in firebase
-     * @param uid
-     * @param updates
-     * @param listener
+     * Takes in a userId, a map of updates and a listener to update user information in firebase.
+     * Additonally updates the user's email and password in firebase authentication if those were
+     * updated as well.
+     * @param uid UserID of the specified user
+     * @param updates Map of fields that are to be updated
+     * @param listener Listener to keep track of updates
      */
     public void updateUser(String uid, Map<String, Object> updates, OnUpdatedListener listener) {
         db.collection("users").document(uid)
@@ -74,6 +76,11 @@ public class FirebaseDB {
 
     //Add method for updating email and password, separate from updates
 
+    /**
+     * Takes in a userID and fetches the user from Firebase, and returns as a user object.
+     * @param uid UserID of the specified user
+     * @return the user with the specified uid
+     */
     public User getUser(String uid) {
         DocumentReference docRef = db.collection("users").document(uid);
         final User[] userData = new User[1];
@@ -96,9 +103,10 @@ public class FirebaseDB {
     }
 
     /**
-     * Adds the selected mood to firebase
-     * @param mood
-     * @param uid
+     * Takes in a Mood object and the userID of the user that created the mood, and
+     * adds the mood to the database with the userID. Creates a unique moodID to track the mood.
+     * @param mood A mood object
+     * @param uid The userID of the user that created the mood
      */
     public void addMoodtoDB(Mood mood, String uid) {
         String moodID = db.collection("moods").document().getId();
@@ -114,9 +122,9 @@ public class FirebaseDB {
     }
 
     /**
-     * Updates a given mood
-     * @param moodID
-     * @param updates
+     * Updates and existing mood in firebase with the new mood information.
+     * @param moodID Unique ID of the mood to be updated
+     * @param updates Map of the updates
      * @param listener
      */
     public void updateMood(String moodID, Map<String, Object> updates, OnUpdatedListener listener) {
@@ -128,7 +136,7 @@ public class FirebaseDB {
 
     /**
      * Deletes the selected mood from firebase
-     * @param mood
+     * @param mood Specified mood to be deleted
      */
     public void deleteMood(Mood mood) {
         db.collection("moods").document(mood.getMoodID().toString())
@@ -148,9 +156,9 @@ public class FirebaseDB {
     }
 
     /**
-     * Get the list of user moods
-     * @param uid
-     * @return
+     * Returns a list of moods created by a user, from userID
+     * @param uid UserId of the user that created the moods
+     * @return List<Mood> an ArrayList of the moods that a user has created
      */
     // Not sure if this works
     public List<Mood> getMoods(String uid) {
@@ -175,8 +183,7 @@ public class FirebaseDB {
                     Location location = (Location) snapshot.get("location");
 
                     if (userID.equals(uid)) {
-                        User user = getUser(userID);
-                        userMoods.add(new Mood(moodID, user, state, postDate, trigger, photo, socialSituation, location));
+                        userMoods.add(new Mood(moodID, userID, state, postDate, trigger, photo, socialSituation, location));
                     }
 
                 }
@@ -185,19 +192,37 @@ public class FirebaseDB {
         return userMoods;
     }
 
+    /**
+     * To be implemented
+     */
     public interface OnMoodLoadedListener {
         void onMoodsLoaded(List<Mood> moods);
         void onMoodsLoadedFailed(Exception e);
     }
 
+    /**
+     * To be implemented
+     * @param follower
+     * @param followee
+     */
     public void addFollower(User follower, User followee) {
         db.collection("follows").document();
     }
 
+    /**
+     * To be implemented
+     * @param follower
+     * @param followee
+     */
     public void removeFollwer(User follower, User followee) {
 
     }
 
+    /**
+     * To be implemented
+     * @param follower
+     * @param followee
+     */
     public void getFollowers(User follower, User followee) {
 
     }
