@@ -20,18 +20,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class AddMoodEventFragment extends Fragment {
-
+    private HashMap<String, ArrayList<String>> moodMap = new HashMap<>(); // Stores moods by date
+    private ArrayAdapter<String> moodAdapter;
+    private String selectedDate;
     private FragmentAddMoodBinding binding;
     private AddMoodEventViewModel viewModel;
     private String selectedMood;
-    private String selectedDate;
     private ArrayList<String> weekDates;
     private WeekAdapter weekAdapter;
     private ArrayList<String> moodList = new ArrayList<>();
-    private ArrayAdapter<String> moodAdapter;
+
 
     @Nullable
     @Override
@@ -78,26 +80,35 @@ public class AddMoodEventFragment extends Fragment {
         final String[] selectedSocialSituationWrapper = {selectedSocialSituation};
         final String[] optionalTriggerWrapper = {optionalTrigger};
 
+        // 🔹 Listen for the mood event from PostMoodFragment
         getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
             if ("moodEvent".equals(requestKey)) {
                 String newSelectedDate = bundle.getString("selectedDate", "No date selected");
                 String selectedTime = bundle.getString("selectedTime", "No time selected");
                 String selectedMood = bundle.getString("selectedMood", "");
-//                String selectedSocialSituation = bundle.getString("selectedSocialSituation", "No social situation");
-//                String optionalTrigger = bundle.getString("optionalTrigger", "No trigger");
-                // 🔹 Update existing variables instead of redeclaring them
+
                 selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
                 optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
 
                 binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
+
+                // 🔹 Store mood events specific to the selected date
+                if (!moodMap.containsKey(newSelectedDate)) {
+                    moodMap.put(newSelectedDate, new ArrayList<>()); // Initialize list if not present
+                }
+                ArrayList<String> moodsForDate = moodMap.get(newSelectedDate);
+
 
                 // Append new mood event to the list
                 String moodEntry = "Mood: " + selectedMood + "\n"
                         + "Social Situation: " + selectedSocialSituationWrapper[0] + "\n"
                         + "Trigger: " + optionalTriggerWrapper[0] + "\n"
                         + "Time: " + selectedTime;
-                moodList.add(moodEntry);
+                moodsForDate.add(moodEntry);
+              //  moodList.add(moodEntry);
                 moodAdapter.notifyDataSetChanged();
+                selectedDate = newSelectedDate;
+                loadMoodsForDate(newSelectedDate);
             }
         });
 
@@ -171,16 +182,33 @@ public class AddMoodEventFragment extends Fragment {
             }
         }
 
-        // Set up the adapter
         weekAdapter = new WeekAdapter(weekDates, selectedPosition, (position, date) -> {
             selectedDate = convertToFullDate(date);
             viewModel.setSelectedDate(selectedDate);
-            binding.selectedDateTextView.setText("Selected Date: " + date);
+            binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
+
+            // 🔹 Load moods specific to the selected date when switching dates
+            loadMoodsForDate(selectedDate);
         });
 
         binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.weekRecyclerView.setAdapter(weekAdapter);
     }
+    private void loadMoodsForDate(String date) {
+        // 🔹 Clear the current mood list to refresh it for the selected date
+        moodList.clear();
+
+        // 🔹 Check if the selected date has stored moods
+        if (moodMap.containsKey(date) && !moodMap.get(date).isEmpty()) {
+            moodList.addAll(moodMap.get(date)); // Load saved moods for this date
+        }
+
+        // 🔹 Notify adapter to refresh UI
+        if (moodAdapter != null) {
+            moodAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     // Convert "Mon 12" format to "dd-MM-yyyy"
     private String convertToFullDate(String weekDayAndDate) {
