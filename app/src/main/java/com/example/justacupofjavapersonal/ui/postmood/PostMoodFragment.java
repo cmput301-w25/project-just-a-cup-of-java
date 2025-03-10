@@ -115,15 +115,20 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         }
 
         postButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
+            if (dateTextView.getText() == null || timeTextView.getText() == null) {
+                Log.e("PostMoodFragment", "Date or Time is null. Cannot proceed.");
+                return;
+            }
 
-            // Retrieve selected date and mood
-            String selectedDate = dateTextView.getText().toString();
-            bundle.putString("selectedDate", selectedDate);
-            bundle.putString("selectedMood", selectedMood);
+            Bundle result = new Bundle();
+            result.putString("selectedMood", selectedMood);
+            result.putString("selectedDate", dateTextView.getText().toString());
+            result.putString("selectedTime", timeTextView.getText().toString());
 
-            NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.navigation_add_mood, bundle);
+            Log.d("PostMoodFragment", "Sending Mood Data: " + selectedMood);
+
+            getParentFragmentManager().setFragmentResult("moodData", result);
+            requireActivity().onBackPressed(); // Navigate back to AddMoodEventFragment
         });
 
     }

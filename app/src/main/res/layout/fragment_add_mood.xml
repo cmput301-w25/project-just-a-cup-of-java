@@ -61,4 +61,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <Button
+        android:id="@+id/deleteMoodButton"
+        android:layout_width="54dp"
+        android:layout_height="26dp"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:text="Delete"
+        android:textColor="@android:color/white"
+        tools:layout_editor_absoluteX="347dp"
+        tools:layout_editor_absoluteY="705dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
