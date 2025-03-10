@@ -171,9 +171,7 @@ public class FirebaseDB {
             if (value != null && !value.isEmpty()) {
                 for (QueryDocumentSnapshot snapshot : value) {
                     //String moodID, String uid, Date postDate, String trigger, byte[] photo, EmotionalState state, SocialSituation socialSituation, Location location
-                    String _moodID = snapshot.getString("moodID");
-                    if (_moodID == null) { throw new IllegalArgumentException("Mood ID cannot be null"); }
-                    int moodID = Integer.parseInt(_moodID);
+                    String moodID = snapshot.getString("moodID");
                     String userID = snapshot.getString("uid");
                     Date postDate = snapshot.getDate("postDate");
                     String trigger = snapshot.getString("trigger");
