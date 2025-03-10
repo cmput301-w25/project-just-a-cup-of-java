@@ -14,8 +14,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MoodSelectorDialogFragment extends DialogFragment {
+    public MoodSelectorDialogFragment() {
 
+    }
+
+    public interface MoodSelectionListener {
+        void onMoodSelected(String mood);
+    }
     private GridView moodGridView;
+    private MoodSelectionListener moodSelectionListener;
+
+    public MoodSelectorDialogFragment(MoodSelectionListener listener) {
+        this.moodSelectionListener = listener;
+    }
 
     @Nullable
     @Override
@@ -27,7 +38,6 @@ public class MoodSelectorDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
-            // Set width to 85% of screen width
             getDialog().getWindow().setLayout((int) (requireContext().getResources().getDisplayMetrics().widthPixels * 0.85), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
@@ -38,21 +48,22 @@ public class MoodSelectorDialogFragment extends DialogFragment {
 
         moodGridView = view.findViewById(R.id.moodGridView);
 
-        // List of moods with emojis
         ArrayList<String> moods = new ArrayList<>(Arrays.asList(
                 "Happiness 😀", "Fear 😱", "Anger 😡", "Disgust 🤢",
                 "Confused 🤔", "Shame 🤫", "Sadness 😔", "Surprise 😮"
         ));
 
-        // Set up grid adapter
         MoodGridAdapter adapter = new MoodGridAdapter(requireContext(), moods);
         moodGridView.setAdapter(adapter);
 
-        // Handle mood selection
         moodGridView.setOnItemClickListener((parent, view1, position, id) -> {
             String selectedMood = moods.get(position);
             Toast.makeText(requireContext(), "Selected: " + selectedMood, Toast.LENGTH_SHORT).show();
-            dismiss(); // Close the popup
+
+            if (moodSelectionListener != null) {
+                moodSelectionListener.onMoodSelected(selectedMood);
+            }
+            dismiss();
         });
     }
 }

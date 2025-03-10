@@ -51,34 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.576" />
 
-    <Button
-        android:id="@+id/postmoodbutton"
-        android:layout_width="92dp"
-        android:layout_height="39dp"
-        android:backgroundTint="#488685"
-        android:text="Post"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.949"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.94" />
-
-    <Button
-        android:id="@+id/addEmoStateButton"
-        android:layout_width="160dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="132dp"
-        android:backgroundTint="#85BEC8"
-        android:text="Add Emotional State"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-     <!-- Optional Trigger TextField -->
+    <!-- Optional Trigger TextField -->
     <!--     app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.99"app:layout_constraintBottom_toTopOf="@+id/socialSituationSpinner"-->
 
@@ -87,12 +60,40 @@
     <!-- Social Situation Spinner -->
 
     <!-- Why are you feeling this way TextField -->
+    <Button
+        android:id="@+id/postmoodbutton"
+        android:layout_width="152dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#488685"
+        android:text="Post"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.822" />
+
+    <Button
+        android:id="@+id/addEmoStateButton"
+        android:layout_width="160dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="120dp"
+        android:backgroundTint="#85BEC8"
+        android:text="Add Emotional State"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+<!--      //android:hint="Optional trigger"-->
     <EditText
         android:id="@+id/triggerText"
         android:layout_width="411dp"
         android:layout_height="79dp"
         android:layout_marginTop="16dp"
-        android:hint="Optional trigger"
+
+        android:prompt="@string/select_social_prompt"
         android:maxLength="100"
         android:padding="12dp"
         android:textColor="@color/black"
@@ -113,23 +114,24 @@
 
     <ImageView
         android:id="@+id/addPhoto"
-        android:layout_width="95dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="112dp"
+        android:layout_width="120dp"
+        android:layout_height="98dp"
+        android:layout_marginBottom="188dp"
         android:clickable="true"
         android:contentDescription="Add a photo"
         android:focusable="true"
         android:src="@drawable/ic_add_photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.844"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/whyFeel" />
 
     <EditText
         android:id="@+id/whyFeel"
         android:layout_width="406dp"
         android:layout_height="70dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="20dp"
         android:hint="Why are you feeling this way?"
         android:maxLength="20"
         android:padding="12dp"

@@ -1,11 +1,7 @@
 package com.example.justacupofjavapersonal.ui.postmood;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +12,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
 
-import java.io.IOException;
-
-public class PostMoodFragment extends Fragment {
+public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText optionalTriggerEditText;
     private Spinner socialSituationSpinner;
@@ -36,6 +30,8 @@ public class PostMoodFragment extends Fragment {
     private Uri selectedImageUri;
     private TextView dateTextView;
     private TextView timeTextView;
+    private Button addMoodButton;
+    private String selectedMood = "Add Emotional State";
 
     @Nullable
     @Override
@@ -54,7 +50,8 @@ public class PostMoodFragment extends Fragment {
         addPhotoImageView = view.findViewById(R.id.addPhoto);
         dateTextView = view.findViewById(R.id.dateTextView);
         timeTextView = view.findViewById(R.id.timeTextView);
-        //postButton = view.findViewById(R.id.button7);
+        addMoodButton = view.findViewById(R.id.addEmoStateButton);
+        postButton = view.findViewById(R.id.postmoodbutton);
 
         // Get arguments passed from AddMoodEventFragment
         Bundle args = getArguments();
@@ -75,16 +72,33 @@ public class PostMoodFragment extends Fragment {
         }
 
 
-        // Set up the Spinner (dropdown) for Social Situation
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getContext(),
-                R.array.social_situation_options, // This is the array from strings.xml
-                android.R.layout.simple_spinner_item
-        );
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.social_situation_options)
+        ) {
+            @Override
+            public boolean isEnabled(int position) {
+                // Disable the first item ("Select a social situation") to prevent selection
+                return position != 0;
+            }
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    // Grey out the first item
+                    textView.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                } else {
+                    textView.setTextColor(getResources().getColor(android.R.color.black));
+                }
+                return view;
+            }
+        };
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         socialSituationSpinner.setAdapter(adapter);
-        // Add Photo Click Event
-//        addPhotoImageView.setOnClickListener(v -> openGallery());
+        socialSituationSpinner.setSelection(0);
 
         // Find the "Add Emotional State" button
         View addMoodButton = view.findViewById(R.id.addEmoStateButton);
@@ -93,33 +107,32 @@ public class PostMoodFragment extends Fragment {
         if (addMoodButton != null) {
             // Open Mood Selector Dialog when button is clicked
             addMoodButton.setOnClickListener(v -> {
-                MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment();
+                MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment(this);
                 moodDialog.show(getParentFragmentManager(), "MoodSelector");
             });
         } else {
             Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
+
+        postButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+
+            // Retrieve selected date and mood
+            String selectedDate = dateTextView.getText().toString();
+            bundle.putString("selectedDate", selectedDate);
+            bundle.putString("selectedMood", selectedMood);
+
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.navigation_add_mood, bundle);
+        });
+
     }
-//    private void openGallery() {
-////        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-////        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        intent.setType("image/*");
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-//    }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-//            selectedImageUri = data.getData();
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
-//                addPhotoImageView.setImageBitmap(bitmap); // Set the selected image
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+
+    @Override
+    public void onMoodSelected(String mood) {
+        selectedMood = mood;
+        if (addMoodButton != null) {
+            addMoodButton.setText(mood);
+        }
+    }
 }
