@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="410dp"
+        android:layout_width="330dp"
         android:layout_height="70dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
 
         <!-- User -->
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="2dp"
@@ -41,7 +41,7 @@
 
             <!-- Display Name -->
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/feedName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -54,7 +54,7 @@
 
             <!-- Time -->
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/feedTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -83,11 +83,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:src="@drawable/socialsituation1"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
             <!-- Photo Indicator -->
             <ImageView
@@ -95,11 +97,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:src="@drawable/mood_hasphoto"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
             <!-- Explanation Indicator -->
             <ImageView
@@ -107,11 +111,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:src="@drawable/mood_hasexplanation"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
             <!-- Location Indicator -->
             <ImageView
@@ -119,11 +125,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:src="@drawable/mood_haslocation"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
         </LinearLayout>
 

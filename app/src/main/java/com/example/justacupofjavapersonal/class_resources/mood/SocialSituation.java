@@ -1,4 +1,4 @@
-package com.example.justacupofjavapersonal.class_resources;
+package com.example.justacupofjavapersonal.class_resources.mood;
 
 public enum SocialSituation {
     ALONE,

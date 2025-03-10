@@ -1,13 +1,15 @@
-package com.example.justacupofjavapersonal.class_resources;
+package com.example.justacupofjavapersonal.class_resources.mood;
 
 import android.location.Location;
+
+import com.example.justacupofjavapersonal.class_resources.User;
 
 import java.util.Date;
 
 public class Mood {
 
-    private final String moodID; // Immutable: Unique ID for the mood event
-    private String uid; // Mutable: Unique username, with setter
+    private final Integer moodID; // Immutable: Unique ID for the mood event
+    private User user; // Mutable: Unique username, with setter
     private final Date postDate; // Immutable: Date and time of the mood event
     private String trigger; //max 20 characters and is optional
     private byte[] photo; //optional
@@ -15,12 +17,16 @@ public class Mood {
     private SocialSituation socialSituation; //optional
     private Location location; //optional
 
+    private boolean hasPhoto = false;
+    private boolean hasLocation = false;
+    private boolean hasSocialSituation = false;
+    private boolean hasTrigger = false;
 
-    public Mood(String moodID, String uid, EmotionalState state, Date postDate) {
+    public Mood(Integer moodID, User user, EmotionalState state, Date postDate) {
         if (moodID == null) {
             throw new IllegalArgumentException("Mood ID is required.");
         }
-        if (uid == null) {
+        if (user == null) {
             throw new IllegalArgumentException("Username is required.");
         }
         if (state == null) {
@@ -30,7 +36,7 @@ public class Mood {
             throw new IllegalArgumentException("Post date is required.");
         }
         this.moodID = moodID;
-        this.uid = uid;
+        this.user = user;
         this.state = state;
         this.postDate = postDate;
 
@@ -41,16 +47,14 @@ public class Mood {
         this.location = null;
     }
 
-    public Mood(String moodID, String uid, Date postDate, String trigger, byte[] photo, EmotionalState state, SocialSituation socialSituation, Location location) {
-        this.moodID = moodID;
-        this.uid = uid;
-        this.postDate = postDate;
-        this.state = state;
 
-        this.trigger = trigger;
-        this.photo = photo;
-        this.socialSituation = socialSituation;
-        this.location = location;
+    public Mood(Integer moodID, User user, EmotionalState state, Date postDate,
+                String trigger, byte[] photo, SocialSituation socialSituation, Location location) {
+        this(moodID, user, state, postDate);
+        this.setTrigger(trigger);
+        this.setPhoto(photo);
+        this.setSocialSituation(socialSituation);
+        this.setLocation(location);
     }
 
     public SocialSituation getSocialSituation() {
@@ -59,6 +63,7 @@ public class Mood {
 
     public void setSocialSituation(SocialSituation socialSituation) {
         this.socialSituation = socialSituation;
+        this.hasSocialSituation = socialSituation != null;
     }
 
     public EmotionalState getState() {
@@ -74,23 +79,26 @@ public class Mood {
     }
 
     public void setTrigger(String trigger) {
-
-        if(trigger.length() > 20){
+        if (trigger.length() > 20) {
             throw new IllegalArgumentException("Trigger must be 20 characters at most.");
         }
         this.trigger = trigger;
+        this.hasTrigger = trigger != null && !trigger.isEmpty();
     }
 
     public Date getPostDate() {
         return postDate;
     }
 
-
-    public String getUid() {
-        return uid;
+    public User getUsername() {
+        return user;
     }
 
-    public String getMoodId() {
+    public void setUsername(User user) {
+        this.user = user;
+    }
+
+    public Integer getMoodID() {
         return moodID;
     }
 
@@ -103,6 +111,7 @@ public class Mood {
             throw new IllegalArgumentException("Photo must be under 65536 bytes.");
         }
         this.photo = photo;
+        this.hasPhoto = photo != null;
     }
 
     public Location getLocation() {
@@ -111,13 +120,30 @@ public class Mood {
 
     public void setLocation(Location location) {
         this.location = location;
+        this.hasLocation = location != null;
+    }
+
+    public boolean hasPhoto() {
+        return hasPhoto;
+    }
+
+    public boolean hasLocation() {
+        return hasLocation;
+    }
+
+    public boolean hasSocialSituation() {
+        return hasSocialSituation;
+    }
+
+    public boolean hasTrigger() {
+        return hasTrigger;
     }
 
     @Override
     public String toString() { //useful for debugging purposes. Doesn't include photo
         return "Mood{" +
                 "moodID=" + moodID +
-                ", uid='" + uid + '\'' +
+                ", username='" + user.getUsername() + '\'' +
                 ", postDate=" + postDate +
                 ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
                 ", emotionalState=" + state +
@@ -126,6 +152,4 @@ public class Mood {
                 ", location=" + (location == null ? "None" : location.toString()) +
                 '}';
     }
-
-
 }
