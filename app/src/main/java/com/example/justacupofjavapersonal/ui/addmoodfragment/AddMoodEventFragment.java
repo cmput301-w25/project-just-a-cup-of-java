@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,16 +41,34 @@ public class AddMoodEventFragment extends Fragment {
         binding = FragmentAddMoodBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         viewModel = new ViewModelProvider(this).get(AddMoodEventViewModel.class);
+// Retrieve values from arguments
+        String selectedSocialSituation = "No social situation";
+        String optionalTrigger = "No trigger";
 
         if (getArguments() != null) {
+//            moodList.clear();  // Clear the existing list so it won't get overwritten
+
             String calendarSelectedDate = AddMoodEventFragmentArgs.fromBundle(getArguments()).getSelectedDate();
             selectedMood = getArguments().getString("selectedMood", "");
+            selectedSocialSituation = getArguments().getString("selectedSocialSituation", "No social situation");
+            optionalTrigger = getArguments().getString("optionalTrigger", "No trigger");
+
             viewModel.initializeSelectedDate(calendarSelectedDate);
 
             if (selectedMood != null && !selectedMood.isEmpty()) {
-                moodList.add(selectedMood);
+                moodList.add("Mood: " + selectedMood);
+            }
+
+            // Add social situation and optional trigger to the list
+            if (!selectedSocialSituation.equals("No social situation")) {
+                moodList.add("Social Situation: " + selectedSocialSituation);
+            }
+            if (!optionalTrigger.equals("No trigger")) {
+                moodList.add("Trigger: " + optionalTrigger);
             }
         }
+        setupMoodList();
+
 
         viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
             selectedDate = date;
@@ -57,7 +77,7 @@ public class AddMoodEventFragment extends Fragment {
             setupWeekRecyclerView();
         });
 
-        setupMoodList();
+
 
         binding.addingMood.setOnClickListener(v -> {
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
@@ -78,6 +98,8 @@ public class AddMoodEventFragment extends Fragment {
     private void setupMoodList() {
         moodAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, moodList);
         binding.moodListView.setAdapter(moodAdapter);
+        moodAdapter.notifyDataSetChanged();
+
     }
 
     private ArrayList<String> getWeekDates(String selectedDate) {

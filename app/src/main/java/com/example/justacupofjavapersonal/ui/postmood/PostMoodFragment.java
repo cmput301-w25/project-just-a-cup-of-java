@@ -119,8 +119,15 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
             // Retrieve selected date and mood
             String selectedDate = dateTextView.getText().toString();
+            String selectedMood = this.selectedMood;
+            String selectedSocialSituation = socialSituationSpinner.getSelectedItem().toString();
+            String optionalTrigger = optionalTriggerEditText.getText().toString();
+
             bundle.putString("selectedDate", selectedDate);
             bundle.putString("selectedMood", selectedMood);
+            bundle.putString("selectedSocialSituation", selectedSocialSituation);
+            bundle.putString("optionalTrigger", optionalTrigger);
+
 
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.navigation_add_mood, bundle);
