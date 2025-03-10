@@ -141,6 +141,7 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
+    // Get the week dates based on the selected date
     private ArrayList<String> getWeekDates(String selectedDate) {
         ArrayList<String> weekList = new ArrayList<>();
         try {
@@ -159,6 +160,7 @@ public class AddMoodEventFragment extends Fragment {
         return weekList;
     }
 
+    // Setup the week RecyclerView (Keeps week display the same while allowing date selection)
     private void setupWeekRecyclerView() {
         if (weekDates == null || weekDates.isEmpty()) {
             Log.e("AddMoodEventFragment", "weekDates is null or empty. Cannot setup RecyclerView.");
@@ -175,6 +177,7 @@ public class AddMoodEventFragment extends Fragment {
             e.printStackTrace();
         }
 
+        // Find the position of the selected date in the week
         for (int i = 0; i < weekDates.size(); i++) {
             if (weekDates.get(i).equals(formattedSelectedDate)) {
                 selectedPosition = i;
@@ -186,6 +189,8 @@ public class AddMoodEventFragment extends Fragment {
             selectedDate = convertToFullDate(date);
             viewModel.setSelectedDate(selectedDate);
             binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
+
+            // 🔹 Load moods specific to the selected date when switching dates
             loadMoodsForDate(selectedDate);
         });
 
@@ -194,19 +199,31 @@ public class AddMoodEventFragment extends Fragment {
     }
 
     private void loadMoodsForDate(String date) {
+        // 🔹 Clear the current mood list to refresh it for the selected date
         moodList.clear();
+
+        // 🔹 Check if the selected date has stored moods
         if (moodMap.containsKey(date) && !moodMap.get(date).isEmpty()) {
-            moodList.addAll(moodMap.get(date));
+            moodList.addAll(moodMap.get(date)); // Load saved moods for this date
         }
-        moodAdapter.notifyDataSetChanged();
+
+        // 🔹 Notify adapter to refresh UI
+        if (moodAdapter != null) {
+            moodAdapter.notifyDataSetChanged();
+        }
     }
 
+    // Convert "Mon 12" format to "dd-MM-yyyy"
     private String convertToFullDate(String weekDayAndDate) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("EEE dd", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
             Date date = inputFormat.parse(weekDayAndDate);
-            return outputFormat.format(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
+            calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+            return outputFormat.format(calendar.getTime());
         } catch (Exception e) {
             e.printStackTrace();
             return "Invalid Date";
