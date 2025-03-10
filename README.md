@@ -1,5 +1,4 @@
-# CMPUT 301 W25 - Team [Team Name]
-
+# CMPUT 301 W25 - Team Just a Cup of Java
 ## Team Members
 
 | Name        | CCID   | GitHub Username |
