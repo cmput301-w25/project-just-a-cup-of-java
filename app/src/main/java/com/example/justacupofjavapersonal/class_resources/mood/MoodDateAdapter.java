@@ -96,7 +96,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
 
-            moodHolder.feedName.setText(mood.getUsername().getName());
+            moodHolder.feedName.setText(mood.getUid());
             long timeDifference = System.currentTimeMillis() - mood.getPostDate().getTime();
             long seconds = timeDifference / 1000;
             long minutes = seconds / 60;
