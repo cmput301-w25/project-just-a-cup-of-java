@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.justacupofjavapersonal.class_resources.mood.EmotionalState;
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
+import com.example.justacupofjavapersonal.class_resources.mood.SocialSituation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.example.justacupofjavapersonal.class_resources.User;
 
 import org.w3c.dom.Document;
 
@@ -70,19 +74,21 @@ public class FirebaseDB {
 
     //Add method for updating email and password, separate from updates
 
-    // Add implementation later
-//    public User getUserData(String uid) {
-//        DocumentReference docRef = db.collection("users").document(uid);
-//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            User userData;
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                userData = documentSnapshot.toObject(User.class);
-//
-//            }
-//            return userData;
-//        });
-//    }
+    public User getUser(String uid) {
+        DocumentReference docRef = db.collection("users").document(uid);
+        final User[] userData = new User[1];
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            userData[0] = documentSnapshot.toObject(User.class);
+        }).addOnFailureListener(e -> {
+            Log.e("Get User Data", "Error loading user data", e);
+        });
+        return userData[0];
+    }
+
+    public interface OnUserDataLoadedListener {
+        void onUserDataLoaded(User user);
+        void onUserDataLoadFailed(Exception e);
+    }
 
     public interface OnUpdatedListener {
         void onUpdateSuccess();
@@ -125,7 +131,7 @@ public class FirebaseDB {
      * @param mood
      */
     public void deleteMood(Mood mood) {
-        db.collection("moods").document(mood.getMoodId())
+        db.collection("moods").document(mood.getMoodID().toString())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -157,7 +163,9 @@ public class FirebaseDB {
             if (value != null && !value.isEmpty()) {
                 for (QueryDocumentSnapshot snapshot : value) {
                     //String moodID, String uid, Date postDate, String trigger, byte[] photo, EmotionalState state, SocialSituation socialSituation, Location location
-                    String moodID = snapshot.getString("moodID");
+                    String _moodID = snapshot.getString("moodID");
+                    if (_moodID == null) { throw new IllegalArgumentException("Mood ID cannot be null"); }
+                    int moodID = Integer.parseInt(_moodID);
                     String userID = snapshot.getString("uid");
                     Date postDate = snapshot.getDate("postDate");
                     String trigger = snapshot.getString("trigger");
@@ -167,7 +175,8 @@ public class FirebaseDB {
                     Location location = (Location) snapshot.get("location");
 
                     if (userID.equals(uid)) {
-                        userMoods.add(new Mood(moodID, userID, postDate, trigger, photo, state, socialSituation, location));
+                        User user = getUser(userID);
+                        userMoods.add(new Mood(moodID, user, state, postDate, trigger, photo, socialSituation, location));
                     }
 
                 }

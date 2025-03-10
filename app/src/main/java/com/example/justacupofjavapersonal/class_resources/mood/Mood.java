@@ -47,6 +47,16 @@ public class Mood {
         this.location = null;
     }
 
+
+    public Mood(Integer moodID, User user, EmotionalState state, Date postDate,
+                String trigger, byte[] photo, SocialSituation socialSituation, Location location) {
+        this(moodID, user, state, postDate);
+        this.setTrigger(trigger);
+        this.setPhoto(photo);
+        this.setSocialSituation(socialSituation);
+        this.setLocation(location);
+    }
+
     public SocialSituation getSocialSituation() {
         return this.socialSituation;
     }

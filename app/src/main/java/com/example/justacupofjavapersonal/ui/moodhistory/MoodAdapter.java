@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.widget.ArrayAdapter;
 import com.example.justacupofjavapersonal.R;
-import com.example.justacupofjavapersonal.class_resources.Mood;
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
