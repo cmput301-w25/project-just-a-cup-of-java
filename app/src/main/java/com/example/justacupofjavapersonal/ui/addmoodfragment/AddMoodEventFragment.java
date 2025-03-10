@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,8 +12,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.databinding.FragmentAddMoodBinding;
+import com.example.justacupofjavapersonal.ui.mood.MoodActionsAdapter;
 import com.example.justacupofjavapersonal.ui.weekadapter.WeekAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.Locale;
 
 public class AddMoodEventFragment extends Fragment {
     private HashMap<String, ArrayList<String>> moodMap = new HashMap<>(); // Stores moods by date
-    private ArrayAdapter<String> moodAdapter;
     private String selectedDate;
     private FragmentAddMoodBinding binding;
     private AddMoodEventViewModel viewModel;
@@ -33,7 +33,7 @@ public class AddMoodEventFragment extends Fragment {
     private ArrayList<String> weekDates;
     private WeekAdapter weekAdapter;
     private ArrayList<String> moodList = new ArrayList<>();
-
+    private MoodActionsAdapter moodAdapter;
 
     @Nullable
     @Override
@@ -66,8 +66,8 @@ public class AddMoodEventFragment extends Fragment {
             }
         }
 
-        // Setup mood list
-        setupMoodList();
+        // Setup mood list with RecyclerView
+        setupMoodRecyclerView();
 
         // Observe selected date from ViewModel
         viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
@@ -76,7 +76,7 @@ public class AddMoodEventFragment extends Fragment {
             weekDates = getWeekDates(selectedDate);
             setupWeekRecyclerView();
         });
-// Use a final array wrapper to store selectedSocialSituation and optionalTrigger
+
         final String[] selectedSocialSituationWrapper = {selectedSocialSituation};
         final String[] optionalTriggerWrapper = {optionalTrigger};
 
@@ -98,7 +98,6 @@ public class AddMoodEventFragment extends Fragment {
                 }
                 ArrayList<String> moodsForDate = moodMap.get(newSelectedDate);
 
-
                 // Append new mood event to the list
                 String moodEntry = "Mood: " + selectedMood + "\n"
                         + "Social Situation: " + selectedSocialSituationWrapper[0] + "\n"
@@ -110,7 +109,6 @@ public class AddMoodEventFragment extends Fragment {
                 loadMoodsForDate(newSelectedDate);
             }
         });
-
 
         // Handle "Add Mood" button click
         binding.addingMood.setOnClickListener(v -> {
@@ -129,15 +127,20 @@ public class AddMoodEventFragment extends Fragment {
         return view;
     }
 
-    // Setup mood list adapter
-    private void setupMoodList() {
-        moodAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, moodList);
+    // Setup mood list adapter using RecyclerView
+    private void setupMoodRecyclerView() {
+        moodAdapter = new MoodActionsAdapter(getContext(), moodList, position -> deleteMood(position));
+        binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.moodListView.setAdapter(moodAdapter);
-
-        moodAdapter.notifyDataSetChanged();
     }
 
-    // Get the week dates based on the selected date
+    private void deleteMood(int position) {
+        if (position >= 0 && position < moodList.size()) {
+            moodList.remove(position);
+            moodAdapter.notifyItemRemoved(position);
+        }
+    }
+
     private ArrayList<String> getWeekDates(String selectedDate) {
         ArrayList<String> weekList = new ArrayList<>();
         try {
@@ -156,7 +159,6 @@ public class AddMoodEventFragment extends Fragment {
         return weekList;
     }
 
-    // Setup the week RecyclerView (Keeps week display the same while allowing date selection)
     private void setupWeekRecyclerView() {
         if (weekDates == null || weekDates.isEmpty()) {
             Log.e("AddMoodEventFragment", "weekDates is null or empty. Cannot setup RecyclerView.");
@@ -173,7 +175,6 @@ public class AddMoodEventFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // Find the position of the selected date in the week
         for (int i = 0; i < weekDates.size(); i++) {
             if (weekDates.get(i).equals(formattedSelectedDate)) {
                 selectedPosition = i;
@@ -185,41 +186,27 @@ public class AddMoodEventFragment extends Fragment {
             selectedDate = convertToFullDate(date);
             viewModel.setSelectedDate(selectedDate);
             binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
-
-            // 🔹 Load moods specific to the selected date when switching dates
             loadMoodsForDate(selectedDate);
         });
 
         binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.weekRecyclerView.setAdapter(weekAdapter);
     }
+
     private void loadMoodsForDate(String date) {
-        // 🔹 Clear the current mood list to refresh it for the selected date
         moodList.clear();
-
-        // 🔹 Check if the selected date has stored moods
         if (moodMap.containsKey(date) && !moodMap.get(date).isEmpty()) {
-            moodList.addAll(moodMap.get(date)); // Load saved moods for this date
+            moodList.addAll(moodMap.get(date));
         }
-
-        // 🔹 Notify adapter to refresh UI
-        if (moodAdapter != null) {
-            moodAdapter.notifyDataSetChanged();
-        }
+        moodAdapter.notifyDataSetChanged();
     }
 
-
-    // Convert "Mon 12" format to "dd-MM-yyyy"
     private String convertToFullDate(String weekDayAndDate) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("EEE dd", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
             Date date = inputFormat.parse(weekDayAndDate);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
-            calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-            return outputFormat.format(calendar.getTime());
+            return outputFormat.format(date);
         } catch (Exception e) {
             e.printStackTrace();
             return "Invalid Date";
