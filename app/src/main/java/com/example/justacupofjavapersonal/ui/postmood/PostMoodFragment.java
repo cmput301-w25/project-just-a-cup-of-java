@@ -113,22 +113,48 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         } else {
             Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
+//WORKING
+//        postButton.setOnClickListener(v -> {
+//            Bundle bundle = new Bundle();
+//
+//            // Retrieve selected date and mood
+//            String selectedDate = dateTextView.getText().toString();
+//            //added
+//            String selectedTime = timeTextView.getText().toString();
+//            //added
+//            String selectedMood = this.selectedMood;
+//            String selectedSocialSituation = socialSituationSpinner.getSelectedItem().toString();
+//            String optionalTrigger = optionalTriggerEditText.getText().toString();
+//
+//            bundle.putString("selectedDate", selectedDate);
+//            //added
+//            bundle.putString("selectedTime", selectedTime);
+//            //added
+//            bundle.putString("selectedMood", selectedMood);
+//            bundle.putString("selectedSocialSituation", selectedSocialSituation);
+//            bundle.putString("optionalTrigger", optionalTrigger);
+//
+//
+//            NavController navController = Navigation.findNavController(v);
+//            navController.navigate(R.id.navigation_add_mood, bundle);
+//        });
+        //WORKING
 
+        //NEW TRY
         postButton.setOnClickListener(v -> {
-            if (dateTextView.getText() == null || timeTextView.getText() == null) {
-                Log.e("PostMoodFragment", "Date or Time is null. Cannot proceed.");
-                return;
-            }
-
             Bundle result = new Bundle();
-            result.putString("selectedMood", selectedMood);
             result.putString("selectedDate", dateTextView.getText().toString());
             result.putString("selectedTime", timeTextView.getText().toString());
+            result.putString("selectedMood", selectedMood);
+            result.putString("selectedSocialSituation", socialSituationSpinner.getSelectedItem().toString());
+            result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
 
-            Log.d("PostMoodFragment", "Sending Mood Data: " + selectedMood);
+            // Send the result back to AddMoodEventFragment
+            getParentFragmentManager().setFragmentResult("moodEvent", result);
 
-            getParentFragmentManager().setFragmentResult("moodData", result);
-            requireActivity().onBackPressed(); // Navigate back to AddMoodEventFragment
+            // Navigate back
+            NavController navController = Navigation.findNavController(v);
+            navController.popBackStack();
         });
 
     }
