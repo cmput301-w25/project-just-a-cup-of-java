@@ -136,8 +136,16 @@ public class AddMoodEventFragment extends Fragment {
 
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
+            String moodToDelete = moodList.get(position);
             moodList.remove(position);
             moodAdapter.notifyItemRemoved(position);
+
+            // Also remove the mood from the moodMap for the selected date
+            if (moodMap.containsKey(selectedDate)) {
+                ArrayList<String> moodsForDate = moodMap.get(selectedDate);
+                moodsForDate.remove(moodToDelete);  // Remove the specific mood entry
+                moodMap.put(selectedDate, moodsForDate); // Update the map
+            }
         }
     }
 
