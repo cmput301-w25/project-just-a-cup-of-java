@@ -110,15 +110,6 @@ public class UserInfoFragment extends Fragment {
                                 editUsername.setText(user.getUsername());
                                 editEmail.setText(user.getEmail());
                                 if (user.getBio() != null) editBio.setText(user.getBio());
-
-                                if (documentSnapshot.contains("profilePic")) {
-                                    Blob imageBlob = documentSnapshot.getBlob("profilePic");
-                                    if (imageBlob != null) {
-                                        byte[] imageBytes = imageBlob.toBytes();
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                                        profileImage.setImageBitmap(bitmap);
-                                    }
-                                }
                             }
                         }
                     })
