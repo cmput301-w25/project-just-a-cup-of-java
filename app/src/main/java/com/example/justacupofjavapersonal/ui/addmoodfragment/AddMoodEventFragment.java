@@ -104,6 +104,7 @@ public class AddMoodEventFragment extends Fragment {
                         + "Trigger: " + optionalTriggerWrapper[0] + "\n"
                         + "Time: " + selectedTime;
                 moodsForDate.add(moodEntry);
+                
                 moodAdapter.notifyDataSetChanged();
                 selectedDate = newSelectedDate;
                 loadMoodsForDate(newSelectedDate);
