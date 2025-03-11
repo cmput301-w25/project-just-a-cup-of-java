@@ -40,7 +40,6 @@ public class ChangePasswordFragment extends Fragment {
             Log.e("ChangePasswordFragment", "Change password button clicked");
             changePassword();
         });
-
         return view;
     }
 
@@ -72,7 +71,6 @@ public class ChangePasswordFragment extends Fragment {
             confirmPasswordBox.setError("Passwords do not match");
             return;
         }
-
         FirebaseUser user = mAuth.getCurrentUser();
 
         user.updatePassword(newPassword)
