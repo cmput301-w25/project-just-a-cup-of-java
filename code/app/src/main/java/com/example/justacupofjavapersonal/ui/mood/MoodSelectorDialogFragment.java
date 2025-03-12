@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.mood.EmotionalState;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -81,8 +83,8 @@ public class MoodSelectorDialogFragment extends DialogFragment {
         moodGridView = view.findViewById(R.id.moodGridView);
 
         ArrayList<String> moods = new ArrayList<>(Arrays.asList(
-                "Happiness 😀", "Fear 😱", "Anger 😡", "Disgust 🤢",
-                "Confused 🤔", "Shame 🤫", "Sadness 😔", "Surprise 😮"
+                EmotionalState.HAPPINESS.getState(), EmotionalState.FEAR.getState(), EmotionalState.ANGER.getState(), EmotionalState.DISGUST.getState(),EmotionalState.AWKWARD.getState(),
+                EmotionalState.CONFUSION.getState(), EmotionalState.SHAME.getState(), EmotionalState.SADNESS.getState(), EmotionalState.SURPRISE.getState()
         ));
 
         MoodGridAdapter adapter = new MoodGridAdapter(requireContext(), moods);

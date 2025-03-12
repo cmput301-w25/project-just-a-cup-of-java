@@ -61,10 +61,10 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     /**
      * Returns the view type of the item at the specified position.
-     * 
+     *
      * @param position The position of the item within the adapter's data set.
-     * @return An integer representing the view type of the item. 
-     *         Returns VIEW_TYPE_MOOD if the item at the specified position is a mood, 
+     * @return An integer representing the view type of the item.
+     *         Returns VIEW_TYPE_MOOD if the item at the specified position is a mood,
      *         otherwise returns VIEW_TYPE_DATE.
      */
     @Override
@@ -100,7 +100,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         FeedItem item = feedList.get(position);
-        
+
         if (holder instanceof MoodViewHolder) {
             Mood mood = item.getMood();
             MoodViewHolder moodHolder = (MoodViewHolder) holder;
@@ -108,16 +108,16 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 // on hold until database is put here
             if (mood.getSocialSituation() != null) {
                 switch (mood.getSocialSituation()) {
-                    case ALONE:
+                    case "ALONE":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation1);
                         break;
-                    case WITH_ONE_OTHER:
+                    case "WITH_ONE_OTHER":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation2);
                         break;
-                    case WITH_TWO_TO_SEVERAL:
+                    case "WITH_TWO_TO_SEVERAL":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation3);
                         break;
-                    case WITH_A_CROWD:
+                    case "WITH_A_CROWD":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation3);
                         break;
                     default:
@@ -144,8 +144,8 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else {
                 moodHolder.feedTime.setText("now");
             }
-            
-            
+
+
             // i dont have any other moods rn lol
             switch (mood.getState()) {
                 case HAPPINESS:

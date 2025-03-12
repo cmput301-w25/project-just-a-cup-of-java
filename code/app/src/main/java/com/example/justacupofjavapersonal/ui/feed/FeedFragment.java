@@ -64,11 +64,11 @@ public class FeedFragment extends Fragment {
         m1.setPhoto("photo".getBytes());
         m2.setTrigger("trigger");
         m2.setLocation(l1);
-        m3.setSocialSituation(SocialSituation.WITH_TWO_TO_SEVERAL);
+        m3.setSocialSituation("WITH_TWO_TO_SEVERAL");
         m4.setPhoto("photo".getBytes());
         m4.setTrigger("trigger");
         m4.setLocation(l1);
-        m4.setSocialSituation(SocialSituation.WITH_ONE_OTHER);
+        m4.setSocialSituation("WITH_ONE_OTHER");
 
         moods.add(m1);
         moods.add(m2);

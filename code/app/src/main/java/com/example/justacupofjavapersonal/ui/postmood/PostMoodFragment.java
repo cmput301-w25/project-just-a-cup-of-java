@@ -18,7 +18,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
+import com.example.justacupofjavapersonal.class_resources.User;
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * PostMoodFragment is a fragment that allows the user to post a mood event.
@@ -35,6 +41,13 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private TextView timeTextView;
     private Button addMoodButton;
     private String selectedMood = "Add Emotional State";
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private FirebaseDB firebaseDB;
+
+    private User user;
+    private Mood moodPost;
 
     /**
      * Called to do initial creation of a fragment.
@@ -174,12 +187,36 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
         //NEW TRY
         postButton.setOnClickListener(v -> {
+
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                db.collection("users").document(currentUser.getUid())
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        user = documentSnapshot.toObject(User.class);
+                                    }
+                        });
+            }
+
+            moodPost = new Mood()  ;
+
+
             Bundle result = new Bundle();
             result.putString("selectedDate", dateTextView.getText().toString());
+            moodPost.setDate(dateTextView.getText().toString());
             result.putString("selectedTime", timeTextView.getText().toString());
+            moodPost.setTime(timeTextView.getText().toString());
             result.putString("selectedMood", selectedMood);
+            moodPost.setEmotion(selectedMood);
             result.putString("selectedSocialSituation", socialSituationSpinner.getSelectedItem().toString());
+            moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
             result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
+            moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+
+            firebaseDB = new FirebaseDB();
+
+            firebaseDB.addMoodtoDB(moodPost, user.getUid());
 
             // Send the result back to AddMoodEventFragment
             getParentFragmentManager().setFragmentResult("moodEvent", result);
