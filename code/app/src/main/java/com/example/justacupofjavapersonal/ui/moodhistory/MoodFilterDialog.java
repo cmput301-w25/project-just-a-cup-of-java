@@ -68,13 +68,9 @@ public class MoodFilterDialog extends DialogFragment {
         applyButton.setOnClickListener(v -> {
             boolean recentWeek = recentWeekCheckBox.isChecked();
             String emotion = emotionSpinner.getSelectedItem().toString();
-            // Ignore the default placeholder if it's selected
-            if (emotion.equals("Select an emotion")) {
-                emotion = null; // No filter applied
-            }
             String reasonKeyword = reasonEditText.getText().toString().trim();
 
-            filterListener.onFilterApplied(recentWeek, emotion.equals("Any") ? null : emotion, reasonKeyword);
+            filterListener.onFilterApplied(recentWeek, emotion.equals("Select an emotion") ? null : emotion, reasonKeyword);
             dismiss();
         });
 
