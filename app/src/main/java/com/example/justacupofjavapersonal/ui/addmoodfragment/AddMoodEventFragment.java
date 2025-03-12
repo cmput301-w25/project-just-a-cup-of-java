@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.databinding.FragmentAddMoodBinding;
-import com.example.justacupofjavapersonal.ui.mood.MoodActionsAdapter;
+import com.example.justacupofjavapersonal.ui.addmoodfragment.MoodActionsAdapter;
 import com.example.justacupofjavapersonal.ui.weekadapter.WeekAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

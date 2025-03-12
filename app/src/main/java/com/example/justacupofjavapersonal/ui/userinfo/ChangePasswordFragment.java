@@ -18,30 +18,41 @@ import com.example.justacupofjavapersonal.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * A {@link Fragment} that provides a user interface to change the current user's password.
+ * <p>
+ * This fragment allows a user to input a new password and confirm it. It validates the inputs
+ * and, upon successful validation, updates the user's password using Firebase Authentication.
+ * </p>
+ */
 public class ChangePasswordFragment extends Fragment {
 
     private EditText passwordBox, confirmPasswordBox;
     private Button changePasswordButton;
     private FirebaseAuth mAuth;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e("ChangePasswordFragment", "onCreateView started");
         View view = inflater.inflate(R.layout.change_password, container, false);
 
+        // Initialize Firebase Authentication instance.
         mAuth = FirebaseAuth.getInstance();
 
+        // Bind UI elements.
         passwordBox = view.findViewById(R.id.passwordEditText);
         confirmPasswordBox = view.findViewById(R.id.confirmPasswordEditText);
         changePasswordButton = view.findViewById(R.id.changePasswordButton);
 
-        // Set up button listener
+        // Set up the change password button click listener.
         changePasswordButton.setOnClickListener(v -> {
             Log.e("ChangePasswordFragment", "Change password button clicked");
             changePassword();
         });
         return view;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -53,8 +64,19 @@ public class ChangePasswordFragment extends Fragment {
         });
     }
 
-
-
+    /**
+     * Attempts to change the user's password using the provided new password and confirmation password.
+     * <p>
+     * The method performs several validation checks:
+     * <ul>
+     *     <li>Ensures that the new password field is not empty.</li>
+     *     <li>Checks that the new password is at least 6 characters long.</li>
+     *     <li>Confirms that the new password and the confirmation password match.</li>
+     * </ul>
+     * If all validations pass, the method updates the user's password through Firebase Authentication,
+     * and displays a corresponding Toast message for success or failure.
+     * </p>
+     */
     private void changePassword() {
         String newPassword = passwordBox.getText().toString().trim();
         String confirmPassword = confirmPasswordBox.getText().toString().trim();
@@ -81,11 +103,4 @@ public class ChangePasswordFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to update password: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
 }
-
-
-
-
-
-

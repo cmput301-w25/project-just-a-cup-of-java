@@ -31,6 +31,9 @@ import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+/**
+ * Fragment that displays and allows editing of the user's profile information.
+ */
 public class UserInfoFragment extends Fragment {
     private ImageView backArrow, profileImage;
     private TextView changePicture;
@@ -39,8 +42,6 @@ public class UserInfoFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
-
 
     private User user;
 
@@ -74,10 +75,6 @@ public class UserInfoFragment extends Fragment {
     private void setupListeners(View view) {
         NavController navController = Navigation.findNavController(view);
 
-
-
-
-
         btnSave.setOnClickListener(v -> {
             saveProfileChanges();
             navController.navigate(R.id.navigation_home);
@@ -93,7 +90,6 @@ public class UserInfoFragment extends Fragment {
             navController.navigate(R.id.navigation_login);
             Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
         });
-
     }
 
     private void loadUserData() {
