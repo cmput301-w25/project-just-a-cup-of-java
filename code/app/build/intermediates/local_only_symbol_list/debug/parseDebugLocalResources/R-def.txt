@@ -74,6 +74,7 @@ id dateText
 id dateTextView
 id dayTextView
 id deleteMoodButton
+id editMoodButton
 id edit_bio
 id edit_email
 id edit_name

@@ -34,13 +34,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.875" />
 
-    <!-- Optional Trigger TextField -->
-    <!--     app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"app:layout_constraintBottom_toTopOf="@+id/socialSituationSpinner"-->
-
-
-<!--    -->
-    <!-- Social Situation Spinner -->
 
     <!-- Why are you feeling this way TextField -->
     <TextView
@@ -92,7 +85,6 @@
         android:layout_width="411dp"
         android:layout_height="79dp"
         android:layout_marginTop="56dp"
-
         android:maxLength="100"
         android:padding="12dp"
         android:prompt="@string/select_social_prompt"
@@ -141,6 +133,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/socialSituationSpinner" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
