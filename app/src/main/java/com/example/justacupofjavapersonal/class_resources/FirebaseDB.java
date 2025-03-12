@@ -57,7 +57,7 @@ public class FirebaseDB {
                         if (task.isSuccessful()) {
                            Log.d("Update User Profile", "Email updated");
                             }
-                           }
+                        }
                      });
         } else if (updates.containsKey("password")) {
             FirebaseUser user = auth.getCurrentUser();
@@ -92,6 +92,10 @@ public class FirebaseDB {
         return userData[0];
     }
 
+    /**
+     *
+     */
+
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded(User user);
         void onUserDataLoadFailed(Exception e);
@@ -119,6 +123,8 @@ public class FirebaseDB {
         // Add user id to a mood to connect it back to the user
         db.collection("moods").document(moodID)
                 .update("uid", uid);
+        db.collection("moods").document(moodID)
+                .update("moodID", moodID);
     }
 
     /**
@@ -170,19 +176,10 @@ public class FirebaseDB {
             }
             if (value != null && !value.isEmpty()) {
                 for (QueryDocumentSnapshot snapshot : value) {
-                    String moodID = snapshot.getString("moodID"); // Keep as String
-                    if (moodID == null) { throw new IllegalArgumentException("Mood ID cannot be null"); }
-
-                    String userID = snapshot.getString("uid");
-                    Date postDate = snapshot.getDate("postDate");
-                    String trigger = snapshot.getString("trigger");
-                    byte[] photo = (byte[]) snapshot.get("photo");
-                    EmotionalState state = (EmotionalState) snapshot.get("state");
-                    SocialSituation socialSituation = (SocialSituation) snapshot.get("socialSituation");
-                    Location location = (Location) snapshot.get("location");
+                    String userID = snapshot.getString("uid"); // Get the uid to compare to the user that you want
 
                     if (userID.equals(uid)) {
-                        userMoods.add(new Mood(moodID, userID, state, postDate, trigger, photo, socialSituation, location));
+                        userMoods.add(snapshot.toObject(Mood.class));
                     }
                 }
             }
@@ -200,12 +197,17 @@ public class FirebaseDB {
     }
 
     /**
-     * To be implemented
+     * Adds a follower to
      * @param follower
      * @param followee
      */
-    public void addFollower(User follower, User followee) {
-        db.collection("follows").document();
+    public void addFollower(@NonNull User follower, @NonNull User followee) {
+        Map<String, Object> following = new HashMap<>();
+        following.put("follower",follower.getUid());
+        // Followee is the one being followed, the name of the document
+        // Use update so that the old information isn't overwritten
+        db.collection("following").document(followee.getUid()).update(following);
+
     }
 
     /**
@@ -213,7 +215,7 @@ public class FirebaseDB {
      * @param follower
      * @param followee
      */
-    public void removeFollwer(User follower, User followee) {
+    public void removeFollower(User follower, User followee) {
 
     }
 
