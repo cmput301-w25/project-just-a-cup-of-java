@@ -60,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
         binding.navView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.navigation_home) {
-                // If already on home, clear the back stack and go to home
-                navController.popBackStack(R.id.navigation_home, false);
-                navController.navigate(R.id.navigation_home);
-                return true;
-            }
+//            if (itemId == R.id.navigation_home) {
+//                // If already on home, clear the back stack and go to home
+//                navController.popBackStack(R.id.navigation_home, false);
+//                navController.navigate(R.id.navigation_home);
+//                return true;
+//            }
 
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
