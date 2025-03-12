@@ -10,6 +10,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    plugins {
+        id("androidx.navigation.safeargs")version "2.7.7"
+    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -19,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Just-a-cup-of-Java"
+rootProject.name = "just a cup of java personal"
 include(":app")
  
