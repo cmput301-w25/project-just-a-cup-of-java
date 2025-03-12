@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_notifications.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_notifications.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_home.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/mood_history_filter.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/mood_history_filter.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/change_password.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/change_password.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_feed.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_feed.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/activity_main.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_post_mood.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_post_mood.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/item_mood_feed.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/item_mood_feed.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/mood_list_item.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/mood_list_item.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/item_date_feed.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/item_date_feed.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/mood_history.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/mood_history.xml"
+    },
+    {
+        "merged": "com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_feed.xml",
+        "source": "com.example.justacupofjavapersonal.app-main-62:/layout/fragment_feed.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_add_mood.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_add_mood.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_userinfo.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_userinfo.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_dashboard.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_login.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_login.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_edit_mood.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_edit_mood.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/item_mood.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/item_mood.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/dialog_mood_selector.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/dialog_mood_selector.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/dialog_login.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/dialog_login.xml"
+    },
+    {
+        "merged": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_each_day.xml",
+        "source": "/Users/heenz/.gradle/daemon/8.10.2/com.example.justacupofjavapersonal.app-main-62:/layout/fragment_each_day.xml"
+    }
+]
