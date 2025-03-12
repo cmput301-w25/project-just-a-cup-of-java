@@ -3,12 +3,12 @@ package com.example.justacupofjavapersonal.class_resources.mood;
 public enum EmotionalState {
 
 
-    ANGER("ANGER 🤬", "#FF0000"),      // Red
+    ANGER("ANGRY 🤬", "#FF0000"),      // Red
     CONFUSION("CONFUSION 😵‍💫", "#FFA500"),  // Orange
     DISGUST("DISGUST 🤢", "#008000"),    // Green
     FEAR("FEAR 😨", "#800080"),       // Purple
-    HAPPINESS("HAPPINESS 😊", "#FFFF00"),  // Yellow
-    SADNESS("SADNESS 🥺", "#0000FF"),    // Blue
+    HAPPINESS("HAPPY 😊", "#FFFF00"),  // Yellow
+    SADNESS("SAD 🥺", "#0000FF"),    // Blue
     SHAME("SHAME 😞", "#FF69B4"),      // Pink
     SURPRISE("SURPRISE 😲", "#00FFFF"),   // Cyan
     AWKWARD("AWKWARD 😅", "#2A2C57");   // Space Cadet/blue purple mix

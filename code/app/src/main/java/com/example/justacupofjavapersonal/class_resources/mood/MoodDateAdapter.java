@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
@@ -14,7 +15,7 @@ import com.example.justacupofjavapersonal.R;
 import java.util.List;
 
 public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<FeedItem> feedList;
+    private final List<FeedItem> feedList;
 
     private static final int VIEW_TYPE_MOOD = 0;
     private static final int VIEW_TYPE_DATE = 1;
@@ -80,8 +81,9 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      */
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MOOD) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mood_feed, parent, false);
             return new MoodViewHolder(view);
@@ -98,7 +100,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FeedItem item = feedList.get(position);
 
         if (holder instanceof MoodViewHolder) {

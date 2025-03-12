@@ -81,7 +81,11 @@ id edit_username
 id emailEditText
 id emotionSpinner
 id feedName
+id feedSelector
 id feedTime
+id feed_Nearby
+id feed_followingButton
+id feed_recentButton
 id filterButton
 id filterbutton
 id forgotPasswordText
@@ -104,7 +108,6 @@ id nav_host_fragment_activity_main
 id nav_view
 id navigation_add_mood
 id navigation_change_password
-id navigation_dashboard
 id navigation_feed
 id navigation_home
 id navigation_login
@@ -126,7 +129,7 @@ id signupButton
 id socialSituation
 id socialSituationSpinner
 id socialSituationTextView
-id text_dashboard
+id text_feed
 id text_notifications
 id timeTextView
 id topAppBar
@@ -184,7 +187,7 @@ string social_situation_alone
 string social_situation_crowd
 string social_situation_one_other_person
 string social_situation_two_or_several_people
-string title_dashboard
+string title_feed
 string title_home
 string title_notifications
 style Theme.JustACupOfJavaPersonal
