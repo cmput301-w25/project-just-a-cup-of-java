@@ -41,10 +41,10 @@ public class FeedFragment extends Fragment {
         User user2 = new User("person also", "a", "a", "a", "a", "a", "a");
 
         // Pass user IDs instead of full User objects
-        Mood m1 = new Mood("1", user1.getUid(), EmotionalState.HAPPINESS, t1);
-        Mood m2 = new Mood("2", user2.getUid(), EmotionalState.HAPPINESS, t2);
-        Mood m3 = new Mood("3", user1.getUid(), EmotionalState.HAPPINESS, t3);
-        Mood m4 = new Mood("4", user1.getUid(), EmotionalState.HAPPINESS, t4);
+        Mood m1 = new Mood(EmotionalState.HAPPINESS, t1);
+        Mood m2 = new Mood(EmotionalState.HAPPINESS, t2);
+        Mood m3 = new Mood(EmotionalState.HAPPINESS, t3);
+        Mood m4 = new Mood(EmotionalState.HAPPINESS, t4);
 
         Location l1 = new Location("location");
         l1.setLatitude(1.0);
