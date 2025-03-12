@@ -15,11 +15,6 @@
           <theme>@style/Theme.JustACupOfJavaPersonal</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_dashboard.xml">
-        <config>
-          <theme>@style/Theme.JustACupOfJavaPersonal</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_each_day.xml">
         <config>
           <theme>@style/Theme.JustACupOfJavaPersonal</theme>

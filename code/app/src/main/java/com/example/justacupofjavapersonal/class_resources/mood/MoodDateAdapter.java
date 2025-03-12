@@ -15,7 +15,7 @@ import com.example.justacupofjavapersonal.R;
 import java.util.List;
 
 public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<FeedItem> feedList;
+    private final List<FeedItem> feedList;
 
     private static final int VIEW_TYPE_MOOD = 0;
     private static final int VIEW_TYPE_DATE = 1;
@@ -100,7 +100,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FeedItem item = feedList.get(position);
 
         if (holder instanceof MoodViewHolder) {
