@@ -31,6 +31,10 @@ public class User implements Serializable {
         this.uid = uid;
     }
 
+    public User(String name) {
+        this.name = name;
+    }
+
     /**
      * Gets the user's name
      * @return The user's name
