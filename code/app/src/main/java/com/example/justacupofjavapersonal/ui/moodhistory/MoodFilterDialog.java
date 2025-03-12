@@ -16,18 +16,36 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.example.justacupofjavapersonal.R;
 
+/**
+ * MoodFilterDialog is a dialog fragment that allows the user to filter the mood history.
+ */
 public class MoodFilterDialog extends DialogFragment {
 
     private FilterListener filterListener;
     private Spinner emotionSpinner;
+    /**
+     * Interface for listeners to be notified when a filter is applied.
+     */
     public interface FilterListener {
         void onFilterApplied(boolean recentWeek, String emotion, String reasonKeyword);
     }
 
+    /**
+     * Constructor for the MoodFilterDialog.
+     *
+     * @param listener the listener for when a filter is applied
+     */
     public MoodFilterDialog(FilterListener listener) {
         this.filterListener = listener;
     }
 
+    /**
+     * Called to do initial creation of a fragment.
+     * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the Dialog to be shown.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -77,9 +95,5 @@ public class MoodFilterDialog extends DialogFragment {
         builder.setView(view).setTitle("Filter Mood History");
         return builder.create();
     }
-
-
-
-
     }
 

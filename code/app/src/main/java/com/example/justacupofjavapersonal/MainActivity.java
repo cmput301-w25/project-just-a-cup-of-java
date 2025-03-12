@@ -18,11 +18,22 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.justacupofjavapersonal.databinding.ActivityMainBinding;
 
+/**
+ * Entry point of the application.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
 
+    
+    /**
+     * Called when the activity is starting. This is where most initialization should go:
+     * calling setContentView(int) to inflate the activity's UI, using findViewById(int) to programmatically interact
+     * with widgets in the UI, and initializing other components.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,14 +87,24 @@ public class MainActivity extends AppCompatActivity {
         topAppBar.setNavigationOnClickListener(v -> navController.navigateUp());
     }
 
-    // Inflate the toolbar menu
+    /**
+     * Initializes the contents of the Activity's options menu.
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true for the menu to be displayed; false if it should not be shown.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_app_bar_menu, menu);
         return true;
     }
 
-    // Handle menu clicks
+    /**
+     * Handles item selections from the options menu.
+     *
+     * @param item The selected menu item.
+     * @return true if the item selection was handled, false otherwise.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -99,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles the navigation when the user chooses to navigate up within the app's activity hierarchy from the action bar.
+     *
+     * @return true if navigation was successful, false otherwise.
+     */
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();

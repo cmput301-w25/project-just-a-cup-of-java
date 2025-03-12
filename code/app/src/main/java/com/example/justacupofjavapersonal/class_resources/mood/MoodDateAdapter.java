@@ -23,6 +23,10 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.feedList = feedList;
     }
 
+    /**
+     * ViewHolder class for displaying mood-related data in a RecyclerView.
+     * This class holds references to the views that will be populated with data.
+     */
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         ImageView socialSituation, moodIndicator;
@@ -42,6 +46,10 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * ViewHolder class for displaying date information in a RecyclerView.
+     * This class holds the reference to the TextView that displays the day.
+     */
     public static class DateViewHolder extends RecyclerView.ViewHolder {
         TextView dayText;
 
@@ -51,11 +59,27 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * Returns the view type of the item at the specified position.
+     * 
+     * @param position The position of the item within the adapter's data set.
+     * @return An integer representing the view type of the item. 
+     *         Returns VIEW_TYPE_MOOD if the item at the specified position is a mood, 
+     *         otherwise returns VIEW_TYPE_DATE.
+     */
     @Override
     public int getItemViewType(int position) {
         return feedList.get(position).isMood() ? VIEW_TYPE_MOOD : VIEW_TYPE_DATE;
     }
 
+    /**
+     * Called when RecyclerView needs a new {@link RecyclerView.ViewHolder} of the given type to represent an item.
+     * This method will either create a new {@link MoodViewHolder} or {@link DateViewHolder} depending on the view type.
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MOOD) {
@@ -67,6 +91,12 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * Binds the data to the ViewHolder for the given position in the RecyclerView.
+     *
+     * @param holder   The ViewHolder to bind data to.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         FeedItem item = feedList.get(position);
@@ -134,6 +164,11 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in the feed list.
+     */
     @Override
     public int getItemCount() {
         return feedList.size();

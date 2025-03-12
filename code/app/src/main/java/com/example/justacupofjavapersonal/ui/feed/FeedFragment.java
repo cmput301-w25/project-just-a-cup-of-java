@@ -20,12 +20,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * FeedFragment is a fragment that displays a list of moods in a RecyclerView.
+ * It initializes a list of Mood objects with sample data and sets up the RecyclerView
+ * with a MoodDateAdapter to display the moods.
+ */
 public class FeedFragment extends Fragment {
 
     private FragmentFeedBinding binding;
     private ArrayList<Mood> moods;
     private MoodDateAdapter moodDateAdapter;
 
+    /**
+     * Called to do initial creation of a fragment.
+     * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +76,14 @@ public class FeedFragment extends Fragment {
         moods.add(m4);
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -81,6 +100,12 @@ public class FeedFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Called when the view previously created by onCreateView() has been detached from the fragment.
+     * This is where you should clean up resources related to the view.
+     * It is important to call the superclass's implementation of this method.
+     * In this implementation, the binding is set to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

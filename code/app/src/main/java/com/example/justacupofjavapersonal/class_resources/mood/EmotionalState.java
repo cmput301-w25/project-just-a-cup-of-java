@@ -22,10 +22,20 @@ public enum EmotionalState {
         this.color = color;
     }
 
+    /**
+     * Returns the emoticon representing the current emotional state.
+     *
+     * @return a String containing the emoticon.
+     */
     public String getEmoticon() {
         return emoticon;
     }
 
+    /**
+     * Retrieves the color associated with the emotional state.
+     *
+     * @return the color as a String
+     */
     public String getColor() {
         return color;
     }
