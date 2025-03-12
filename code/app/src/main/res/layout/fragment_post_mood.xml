@@ -32,9 +32,17 @@
         app:layout_constraintHorizontal_bias="0.033"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.576" />
+        app:layout_constraintVertical_bias="0.875" />
+
+    <!-- Optional Trigger TextField -->
+    <!--     app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.99"app:layout_constraintBottom_toTopOf="@+id/socialSituationSpinner"-->
 
 
+<!--    -->
+    <!-- Social Situation Spinner -->
+
+    <!-- Why are you feeling this way TextField -->
     <TextView
         android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
@@ -46,20 +54,11 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/addEmoStateButton"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintHorizontal_bias="0.009"
         app:layout_constraintStart_toEndOf="@id/dateTextView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.576" />
+        app:layout_constraintVertical_bias="0.875" />
 
-    <!-- Optional Trigger TextField -->
-    <!--     app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"app:layout_constraintBottom_toTopOf="@+id/socialSituationSpinner"-->
-
-
-<!--    -->
-    <!-- Social Situation Spinner -->
-
-    <!-- Why are you feeling this way TextField -->
     <Button
         android:id="@+id/postmoodbutton"
         android:layout_width="152dp"
@@ -87,15 +86,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 <!--      //android:hint="Optional trigger"-->
+
     <EditText
         android:id="@+id/triggerText"
         android:layout_width="411dp"
         android:layout_height="79dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="56dp"
 
-        android:prompt="@string/select_social_prompt"
         android:maxLength="100"
         android:padding="12dp"
+        android:prompt="@string/select_social_prompt"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
