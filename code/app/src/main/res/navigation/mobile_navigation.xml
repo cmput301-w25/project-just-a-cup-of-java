@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_login_to_navigation_user_info2"
             app:destination="@id/navigation_user_info" />
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
     </fragment>
 
     <fragment
@@ -41,16 +44,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_feed"
-        android:name="com.example.justacupofjavapersonal.ui.feed.FeedFragment"
-        android:label="@string/title_feed"
-        tools:layout="@layout/fragment_feed" />
-
-    <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.justacupofjavapersonal.ui.notifications.NotificationsFragment"
+        android:name="com.example.justacupofjavapersonal.ui.follow.AllFriendsFollowFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_follower_all_friends" />
 
     <fragment
         android:id="@+id/navigation_user_info"
@@ -90,9 +87,9 @@
         android:label="Mood History"
         tools:layout="@layout/mood_history">
 
-    <action
-        android:id="@+id/action_navigation_moodHistory_to_home"
-        app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_moodHistory_to_home"
+            app:destination="@id/navigation_home" />
 
     </fragment>
 
@@ -102,11 +99,11 @@
         android:label="Feed"
         tools:layout="@layout/fragment_feed" />
 
-<fragment
-    android:id="@+id/navigation_post_mood"
-    android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
-    android:label="Post Mood"
-    tools:layout="@layout/fragment_post_mood"/>
+    <fragment
+        android:id="@+id/navigation_post_mood"
+        android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
+        android:label="Post Mood"
+        tools:layout="@layout/fragment_post_mood"/>
 
 
 </navigation>
