@@ -29,6 +29,6 @@ Team Just a Cup of Java presents a mood tracking application designed to help us
 ## Documentation
 
 - [[Wiki Link]](https://github.com/cmput301-w25/project-just-a-cup-of-java/wiki)
-- [Scrum Board]
+- [[Scrum Board]](https://github.com/cmput301-w25/project-just-a-cup-of-java/wiki/Object-Oriented-Analysis)
 - [[UI Mockups]](https://www.figma.com/design/zDemJQpM6kr9qdGpcdzVO1/StoryBoard?node-id=0-1&p=f&t=8JDsRwLwJBInMEvm-0)
 - [[UML]](https://github.com/cmput301-w25/project-just-a-cup-of-java/wiki/UML)
