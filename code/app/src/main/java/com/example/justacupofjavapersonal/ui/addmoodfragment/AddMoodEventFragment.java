@@ -44,11 +44,11 @@ public class AddMoodEventFragment extends Fragment {
     /**
      * Called to have the fragment instantiate its user interface view.
      *
-     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
-     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
      * @return The View for the fragment's UI, or null.
-     *
+     * <p>
      * This method initializes the binding, ViewModel, and retrieves values from arguments.
      * It sets up the mood list with RecyclerView and observes the selected date from ViewModel.
      * It listens for the mood event from PostMoodFragment and handles the "Add Mood" button click.
@@ -146,6 +146,7 @@ public class AddMoodEventFragment extends Fragment {
         return view;
     }
 
+
     /**
      * Sets up the RecyclerView for displaying mood events.
      * Initializes the MoodActionsAdapter with the current context and mood list,
@@ -157,12 +158,15 @@ public class AddMoodEventFragment extends Fragment {
         binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.moodListView.setAdapter(moodAdapter);
     }
+    private void editMood(int position) {
+        // Implement the mood edit logic here
+    }
 
     /**
      * Deletes a mood from the mood list and updates the mood map for the selected date.
      *
      * @param position The position of the mood to delete in the mood list.
-     *                  Must be a valid index within the bounds of the mood list.
+     *                 Must be a valid index within the bounds of the mood list.
      */
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
@@ -298,5 +302,6 @@ public class AddMoodEventFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-}
 
+
+}
