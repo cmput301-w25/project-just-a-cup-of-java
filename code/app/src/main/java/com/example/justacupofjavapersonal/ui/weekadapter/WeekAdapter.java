@@ -1,3 +1,4 @@
+
 package com.example.justacupofjavapersonal.ui.weekadapter;
 
 import android.annotation.SuppressLint;
@@ -15,6 +16,10 @@ import com.example.justacupofjavapersonal.R;
 
 import java.util.List;
 
+/**
+ * WeekAdapter is a RecyclerView.Adapter that displays a list of weekdays with their corresponding dates.
+ * It allows for item selection and highlights the selected item.
+ */
 public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekViewHolder> {
 
     private List<String> weekDays;
@@ -29,6 +34,14 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekViewHolder
 
     }
 
+    /**
+     * Called when RecyclerView needs a new {@link WeekViewHolder} of the given type to represent an item.
+     * This method will inflate the item layout and create the ViewHolder.
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new WeekViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public WeekViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,6 +49,13 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekViewHolder
         return new WeekViewHolder(view);
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position. This method should update the contents
+     * of the {@link WeekViewHolder#itemView} to reflect the item at the given position.
+     *
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull WeekViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Split the formatted date (e.g., "Mon 12") into weekday and date
@@ -62,13 +82,25 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekViewHolder
         });
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return weekDays.size();
     }
+    /**
+     * Interface definition for a callback to be invoked when an item in the week view is clicked.
+     */
     public interface OnItemClickListener {
         void onItemClick(int position, String date);
     }
+    /**
+     * ViewHolder class for the WeekAdapter RecyclerView.
+     * This class holds the views for each item in the RecyclerView.
+     */
     static class WeekViewHolder extends RecyclerView.ViewHolder {
         TextView weekDayText, dateText;
         LinearLayout circularLayout;

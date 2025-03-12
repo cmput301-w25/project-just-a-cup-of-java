@@ -31,6 +31,10 @@ import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+/**
+ * Fragment for User info.
+ */
+
 public class UserInfoFragment extends Fragment {
     private ImageView backArrow, profileImage;
     private TextView changePicture;
@@ -44,6 +48,15 @@ public class UserInfoFragment extends Fragment {
 
     private User user;
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to. 
+     *                  The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
@@ -64,6 +77,11 @@ public class UserInfoFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Loads data and sets up listeners when view is created.
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

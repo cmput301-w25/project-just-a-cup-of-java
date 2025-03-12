@@ -27,6 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * LoginDialogFragment is a dialog fragment that allows the user to login to the app.
+ */
 public class LoginDialogFragment extends DialogFragment {
 
     private DialogLoginBinding binding;
@@ -34,6 +37,17 @@ public class LoginDialogFragment extends DialogFragment {
     private String email ="";
     private String password ="";
 
+
+    /**
+     * Called to do initial creation of a fragment.
+     * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                  The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +57,10 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
 
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally tied to Activity.onResume of the containing Activity's lifecycle.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -55,6 +73,12 @@ public class LoginDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
+     *
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -124,6 +148,9 @@ public class LoginDialogFragment extends DialogFragment {
         });
     }
 
+    /**
+     * This method is called when the view previously created by onCreateView has been detached from the fragment.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

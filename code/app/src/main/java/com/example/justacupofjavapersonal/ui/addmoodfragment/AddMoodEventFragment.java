@@ -24,6 +24,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+/**
+ * AddMoodEventFragment is responsible for handling the UI and logic for adding mood events.
+ * It allows users to select a date, add mood details, and view mood events for specific dates.
+ * The fragment interacts with a ViewModel to manage the selected date and mood events.
+ * It also communicates with other fragments to receive mood event data and update the UI accordingly.
+ */
 public class AddMoodEventFragment extends Fragment {
     private HashMap<String, ArrayList<String>> moodMap = new HashMap<>(); // Stores moods by date
     private String selectedDate;
@@ -35,6 +41,18 @@ public class AddMoodEventFragment extends Fragment {
     private ArrayList<String> moodList = new ArrayList<>();
     private MoodActionsAdapter moodAdapter;
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     *
+     * This method initializes the binding, ViewModel, and retrieves values from arguments.
+     * It sets up the mood list with RecyclerView and observes the selected date from ViewModel.
+     * It listens for the mood event from PostMoodFragment and handles the "Add Mood" button click.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -128,13 +146,24 @@ public class AddMoodEventFragment extends Fragment {
         return view;
     }
 
-    // Setup mood list adapter using RecyclerView
+    /**
+     * Sets up the RecyclerView for displaying mood events.
+     * Initializes the MoodActionsAdapter with the current context and mood list,
+     * and sets it to the RecyclerView. Also configures the RecyclerView with a
+     * LinearLayoutManager.
+     */
     private void setupMoodRecyclerView() {
         moodAdapter = new MoodActionsAdapter(getContext(), moodList, position -> deleteMood(position));
         binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.moodListView.setAdapter(moodAdapter);
     }
 
+    /**
+     * Deletes a mood from the mood list and updates the mood map for the selected date.
+     *
+     * @param position The position of the mood to delete in the mood list.
+     *                  Must be a valid index within the bounds of the mood list.
+     */
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
             String moodToDelete = moodList.get(position);
@@ -150,7 +179,13 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
-    // Get the week dates based on the selected date
+    
+    /**
+     * Generates a list of dates representing the week (Sunday to Saturday) for the given selected date.
+     *
+     * @param selectedDate The selected date in the format "dd-MM-yyyy".
+     * @return An ArrayList of strings where each string represents a date in the format "EEE dd".
+     */
     private ArrayList<String> getWeekDates(String selectedDate) {
         ArrayList<String> weekList = new ArrayList<>();
         try {
@@ -169,7 +204,12 @@ public class AddMoodEventFragment extends Fragment {
         return weekList;
     }
 
-    // Setup the week RecyclerView (Keeps week display the same while allowing date selection)
+    /**
+     * Sets up the RecyclerView for displaying the week dates.
+     * Initializes the WeekAdapter with the week dates and selected position,
+     * and sets it to the RecyclerView. Also configures the RecyclerView with a
+     * LinearLayoutManager.
+     */
     private void setupWeekRecyclerView() {
         if (weekDates == null || weekDates.isEmpty()) {
             Log.e("AddMoodEventFragment", "weekDates is null or empty. Cannot setup RecyclerView.");
@@ -207,6 +247,12 @@ public class AddMoodEventFragment extends Fragment {
         binding.weekRecyclerView.setAdapter(weekAdapter);
     }
 
+
+    /**
+     * Loads the moods specific to the selected date and updates the mood list.
+     *
+     * @param date The selected date in the format "dd-MM-yyyy".
+     */
     private void loadMoodsForDate(String date) {
         // 🔹 Clear the current mood list to refresh it for the selected date
         moodList.clear();
@@ -222,7 +268,12 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
-    // Convert "Mon 12" format to "dd-MM-yyyy"
+    /**
+     * Converts a date in the format "EEE dd" to the full date format "dd-MM-yyyy".
+     *
+     * @param weekDayAndDate The date in the format "EEE dd".
+     * @return The date in the format "dd-MM-yyyy".
+     */
     private String convertToFullDate(String weekDayAndDate) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("EEE dd", Locale.getDefault());
@@ -239,6 +290,9 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when the view previously created by onCreateView has been detached from the fragment.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

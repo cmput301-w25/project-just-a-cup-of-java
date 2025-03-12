@@ -18,8 +18,17 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
+import com.example.justacupofjavapersonal.class_resources.User;
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * PostMoodFragment is a fragment that allows the user to post a mood event.
+ */
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText optionalTriggerEditText;
@@ -32,13 +41,37 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private TextView timeTextView;
     private Button addMoodButton;
     private String selectedMood = "Add Emotional State";
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
+    private FirebaseDB firebaseDB;
+
+    private User user;
+    private Mood moodPost;
+
+    /**
+     * Called to do initial creation of a fragment.
+     * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                  The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_post_mood, container, false);
     }
-
+    
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
+     * It is safe to perform operations on views in this method.
+     *
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -77,11 +110,23 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.social_situation_options)
         ) {
+            /** Returns whether an item is enabled.
+             * 
+             * @param position
+             * @return
+             */
             @Override
             public boolean isEnabled(int position) {
                 // Disable the first item ("Select a social situation") to prevent selection
                 return position != 0;
             }
+            /** Gets the dropdown view.
+             * 
+             * @param position
+             * @param convertView
+             * @param parent
+             * @return
+             */
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -142,12 +187,36 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
         //NEW TRY
         postButton.setOnClickListener(v -> {
+
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                db.collection("users").document(currentUser.getUid())
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        user = documentSnapshot.toObject(User.class);
+                                    }
+                        });
+            }
+
+            moodPost = new Mood()  ;
+
+
             Bundle result = new Bundle();
             result.putString("selectedDate", dateTextView.getText().toString());
+            moodPost.setDate(dateTextView.getText().toString());
             result.putString("selectedTime", timeTextView.getText().toString());
+            moodPost.setTime(timeTextView.getText().toString());
             result.putString("selectedMood", selectedMood);
+            moodPost.setEmotion(selectedMood);
             result.putString("selectedSocialSituation", socialSituationSpinner.getSelectedItem().toString());
+            moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
             result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
+            moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+
+            firebaseDB = new FirebaseDB();
+
+            firebaseDB.addMoodtoDB(moodPost, user.getUid());
 
             // Send the result back to AddMoodEventFragment
             getParentFragmentManager().setFragmentResult("moodEvent", result);
@@ -159,6 +228,10 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
     }
 
+    /** Sets the text for a selected mood.
+     * 
+     * @param mood
+     */
     @Override
     public void onMoodSelected(String mood) {
         selectedMood = mood;

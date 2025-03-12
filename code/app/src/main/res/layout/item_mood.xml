@@ -3,7 +3,7 @@
     android:id="@+id/moodText"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="12dp"
+    android:padding="13dp"
     android:gravity="center"
     android:textSize="18sp"
     android:textStyle="bold"

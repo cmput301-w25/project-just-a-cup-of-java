@@ -20,12 +20,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * FeedFragment is a fragment that displays a list of moods in a RecyclerView.
+ * It initializes a list of Mood objects with sample data and sets up the RecyclerView
+ * with a MoodDateAdapter to display the moods.
+ */
 public class FeedFragment extends Fragment {
 
     private FragmentFeedBinding binding;
     private ArrayList<Mood> moods;
     private MoodDateAdapter moodDateAdapter;
 
+    /**
+     * Called to do initial creation of a fragment.
+     * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +52,10 @@ public class FeedFragment extends Fragment {
         User user2 = new User("person also", "a", "a", "a", "a", "a", "a");
 
         // Pass user IDs instead of full User objects
-        Mood m1 = new Mood("1", user1.getUid(), EmotionalState.HAPPINESS, t1);
-        Mood m2 = new Mood("2", user2.getUid(), EmotionalState.HAPPINESS, t2);
-        Mood m3 = new Mood("3", user1.getUid(), EmotionalState.HAPPINESS, t3);
-        Mood m4 = new Mood("4", user1.getUid(), EmotionalState.HAPPINESS, t4);
+        Mood m1 = new Mood(EmotionalState.HAPPINESS, t1);
+        Mood m2 = new Mood(EmotionalState.HAPPINESS, t2);
+        Mood m3 = new Mood(EmotionalState.HAPPINESS, t3);
+        Mood m4 = new Mood(EmotionalState.HAPPINESS, t4);
 
         Location l1 = new Location("location");
         l1.setLatitude(1.0);
@@ -53,11 +64,11 @@ public class FeedFragment extends Fragment {
         m1.setPhoto("photo".getBytes());
         m2.setTrigger("trigger");
         m2.setLocation(l1);
-        m3.setSocialSituation(SocialSituation.WITH_TWO_TO_SEVERAL);
+        m3.setSocialSituation("WITH_TWO_TO_SEVERAL");
         m4.setPhoto("photo".getBytes());
         m4.setTrigger("trigger");
         m4.setLocation(l1);
-        m4.setSocialSituation(SocialSituation.WITH_ONE_OTHER);
+        m4.setSocialSituation("WITH_ONE_OTHER");
 
         moods.add(m1);
         moods.add(m2);
@@ -65,6 +76,14 @@ public class FeedFragment extends Fragment {
         moods.add(m4);
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -81,6 +100,12 @@ public class FeedFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Called when the view previously created by onCreateView() has been detached from the fragment.
+     * This is where you should clean up resources related to the view.
+     * It is important to call the superclass's implementation of this method.
+     * In this implementation, the binding is set to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

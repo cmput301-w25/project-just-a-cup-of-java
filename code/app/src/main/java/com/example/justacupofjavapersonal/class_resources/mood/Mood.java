@@ -12,14 +12,18 @@ import java.util.Date;
  */
 public class Mood {
 
-    private final String moodID; // Immutable: Unique ID for the mood event
+    private String moodID; // Immutable: Unique ID for the mood event
     private String uid; // Mutable: Unique username, with setter
-    private final Date postDate; // Immutable: Date and time of the mood event
+    private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
     private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
-    private SocialSituation socialSituation; // Optional
+    private String emotion;
+    private String socialSituation; // Optional
     private Location location; // Optional
+
+    private String date;
+    private String time;
 
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
@@ -29,19 +33,11 @@ public class Mood {
     /**
      * Constructs a Mood object with mandatory fields.
      *
-     * @param moodID   the unique identifier for the mood event
-     * @param uid      the unique identifier of the user
      * @param state    the emotional state of the user
      * @param postDate the date and time the mood was posted
      * @throws IllegalArgumentException if any mandatory field is null
      */
-    public Mood(String moodID, String uid, EmotionalState state, Date postDate) {
-        if (moodID == null) {
-            throw new IllegalArgumentException("Mood ID is required.");
-        }
-        if (uid == null) {
-            throw new IllegalArgumentException("Username is required.");
-        }
+    public Mood(EmotionalState state, Date postDate) {
         if (state == null) {
             throw new IllegalArgumentException("Emotional state is required.");
         }
@@ -63,8 +59,6 @@ public class Mood {
     /**
      * Constructs a Mood object with both mandatory and optional fields.
      *
-     * @param moodID          the unique identifier for the mood event
-     * @param uid             the unique identifier of the user
      * @param state           the emotional state of the user
      * @param postDate        the date and time the mood was posted
      * @param trigger         the trigger for the mood (optional, max 20 characters)
@@ -72,13 +66,17 @@ public class Mood {
      * @param socialSituation the social situation when the mood was recorded (optional)
      * @param location        the location of the mood event (optional)
      */
-    public Mood(String moodID, String uid, EmotionalState state, Date postDate,
-                String trigger, byte[] photo, SocialSituation socialSituation, Location location) {
-        this(moodID, uid, state, postDate);
+    public Mood(EmotionalState state, Date postDate,
+                String trigger, byte[] photo, String socialSituation, Location location) {
+        this(state, postDate);
         this.setTrigger(trigger);
         this.setPhoto(photo);
         this.setSocialSituation(socialSituation);
         this.setLocation(location);
+    }
+
+    public Mood() {
+        //Empty constructor for firebase
     }
 
     /**
@@ -86,7 +84,7 @@ public class Mood {
      *
      * @return the social situation or null if not set
      */
-    public SocialSituation getSocialSituation() {
+    public String getSocialSituation() {
         return this.socialSituation;
     }
 
@@ -95,7 +93,7 @@ public class Mood {
      *
      * @param socialSituation the social situation to set
      */
-    public void setSocialSituation(SocialSituation socialSituation) {
+    public void setSocialSituation(String socialSituation) {
         this.socialSituation = socialSituation;
         this.hasSocialSituation = socialSituation != null;
     }
@@ -157,15 +155,6 @@ public class Mood {
      */
     public String getUid() {
         return uid;
-    }
-
-    /**
-     * Sets the unique identifier of the user.
-     *
-     * @param uid the user ID to set
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     /**
@@ -260,6 +249,33 @@ public class Mood {
      *
      * @return a string representation of the Mood object
      */
+
+
+    public String getEmotion() {
+        return emotion;
+    }
+
+    public void setEmotion(String emotion) {
+        this.emotion = emotion;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+
     @Override
     public String toString() {
         return "Mood{" +
