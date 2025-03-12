@@ -62,6 +62,8 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.fragment_post_mood, container, false);
     }
     
@@ -189,15 +191,17 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         postButton.setOnClickListener(v -> {
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                db.collection("users").document(currentUser.getUid())
-                        .get()
-                        .addOnSuccessListener(documentSnapshot -> {
-                                    if (documentSnapshot.exists()) {
-                                        user = documentSnapshot.toObject(User.class);
-                                    }
-                        });
-            }
+//            Log.d("PostMoodFragment", "Current user: " + currentUser.getEmail());
+//            Log.d("PostMoodFragment", "Current user UID: " + currentUser.getUid());
+//            if (currentUser != null) {
+//                db.collection("users").document(currentUser.getUid())
+//                        .get()
+//                        .addOnSuccessListener(documentSnapshot -> {
+//                                    if (documentSnapshot.exists()) {
+//                                        user = documentSnapshot.toObject(User.class);
+//                                    }
+//                        });
+//            }
 
             moodPost = new Mood()  ;
 
@@ -216,7 +220,8 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
             firebaseDB = new FirebaseDB();
 
-            firebaseDB.addMoodtoDB(moodPost, user.getUid());
+            assert currentUser != null;
+            firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
 
             // Send the result back to AddMoodEventFragment
             getParentFragmentManager().setFragmentResult("moodEvent", result);
