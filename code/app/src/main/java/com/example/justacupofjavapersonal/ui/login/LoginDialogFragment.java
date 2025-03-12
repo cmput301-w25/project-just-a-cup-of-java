@@ -29,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * LoginDialogFragment is a dialog fragment that allows the user to login to the app.
+ * @param binding the binding for the dialog layout
+ * @return the view for the dialog
  */
 public class LoginDialogFragment extends DialogFragment {
 

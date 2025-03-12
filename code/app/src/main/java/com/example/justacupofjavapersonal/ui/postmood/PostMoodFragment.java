@@ -88,6 +88,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         addMoodButton = view.findViewById(R.id.addEmoStateButton);
         postButton = view.findViewById(R.id.postmoodbutton);
 
+
         // Get arguments passed from AddMoodEventFragment
         Bundle args = getArguments();
         if (args != null) {
@@ -160,49 +161,11 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         } else {
             Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
-//WORKING
-//        postButton.setOnClickListener(v -> {
-//            Bundle bundle = new Bundle();
-//
-//            // Retrieve selected date and mood
-//            String selectedDate = dateTextView.getText().toString();
-//            //added
-//            String selectedTime = timeTextView.getText().toString();
-//            //added
-//            String selectedMood = this.selectedMood;
-//            String selectedSocialSituation = socialSituationSpinner.getSelectedItem().toString();
-//            String optionalTrigger = optionalTriggerEditText.getText().toString();
-//
-//            bundle.putString("selectedDate", selectedDate);
-//            //added
-//            bundle.putString("selectedTime", selectedTime);
-//            //added
-//            bundle.putString("selectedMood", selectedMood);
-//            bundle.putString("selectedSocialSituation", selectedSocialSituation);
-//            bundle.putString("optionalTrigger", optionalTrigger);
-//
-//
-//            NavController navController = Navigation.findNavController(v);
-//            navController.navigate(R.id.navigation_add_mood, bundle);
-//        });
-        //WORKING
 
         //NEW TRY
         postButton.setOnClickListener(v -> {
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-//            Log.d("PostMoodFragment", "Current user: " + currentUser.getEmail());
-//            Log.d("PostMoodFragment", "Current user UID: " + currentUser.getUid());
-//            if (currentUser != null) {
-//                db.collection("users").document(currentUser.getUid())
-//                        .get()
-//                        .addOnSuccessListener(documentSnapshot -> {
-//                                    if (documentSnapshot.exists()) {
-//                                        user = documentSnapshot.toObject(User.class);
-//                                    }
-//                        });
-//            }
-
             moodPost = new Mood()  ;
 
 

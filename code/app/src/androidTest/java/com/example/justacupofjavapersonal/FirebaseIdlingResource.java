@@ -4,6 +4,13 @@ import androidx.test.espresso.IdlingResource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+//java documentation
+
+/**
+ * FirebaseIdlingResource is a custom implementation of the IdlingResource interface
+ * @param resourceName The name of the resource being managed by the idling resource.
+ *                     @return The name of the resource.
+*/
 public class FirebaseIdlingResource implements IdlingResource {
     private final String resourceName;
     private final AtomicInteger activeOperations = new AtomicInteger(0);
