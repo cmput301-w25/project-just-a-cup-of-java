@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
@@ -80,8 +81,9 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      */
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MOOD) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mood_feed, parent, false);
             return new MoodViewHolder(view);
