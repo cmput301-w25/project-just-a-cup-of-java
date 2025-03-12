@@ -217,6 +217,11 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
             result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
             moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+            // i'm not sure if explanation and trigger are the same
+            // currently it seems like a max-length trigger will result in an empty string
+                // if someone can look into that itd be awesome
+            // i don't love the idea of photos being stored directly in the mood collection,
+                // ideally we will have to make a photos collection and link the photoid
 
             firebaseDB = new FirebaseDB();
 
