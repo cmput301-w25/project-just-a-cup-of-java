@@ -15,7 +15,7 @@
         <item>@string/emotion_sadness</item>
         <item>@string/emotion_shame</item>
         <item>@string/emotion_surprise</item>
-    </string-array><string name="app_name">just a cup of java personal</string><string name="title_home">Home</string><string name="title_dashboard">Dashboard</string><string name="title_notifications">Notifications</string><string name="selected_date">Selected Date:</string></file><file path="D:\CMPUT301\project-just-a-cup-of-java\code\app\src\main\res\values\themes.xml" qualifiers=""><style name="Theme.JustACupOfJavaPersonal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </string-array><string name="app_name">just a cup of java personal</string><string name="title_home">Home</string><string name="title_notifications">Notifications</string><string name="selected_date">Selected Date:</string><string name="title_feed">Feed</string></file><file path="D:\CMPUT301\project-just-a-cup-of-java\code\app\src\main\res\values\themes.xml" qualifiers=""><style name="Theme.JustACupOfJavaPersonal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>

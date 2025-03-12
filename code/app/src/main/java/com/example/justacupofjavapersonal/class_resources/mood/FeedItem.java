@@ -4,6 +4,8 @@ package com.example.justacupofjavapersonal.class_resources.mood;
  * Represents an item in the feed which can either be a date header or a mood.
  */
 public class FeedItem {
+    private String dateHeader;
+    private Mood mood;
 
     /**
      * Constructs a FeedItem with a date header.

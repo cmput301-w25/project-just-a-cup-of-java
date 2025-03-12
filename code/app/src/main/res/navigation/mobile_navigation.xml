@@ -41,10 +41,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.justacupofjavapersonal.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_feed"
+        android:name="com.example.justacupofjavapersonal.ui.feed.FeedFragment"
+        android:label="@string/title_feed"
+        tools:layout="@layout/fragment_feed" />
 
     <fragment
         android:id="@+id/navigation_notifications"

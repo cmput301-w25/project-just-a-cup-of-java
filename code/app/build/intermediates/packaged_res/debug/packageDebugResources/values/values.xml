@@ -52,7 +52,7 @@
     <string name="social_situation_crowd">With a crowd</string>
     <string name="social_situation_one_other_person">With one other person</string>
     <string name="social_situation_two_or_several_people">With two to several people</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_feed">Feed</string>
     <string name="title_home">Home</string>
     <string name="title_notifications">Notifications</string>
     <style name="Theme.JustACupOfJavaPersonal" parent="Theme.MaterialComponents.DayNight.NoActionBar">

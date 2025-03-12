@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
@@ -14,7 +15,7 @@ import com.example.justacupofjavapersonal.R;
 import java.util.List;
 
 public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<FeedItem> feedList;
+    private final List<FeedItem> feedList;
 
     private static final int VIEW_TYPE_MOOD = 0;
     private static final int VIEW_TYPE_DATE = 1;
@@ -61,10 +62,10 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     /**
      * Returns the view type of the item at the specified position.
-     * 
+     *
      * @param position The position of the item within the adapter's data set.
-     * @return An integer representing the view type of the item. 
-     *         Returns VIEW_TYPE_MOOD if the item at the specified position is a mood, 
+     * @return An integer representing the view type of the item.
+     *         Returns VIEW_TYPE_MOOD if the item at the specified position is a mood,
      *         otherwise returns VIEW_TYPE_DATE.
      */
     @Override
@@ -80,8 +81,9 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      */
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MOOD) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mood_feed, parent, false);
             return new MoodViewHolder(view);
@@ -98,9 +100,9 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FeedItem item = feedList.get(position);
-        
+
         if (holder instanceof MoodViewHolder) {
             Mood mood = item.getMood();
             MoodViewHolder moodHolder = (MoodViewHolder) holder;
@@ -108,16 +110,16 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 // on hold until database is put here
             if (mood.getSocialSituation() != null) {
                 switch (mood.getSocialSituation()) {
-                    case ALONE:
+                    case "ALONE":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation1);
                         break;
-                    case WITH_ONE_OTHER:
+                    case "WITH_ONE_OTHER":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation2);
                         break;
-                    case WITH_TWO_TO_SEVERAL:
+                    case "WITH_TWO_TO_SEVERAL":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation3);
                         break;
-                    case WITH_A_CROWD:
+                    case "WITH_A_CROWD":
                         moodHolder.socialSituation.setImageResource(R.drawable.socialsituation3);
                         break;
                     default:
@@ -144,8 +146,8 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else {
                 moodHolder.feedTime.setText("now");
             }
-            
-            
+
+
             // i dont have any other moods rn lol
             switch (mood.getState()) {
                 case HAPPINESS:

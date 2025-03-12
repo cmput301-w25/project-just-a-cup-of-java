@@ -18,8 +18,12 @@ public class Mood {
     private String trigger; // Max 20 characters, optional
     private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
-    private SocialSituation socialSituation; // Optional
+    private String emotion;
+    private String socialSituation; // Optional
     private Location location; // Optional
+
+    private String date;
+    private String time;
 
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
@@ -63,7 +67,7 @@ public class Mood {
      * @param location        the location of the mood event (optional)
      */
     public Mood(EmotionalState state, Date postDate,
-                String trigger, byte[] photo, SocialSituation socialSituation, Location location) {
+                String trigger, byte[] photo, String socialSituation, Location location) {
         this(state, postDate);
         this.setTrigger(trigger);
         this.setPhoto(photo);
@@ -80,7 +84,7 @@ public class Mood {
      *
      * @return the social situation or null if not set
      */
-    public SocialSituation getSocialSituation() {
+    public String getSocialSituation() {
         return this.socialSituation;
     }
 
@@ -89,7 +93,7 @@ public class Mood {
      *
      * @param socialSituation the social situation to set
      */
-    public void setSocialSituation(SocialSituation socialSituation) {
+    public void setSocialSituation(String socialSituation) {
         this.socialSituation = socialSituation;
         this.hasSocialSituation = socialSituation != null;
     }
@@ -245,6 +249,33 @@ public class Mood {
      *
      * @return a string representation of the Mood object
      */
+
+
+    public String getEmotion() {
+        return emotion;
+    }
+
+    public void setEmotion(String emotion) {
+        this.emotion = emotion;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+
     @Override
     public String toString() {
         return "Mood{" +

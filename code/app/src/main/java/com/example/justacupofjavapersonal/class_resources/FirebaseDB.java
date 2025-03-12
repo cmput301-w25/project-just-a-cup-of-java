@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import com.example.justacupofjavapersonal.class_resources.mood.EmotionalState;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
-import com.example.justacupofjavapersonal.class_resources.mood.SocialSituation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
