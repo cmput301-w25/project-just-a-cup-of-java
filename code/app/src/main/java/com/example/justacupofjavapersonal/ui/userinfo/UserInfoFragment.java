@@ -97,8 +97,8 @@ public class UserInfoFragment extends Fragment {
 
 
         btnSave.setOnClickListener(v -> {
-            saveProfileChanges();
-            navController.navigate(R.id.navigation_home);
+            saveProfileChanges(navController);
+
         });
 
         btnChangePassword.setOnClickListener(v -> {
@@ -145,7 +145,7 @@ public class UserInfoFragment extends Fragment {
         }
     }
 
-    private void saveProfileChanges() {
+    private void saveProfileChanges(NavController navController) {
         String name = editName.getText().toString().trim();
         String username = editUsername.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
@@ -168,6 +168,7 @@ public class UserInfoFragment extends Fragment {
             return;
         }
 
+        navController.navigate(R.id.navigation_home);
         db.collection("users")
                 .whereEqualTo("username", username)
                 .get()
