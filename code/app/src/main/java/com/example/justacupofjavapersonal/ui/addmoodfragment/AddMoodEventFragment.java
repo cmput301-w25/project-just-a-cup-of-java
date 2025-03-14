@@ -122,7 +122,7 @@ public class AddMoodEventFragment extends Fragment {
                         + "Trigger: " + optionalTriggerWrapper[0] + "\n"
                         + "Time: " + selectedTime;
                 moodsForDate.add(moodEntry);
-
+                
                 moodAdapter.notifyDataSetChanged();
                 selectedDate = newSelectedDate;
                 loadMoodsForDate(newSelectedDate);
@@ -179,7 +179,7 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
-
+    
     /**
      * Generates a list of dates representing the week (Sunday to Saturday) for the given selected date.
      *
