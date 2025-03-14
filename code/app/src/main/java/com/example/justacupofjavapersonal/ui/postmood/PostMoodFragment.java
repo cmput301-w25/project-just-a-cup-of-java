@@ -36,6 +36,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private EditText whyFeelEditText;
     private Button postButton;
     private ImageView addPhotoImageView;
+
     private Uri selectedImageUri;
     private TextView dateTextView;
     private TextView timeTextView;
