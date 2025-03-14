@@ -76,7 +76,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     public int getItemCount() {
         return moodList.size();
     }
-
+    
     /**
      * ViewHolder class for displaying moods in a RecyclerView.
      * This class holds the reference to the TextView that displays the mood and the delete button.
