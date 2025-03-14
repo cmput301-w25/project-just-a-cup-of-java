@@ -104,6 +104,7 @@ public class AddMoodEventFragment extends Fragment {
                 String newSelectedDate = bundle.getString("selectedDate", "No date selected");
                 String selectedTime = bundle.getString("selectedTime", "No time selected");
                 String selectedMood = bundle.getString("selectedMood", "");
+                String whyFeel = bundle.getString("whyFeel", "");
 
                 selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
                 optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
@@ -119,7 +120,8 @@ public class AddMoodEventFragment extends Fragment {
                 // Append new mood event to the list
                 String moodEntry = "Mood: " + selectedMood + "\n"
                         + "Social Situation: " + selectedSocialSituationWrapper[0] + "\n"
-                        + "Trigger: " + optionalTriggerWrapper[0] + "\n"
+                        + "Reason: " + optionalTriggerWrapper[0] + "\n"
+                        + "Why: " + whyFeel + "\n"
                         + "Time: " + selectedTime;
                 moodsForDate.add(moodEntry);
                 

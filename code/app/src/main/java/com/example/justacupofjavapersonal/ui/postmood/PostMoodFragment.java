@@ -48,6 +48,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private FirebaseDB firebaseDB;
 
     private User user;
+    private String whyFeel;
     private Mood moodPost;
 
     /**
@@ -67,7 +68,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.fragment_post_mood, container, false);
     }
-    
+
     /**
      * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
      * It is safe to perform operations on views in this method.
@@ -114,7 +115,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 getResources().getStringArray(R.array.social_situation_options)
         ) {
             /** Returns whether an item is enabled.
-             * 
+             *
              * @param position
              * @return
              */
@@ -124,7 +125,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 return position != 0;
             }
             /** Gets the dropdown view.
-             * 
+             *
              * @param position
              * @param convertView
              * @param parent
@@ -209,6 +210,8 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
             result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
             moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+            result.putString("whyFeel", whyFeelEditText.getText().toString());
+            moodPost.setWhyFeel(whyFeelEditText.getText().toString());
 
             firebaseDB = new FirebaseDB();
 
@@ -235,7 +238,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     }
 
     /** Sets the text for a selected mood.
-     * 
+     *
      * @param mood
      */
     @Override

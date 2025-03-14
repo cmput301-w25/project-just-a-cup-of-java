@@ -23,6 +23,7 @@ public class Mood {
     private Location location; // Optional
 
     private String date;
+    private String whyFeel; // Add this field
     private String time;
 
     private boolean hasPhoto = false;
@@ -254,6 +255,13 @@ public class Mood {
     public String getEmotion() {
         return emotion;
     }
+    public String getWhyFeel() {
+        return whyFeel;
+    }
+
+    public void setWhyFeel(String whyFeel) {
+        this.whyFeel = whyFeel;
+    }
 
     public void setEmotion(String emotion) {
         this.emotion = emotion;
@@ -289,5 +297,7 @@ public class Mood {
                 ", location=" + (location == null ? "None" : location.toString()) +
                 '}';
     }
+
+
 }
 
