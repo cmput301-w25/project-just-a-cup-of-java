@@ -1,6 +1,10 @@
 package com.example.justacupofjavapersonal.ui.postmood;
 
+
 import android.net.Uri;
+import android.app.AlertDialog;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,16 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
+
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
@@ -103,8 +112,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             // Set date and time in UI
             dateTextView.setText(selectedDate);
             timeTextView.setText(selectedTime);
-        }
-        else {
+        } else {
             Log.e("PostMoodFragment", "No arguments received!");
         }
 
@@ -114,7 +122,8 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.social_situation_options)
         ) {
-            /** Returns whether an item is enabled.
+            /**
+             * Returns whether an item is enabled.
              *
              * @param position
              * @return
@@ -124,7 +133,9 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 // Disable the first item ("Select a social situation") to prevent selection
                 return position != 0;
             }
-            /** Gets the dropdown view.
+
+            /**
+             * Gets the dropdown view.
              *
              * @param position
              * @param convertView
@@ -191,50 +202,105 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
         //NEW TRY
         postButton.setOnClickListener(v -> {
+            // Show the privacy selection dialog first
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Select Privacy Option");
 
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-//            Log.d("PostMoodFragment", "Current user: " + currentUser.getEmail());
-//            Log.d("PostMoodFragment", "Current user UID: " + currentUser.getUid());
+            // Create layout with checkboxes
+            LinearLayout layout = new LinearLayout(requireContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
 
-            moodPost = new Mood()  ;
+            CheckBox privateCheckBox = new CheckBox(requireContext());
+            privateCheckBox.setText("Private");
 
+            CheckBox publicCheckBox = new CheckBox(requireContext());
+            publicCheckBox.setText("Public");
 
-            Bundle result = new Bundle();
-            result.putString("selectedDate", dateTextView.getText().toString());
-            moodPost.setDate(dateTextView.getText().toString());
-            result.putString("selectedTime", timeTextView.getText().toString());
-            moodPost.setTime(timeTextView.getText().toString());
-            result.putString("selectedMood", selectedMood);
-            moodPost.setEmotion(selectedMood);
-            result.putString("selectedSocialSituation", socialSituationSpinner.getSelectedItem().toString());
-            moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
-            result.putString("optionalTrigger", optionalTriggerEditText.getText().toString());
-            moodPost.setTrigger(optionalTriggerEditText.getText().toString());
-            result.putString("whyFeel", whyFeelEditText.getText().toString());
-            moodPost.setWhyFeel(whyFeelEditText.getText().toString());
+            layout.addView(privateCheckBox);
+            layout.addView(publicCheckBox);
 
-            firebaseDB = new FirebaseDB();
+            builder.setView(layout);
 
-//            assert currentUser != null;
-//            if (currentUser != null) {
-//                db.collection("users").document(currentUser.getUid())
-//                        .get()
-//                        .addOnSuccessListener(documentSnapshot -> {
-//                            if (documentSnapshot.exists()) {
-//                                user = documentSnapshot.toObject(User.class);
-//                                firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
-//                            }
-//                        });
-//            }
+            // Ensure only one option is selected
+            privateCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) publicCheckBox.setChecked(false);
+            });
 
-            // Send the result back to AddMoodEventFragment
-            getParentFragmentManager().setFragmentResult("moodEvent", result);
+            publicCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) privateCheckBox.setChecked(false);
+            });
 
-            // Navigate back
-            NavController navController = Navigation.findNavController(v);
-            navController.popBackStack();
+            // Set the "Post" button action in the dialog
+            builder.setPositiveButton("Post", null); // Override below to prevent auto-dismiss
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog dialog = builder.create();
+
+            // Override the button behavior so the dialog doesn't close on an invalid selection
+            dialog.setOnShowListener(d -> {
+                Button postButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                postButton.setOnClickListener(buttonView -> {
+                    // Ensure one option is selected
+                    if (!privateCheckBox.isChecked() && !publicCheckBox.isChecked()) {
+                        Toast.makeText(requireContext(), "Please select Private or Public", Toast.LENGTH_SHORT).show();
+                        return; // Prevent dialog from closing
+                    }
+
+                    String privacySetting = privateCheckBox.isChecked() ? "Private" : "Public";
+
+                    // Initialize moodPost AFTER selecting privacy
+                    moodPost = new Mood();
+                    moodPost.setDate(dateTextView.getText().toString());
+                    moodPost.setTime(timeTextView.getText().toString());
+                    moodPost.setEmotion(selectedMood);
+                    moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
+                    moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+                    moodPost.setWhyFeel(whyFeelEditText.getText().toString());
+                    moodPost.setPrivacy(privacySetting); // Save the privacy setting
+
+                    // Prepare data bundle to send to AddMoodEventFragment
+                    Bundle result = new Bundle();
+                    result.putString("selectedDate", moodPost.getDate());
+                    result.putString("selectedTime", moodPost.getTime());
+                    result.putString("selectedMood", moodPost.getEmotion());
+                    result.putString("selectedSocialSituation", moodPost.getSocialSituation());
+                    result.putString("optionalTrigger", moodPost.getTrigger());
+                    result.putString("whyFeel", moodPost.getWhyFeel());
+                    result.putString("privacySetting", privacySetting);
+
+                    firebaseDB = new FirebaseDB();
+                    //YOU HAVE TO BE LOGGED IN FOR THE POST BUTTON TO WORK
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+
+                    if (currentUser != null) {
+                        db.collection("users").document(currentUser.getUid())
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        user = documentSnapshot.toObject(User.class);
+                                        firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
+
+                                        // Send data to AddMoodEventFragment **only after Firebase upload**
+                                        getParentFragmentManager().setFragmentResult("moodEvent", result);
+
+                                        // Navigate back **only after Firebase upload succeeds**
+                                        NavController navController = Navigation.findNavController(v);
+                                        navController.popBackStack();
+
+                                        // Dismiss dialog only after everything is done
+                                        dialog.dismiss();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+
+            // Show the dialog
+            dialog.show();
         });
-
     }
 
     /** Sets the text for a selected mood.

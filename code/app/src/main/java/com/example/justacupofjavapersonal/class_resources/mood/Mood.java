@@ -13,6 +13,7 @@ import java.util.Date;
 public class Mood {
 
     private String moodID; // Immutable: Unique ID for the mood event
+    private String privacy;
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
@@ -261,6 +262,14 @@ public class Mood {
 
     public void setWhyFeel(String whyFeel) {
         this.whyFeel = whyFeel;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
+    public String getPrivacy() {
+        return privacy;
     }
 
     public void setEmotion(String emotion) {

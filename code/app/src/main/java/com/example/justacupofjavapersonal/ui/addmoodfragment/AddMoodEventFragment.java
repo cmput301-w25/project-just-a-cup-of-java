@@ -105,6 +105,7 @@ public class AddMoodEventFragment extends Fragment {
                 String selectedTime = bundle.getString("selectedTime", "No time selected");
                 String selectedMood = bundle.getString("selectedMood", "");
                 String whyFeel = bundle.getString("whyFeel", "");
+                String privacySetting = bundle.getString("privacySetting", "Private"); // ✅ Retrieve privacy setting
 
                 selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
                 optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
@@ -122,6 +123,7 @@ public class AddMoodEventFragment extends Fragment {
                         + "Social Situation: " + selectedSocialSituationWrapper[0] + "\n"
                         + "Reason: " + optionalTriggerWrapper[0] + "\n"
                         + "Why: " + whyFeel + "\n"
+                        + "Privacy: " + privacySetting + "\n"
                         + "Time: " + selectedTime;
                 moodsForDate.add(moodEntry);
                 
