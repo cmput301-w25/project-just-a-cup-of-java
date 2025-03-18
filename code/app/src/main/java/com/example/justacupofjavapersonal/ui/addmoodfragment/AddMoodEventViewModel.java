@@ -50,8 +50,19 @@ public class AddMoodEventViewModel extends ViewModel {
      */
     public void addMood(String mood) {
         List<String> currentMoods = moodList.getValue();
-        currentMoods.add(mood);
+        if (currentMoods == null) {
+            currentMoods = new ArrayList<>();
+        }
+        currentMoods.add(0,mood); // adding mood at top of list
         moodList.setValue(currentMoods);
+    }
+
+    public void removeMood(int position) {
+        List<String> currentMoods = moodList.getValue();
+        if (currentMoods != null && position >= 0 && position < currentMoods.size()) {
+            currentMoods.remove(position);
+            moodList.setValue(currentMoods);
+        }
     }
 
     /**
