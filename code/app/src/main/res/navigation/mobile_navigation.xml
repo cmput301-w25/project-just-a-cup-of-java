@@ -47,7 +47,21 @@
         android:id="@+id/navigation_notifications"
         android:name="com.example.justacupofjavapersonal.ui.follow.AllFriendsFollowFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_follower_all_friends" />
+        tools:layout="@layout/fragment_follower_all_friends">
+        <action
+            android:id="@+id/action_navigation_notification_to_follower_requests"
+            app:destination="@id/navigation_follower_requests"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_follower_requests"
+        android:name="com.example.justacupofjavapersonal.ui.follow.FollowRequestsFragment"
+        android:label="Following"
+        tools:layout="@layout/fragment_follow_requests">
+        <action
+            android:id="@+id/action_navigation_follower_requests_to_notifications"
+            app:destination="@id/navigation_notifications"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_user_info"
