@@ -54,8 +54,10 @@ public class AllFriendsFollowFragment extends Fragment {
         // Get NavController for navigating between fragments
         NavController navController = Navigation.findNavController(view);
 
-        // Add click listener for follow button
-
+        // Add click listener to go to requests page
+        binding.followerRequestsFriends.setOnClickListener(v -> {
+            navController.navigate(R.id.action_navigation_notification_to_follower_requests);
+        });
     }
 
     @Override
