@@ -159,6 +159,10 @@ public class Mood {
         return uid;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     /**
      * Gets the unique mood ID.
      *
@@ -167,6 +171,7 @@ public class Mood {
     public String getMoodID() {
         return moodID;
     }
+
 
     /**
      * Gets the photo associated with the mood event.

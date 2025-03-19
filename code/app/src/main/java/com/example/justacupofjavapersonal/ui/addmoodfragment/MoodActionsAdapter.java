@@ -1,4 +1,4 @@
-package com.example.justacupofjavapersonal.ui.mood;
+package com.example.justacupofjavapersonal.ui.addmoodfragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -57,7 +57,6 @@ public class AddMoodEventViewModel extends ViewModel {
     /**
      * Removes the given mood from the list of moods.
      *
-     * @param mood the mood to remove from the list
      */
     public LiveData<List<String>> getMoodList() {
         return moodList;
