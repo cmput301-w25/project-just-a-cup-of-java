@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.databinding.FragmentAddMoodBinding;
 import com.example.justacupofjavapersonal.ui.addmoodfragment.MoodActionsAdapter;
@@ -48,7 +49,7 @@ public class AddMoodEventFragment extends Fragment {
     private String selectedMood;
     private ArrayList<String> weekDates;
     private WeekAdapter weekAdapter;
-    private ArrayList<String> moodList = new ArrayList<>();
+    private ArrayList<Mood> moodList = new ArrayList<>();
     private MoodActionsAdapter moodAdapter;
 
     /**
@@ -82,15 +83,13 @@ public class AddMoodEventFragment extends Fragment {
 
             viewModel.initializeSelectedDate(calendarSelectedDate);
 
-            // Store mood event details in list
             if (selectedMood != null && !selectedMood.isEmpty()) {
-                moodList.add("Mood: " + selectedMood);
-            }
-            if (!selectedSocialSituation.equals("No social situation")) {
-                moodList.add("Social Situation: " + selectedSocialSituation);
-            }
-            if (!optionalTrigger.equals("No trigger")) {
-                moodList.add("Trigger: " + optionalTrigger);
+                Mood initialMood = new Mood();
+                initialMood.setEmotion(selectedMood);
+                initialMood.setSocialSituation(selectedSocialSituation);
+                initialMood.setTrigger(optionalTrigger);
+                initialMood.setDate(calendarSelectedDate);
+                moodList.add(initialMood);
             }
         }
 
@@ -104,7 +103,9 @@ public class AddMoodEventFragment extends Fragment {
             Toast.makeText(getContext(), "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
             weekDates = getWeekDates(selectedDate);
             loadMoodsForDate(selectedDate);
+            Log.d("Date Check", "onCreateView's selected date: " + selectedDate);
             setupWeekRecyclerView();
+            moodMap.clear();
         });
 
 
@@ -113,40 +114,27 @@ public class AddMoodEventFragment extends Fragment {
 
         // 🔹 Listen for the mood event from PostMoodFragment
         getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
-            if ("moodEvent".equals(requestKey)) {
-                String newSelectedDate = bundle.getString("selectedDate", "No date selected");
-                String selectedTime = bundle.getString("selectedTime", "No time selected");
-                String selectedMood = bundle.getString("selectedMood", "");
-                String whyFeel = bundle.getString("whyFeel", "");
-                String privacySetting = bundle.getString("privacySetting", "Private"); // ✅ Retrieve privacy setting
+            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
+            String selectedTime = bundle.getString("selectedTime", "No time selected");
+            String selectedMood = bundle.getString("selectedMood", "");
+            String whyFeel = bundle.getString("whyFeel", "");
+            String privacySetting = bundle.getString("privacySetting", "Private");
+            selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
+            optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
 
-                selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
-                optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
+            Mood newMood = new Mood();
+            newMood.setDate(newSelectedDate);
+            newMood.setTime(selectedTime);
+            newMood.setEmotion(selectedMood);
+            newMood.setWhyFeel(whyFeel);
+            newMood.setPrivacy(privacySetting);
+            newMood.setSocialSituation(selectedSocialSituationWrapper[0]);
+            newMood.setTrigger(optionalTriggerWrapper[0]);
 
-                binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
-
-                loadMoodsForDate(newSelectedDate);
-
-                // 🔹 Store mood events specific to the selected date
-                if (!moodMap.containsKey(newSelectedDate)) {
-                    moodMap.put(newSelectedDate, new ArrayList<>()); // Initialize list if not present
-                }
-                ArrayList<String> moodsForDate = moodMap.get(newSelectedDate);
-
-                // Append new mood event to the list
-                String moodEntry = "Mood: " + selectedMood + "\n"
-                        + "Social Situation: " + selectedSocialSituationWrapper[0] + "\n"
-                        + "Reason: " + optionalTriggerWrapper[0] + "\n"
-                        + "Why: " + whyFeel + "\n"
-                        + "Privacy: " + privacySetting + "\n"
-                        + "Time: " + selectedTime;
-                moodsForDate.add(moodEntry);
-
-                moodAdapter.notifyDataSetChanged();
-                selectedDate = newSelectedDate;
-
-
-            }
+            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
+            loadMoodsForDate(newSelectedDate);  // This will fetch updated Firestore data
+            viewModel.addMood(newMood);  // Add to ViewModel (optional)
+            selectedDate = newSelectedDate;
         });
 
         // Handle "Add Mood" button click
@@ -178,11 +166,10 @@ public class AddMoodEventFragment extends Fragment {
         binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.moodListView.setAdapter(moodAdapter);
 
-        // Observe the LiveData for mood list and update the adapter
         viewModel.getMoodList().observe(getViewLifecycleOwner(), updatedMoodList -> {
-            moodList.clear();  // Clear current list
-            moodList.addAll(updatedMoodList);  // Add new data
-            moodAdapter.notifyDataSetChanged();  // Notify adapter to update UI
+            moodList.clear();
+            moodList.addAll(updatedMoodList);  // Assuming ViewModel also uses List<Mood>
+            moodAdapter.notifyDataSetChanged();
         });
     }
 
@@ -194,15 +181,24 @@ public class AddMoodEventFragment extends Fragment {
      */
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
-            String moodToDelete = moodList.get(position);
+            Mood moodToDelete = moodList.get(position);
             moodList.remove(position);
             moodAdapter.notifyItemRemoved(position);
 
-            // Also remove the mood from the moodMap for the selected date
+            FirebaseDB firebaseDB = new FirebaseDB();
+            firebaseDB.deleteMood(moodToDelete);
+            Toast.makeText(getContext(), "Mood deleted", Toast.LENGTH_SHORT).show();
+
             if (moodMap.containsKey(selectedDate)) {
                 ArrayList<String> moodsForDate = moodMap.get(selectedDate);
-                moodsForDate.remove(moodToDelete);  // Remove the specific mood entry
-                moodMap.put(selectedDate, moodsForDate); // Update the map
+                String moodEntry = "Mood: " + moodToDelete.getEmotion() + "\n" +
+                        "Social Situation: " + moodToDelete.getSocialSituation() + "\n" +
+                        "Trigger: " + moodToDelete.getTrigger() + "\n" +
+                        "Why: " + moodToDelete.getWhyFeel() + "\n" +
+                        "Privacy: " + moodToDelete.getPrivacy() + "\n" +
+                        "Time: " + moodToDelete.getTime();
+                moodsForDate.remove(moodEntry);
+                moodMap.put(selectedDate, moodsForDate);
             }
         }
     }
@@ -266,9 +262,6 @@ public class AddMoodEventFragment extends Fragment {
             selectedDate = convertToFullDate(date);
             viewModel.setSelectedDate(selectedDate);
             binding.selectedDateTextView.setText("Selected Date: " + selectedDate);
-
-            // 🔹 Load moods specific to the selected date when switching dates
-            loadMoodsForDate(selectedDate);
         });
 
         binding.weekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -282,7 +275,7 @@ public class AddMoodEventFragment extends Fragment {
      * @param date The selected date in the format "dd-MM-yyyy".
      */
     public void loadMoodsForDate(String date) {
-        moodList.clear(); // Clear list before loading
+        moodList.clear();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -295,16 +288,10 @@ public class AddMoodEventFragment extends Fragment {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                                 Mood mood = document.toObject(Mood.class);
-                                String moodEntry = "Mood: " + mood.getEmotion() + "\n"
-                                        + "Social Situation: " + mood.getSocialSituation() + "\n"
-                                        + "Trigger: " + mood.getTrigger() + "\n"
-                                        + "Why: " + mood.getWhyFeel() + "\n"
-                                        + "Privacy: " + mood.getPrivacy() + "\n"
-                                        + "Time: " + mood.getTime();
-                                moodList.add(moodEntry);
+                                moodList.add(mood);  // Store the Mood object directly
                             }
                         }
-                        moodAdapter.notifyDataSetChanged(); // Notify only after data is loaded
+                        moodAdapter.notifyDataSetChanged();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "Error fetching moods: " + e.getMessage(), Toast.LENGTH_LONG).show();

@@ -3,6 +3,9 @@ package com.example.justacupofjavapersonal.ui.addmoodfragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 public class AddMoodEventViewModel extends ViewModel {
     private final MutableLiveData<String> selectedDate = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> moodList = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Mood>> moodList = new MutableLiveData<>(new ArrayList<>());
 
     /**
      * Sets the selected date to the given date.
@@ -48,8 +51,8 @@ public class AddMoodEventViewModel extends ViewModel {
      *
      * @param mood the mood to add to the list
      */
-    public void addMood(String mood) {
-        List<String> currentMoods = moodList.getValue();
+    public void addMood(Mood mood) {
+        List<Mood> currentMoods = moodList.getValue();
         currentMoods.add(mood);
         moodList.setValue(currentMoods);
     }
@@ -58,7 +61,7 @@ public class AddMoodEventViewModel extends ViewModel {
      * Removes the given mood from the list of moods.
      *
      */
-    public LiveData<List<String>> getMoodList() {
+    public LiveData<List<Mood>> getMoodList() {
         return moodList;
     }
 }

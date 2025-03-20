@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.mood.Mood;
+
 import java.util.ArrayList;
 
 /**
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  * This class is responsible for creating the view holders for the RecyclerView and binding the data to them.
  */
 public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.MoodViewHolder> {
-    private final ArrayList<String> moodList;
+    private final ArrayList<Mood> moodList;
     private final Context context;
     private final OnMoodDeleteListener deleteListener;
 
@@ -27,7 +29,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
      * @param moodList the list of moods to display
      * @param deleteListener the listener for the delete button
      */
-    public MoodActionsAdapter(Context context, ArrayList<String> moodList, OnMoodDeleteListener deleteListener) {
+    public MoodActionsAdapter(Context context, ArrayList<Mood> moodList, OnMoodDeleteListener deleteListener) {
         this.context = context;
         this.moodList = moodList;
         this.deleteListener = deleteListener;
@@ -55,12 +57,18 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
      */
     @Override
     public void onBindViewHolder(@NonNull MoodViewHolder holder, int position) {
-        String moodEntry = moodList.get(position);
+        Mood mood = moodList.get(position);
+        // Format the Mood object into a string for display
+        String moodEntry = "Mood: " + mood.getEmotion() + "\n" +
+                "Social Situation: " + mood.getSocialSituation() + "\n" +
+                "Trigger: " + mood.getTrigger() + "\n" +
+                "Why: " + mood.getWhyFeel() + "\n" +
+                "Privacy: " + mood.getPrivacy() + "\n" +
+                "Time: " + mood.getTime();
         holder.moodTextView.setText(moodEntry);
 
-        // Delete button click listener
         holder.deleteButton.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition(); // Ensure correct position
+            int currentPosition = holder.getAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION) {
                 deleteListener.onMoodDelete(currentPosition);
             }
