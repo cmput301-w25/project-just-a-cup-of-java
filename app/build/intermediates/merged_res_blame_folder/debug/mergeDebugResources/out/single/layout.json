@@ -1,0 +1,90 @@
+[
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\item_date_feed.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\item_date_feed.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_notifications.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_notifications.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_each_day.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_each_day.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\dialog_mood_selector.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\dialog_mood_selector.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\mood_history_filter.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\mood_history_filter.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\change_password.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\change_password.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\dialog_login.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\dialog_login.xml"
+    },
+    {
+        "merged": "com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_edit_mood.xml",
+        "source": "com.example.justacupofjavapersonal.app-main-62:/layout/fragment_edit_mood.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_login.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\mood_history.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\mood_history.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_userinfo.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_userinfo.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_feed.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_feed.xml"
+    },
+    {
+        "merged": "com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/fragment_feed.xml",
+        "source": "com.example.justacupofjavapersonal.app-main-62:/layout/fragment_feed.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\item_mood_feed.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\item_mood_feed.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\mood_list_item.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\mood_list_item.xml"
+    },
+    {
+        "merged": "com.example.justacupofjavapersonal.app-mergeDebugResources-59:/layout/mood_list_item.xml",
+        "source": "com.example.justacupofjavapersonal.app-main-62:/layout/mood_list_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_post_mood.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_post_mood.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_dashboard.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\item_mood.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\item_mood.xml"
+    },
+    {
+        "merged": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-mergeDebugResources-59:\\layout\\fragment_add_mood.xml",
+        "source": "C:\\Users\\iqraa\\.gradle\\daemon\\8.10.2\\com.example.justacupofjavapersonal.app-main-62:\\layout\\fragment_add_mood.xml"
+    }
+]
