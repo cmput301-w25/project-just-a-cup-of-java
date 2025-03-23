@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
             android:backgroundTint="#5A9999"
-            android:text="All Friends"
+            android:text="All Users"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@id/recyclerView"
             app:layout_constraintEnd_toStartOf="@+id/follower_requests_fragment"
