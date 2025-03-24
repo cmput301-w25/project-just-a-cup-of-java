@@ -16,13 +16,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.SetOptions;
 
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,6 +92,46 @@ public class FirebaseDB {
             Log.e("Get User Data", "Error loading user data", e);
         });
         return userData[0];
+    }
+
+    public interface OnUsersRetrievedListsner {
+        void onUsersRetrieved(List<User> userList);
+    }
+
+    public void getAllUsers(OnUsersRetrievedListsner listener) {
+        db.collection("users").get().addOnCompleteListener(task -> {
+            List<User> userList = new ArrayList<>();
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    User user = document.toObject(User.class);
+                    userList.add(user);
+                }
+            }
+            listener.onUsersRetrieved(userList);
+        });
+    }
+
+    public void searchUsers(String search, OnUsersRetrievedListsner listener) {
+        if (search.isEmpty()) {
+            getAllUsers(listener);
+            return;
+        }
+
+        db.collection("users")
+                .orderBy("name")
+                .startAt(search)
+                .endAt(search + "\uf8ff")
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<User> searchedList = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            User user = documentSnapshot.toObject(User.class);
+                            searchedList.add(user);
+                        }
+                    }
+                    listener.onUsersRetrieved(searchedList);
+                });
     }
 
     /**
@@ -196,17 +239,29 @@ public class FirebaseDB {
     }
 
     /**
-     * Adds a follower to
+     * Adds a following relation to the database.
+     * Followee is the one being followed, follower is the one following
+     *
      * @param follower
      * @param followee
      */
     public void addFollower(@NonNull User follower, @NonNull User followee) {
-        Map<String, Object> following = new HashMap<>();
-        following.put("follower",follower.getUid());
         // Followee is the one being followed, the name of the document
         // Use update so that the old information isn't overwritten
-        db.collection("following").document(followee.getUid()).update(following);
+        // Add to collection the users that are following a specified user
+        DocumentReference followedByRef = db.collection("followedBy").document(followee.getUid());
+        followedByRef.set(
+                Collections.singletonMap("followers", FieldValue.arrayUnion(follower.getUid())),
+                SetOptions.merge()
+        );
 
+        // Add to the follows collection. The follows collection holds the users the
+        // current user is following
+        DocumentReference followsRef =  db.collection("follows").document(follower.getUid());
+        followsRef.set(
+                Collections.singletonMap("following", FieldValue.arrayUnion(followee.getUid())),
+                SetOptions.merge()
+        );
     }
 
     /**
@@ -224,6 +279,10 @@ public class FirebaseDB {
      * @param followee
      */
     public void getFollowers(User follower, User followee) {
+
+    }
+
+    public void getFollowing(User user) {
 
     }
 }
