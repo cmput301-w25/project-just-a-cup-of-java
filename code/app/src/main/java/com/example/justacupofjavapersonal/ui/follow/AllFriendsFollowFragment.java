@@ -52,7 +52,7 @@ public class AllFriendsFollowFragment extends Fragment {
 
         adapter = new UserAdapter(userList, position -> {
             Toast.makeText(requireContext(), "Follow Request Sent" + userList.get(position).getName(), Toast.LENGTH_LONG).show();
-        });
+        }, db);
 
         binding.recyclerView.setAdapter(adapter);
         // Get NavController for navigating between fragments
