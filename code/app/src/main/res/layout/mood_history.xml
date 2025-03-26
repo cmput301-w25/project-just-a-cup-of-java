@@ -15,55 +15,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--        android:backgroundTint="#85BEC8"-->
+    <!--        android:backgroundTint="#D98160"-->
+    <!-- RecyclerView to display Mood History Entries -->
+
     <Button
         android:id="@+id/button"
         android:layout_width="118dp"
         android:layout_height="48dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="124dp"
         android:backgroundTint="#5A9999"
         android:text="Calendar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.136" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="120dp"
         android:backgroundTint="#5A9999"
         android:text="Mood History"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/filterbutton"
+        app:layout_constraintStart_toEndOf="@+id/button"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.136"
-        />
-    <!--        android:backgroundTint="#85BEC8"-->
-    <!--        android:backgroundTint="#D98160"-->
-    <!-- RecyclerView to display Mood History Entries -->
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moodHistoryRecyclerView"
-        android:layout_width="413dp"
-        android:layout_height="486dp"
-        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="90dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterbutton" />
 
     <Button
         android:id="@+id/filterbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter"
+        android:layout_marginEnd="28dp"
         android:backgroundTint="#5A9999"
-        app:layout_constraintBottom_toTopOf="@+id/moodHistoryRecyclerView"
+        android:text="Filter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.0" />
-    <!--    tools:listitem="@layout/item_mood_history"-->
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,6 @@ public class Mood {
     private Location location; // Optional
 
     private String date;
-    private String whyFeel; // Add this field
     private String time;
 
     private boolean hasPhoto = false;
@@ -134,9 +133,7 @@ public class Mood {
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
     public void setTrigger(String trigger) {
-        if (trigger.length() > 20) {
-            throw new IllegalArgumentException("Trigger must be 20 characters at most.");
-        }
+
         this.trigger = trigger;
         this.hasTrigger = trigger != null && !trigger.isEmpty();
     }
@@ -261,13 +258,6 @@ public class Mood {
     public String getEmotion() {
         return emotion;
     }
-    public String getWhyFeel() {
-        return whyFeel;
-    }
-
-    public void setWhyFeel(String whyFeel) {
-        this.whyFeel = whyFeel;
-    }
 
     public void setPrivacy(String privacy) {
         this.privacy = privacy;
@@ -305,7 +295,6 @@ public class Mood {
                 ", uid='" + uid + '\'' +
                 ", postDate=" + postDate +
                 ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
-                ", emotionalState=" + state +
                 ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
                 ", photo=" + (photo == null ? "None" : "Available") +
                 ", location=" + (location == null ? "None" : location.toString()) +

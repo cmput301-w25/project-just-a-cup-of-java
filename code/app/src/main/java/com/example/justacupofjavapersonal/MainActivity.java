@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_feed, R.id.navigation_notifications)
                 .build();
         NavigationUI.setupWithNavController(binding.topAppBar, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(binding.navView, navController);
+
         binding.navView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 

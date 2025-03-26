@@ -6,7 +6,6 @@ public class User implements Serializable {
 
     private String name;
     private String email;
-    private String password;
     private String bio;
     private String profilePic;
     private String username;
@@ -16,11 +15,10 @@ public class User implements Serializable {
         //Empty constructor for firebase
     }
 
-    public User(String name, String email, String password, String bio, String profilePic, String username, String uid) {
+    public User(String name, String email, String bio, String profilePic, String username, String uid) {
         this.name = name;
         this.uid = uid;
         this.email = email;
-        this.password = password;
         this.bio = bio;
         this.profilePic = profilePic;
         this.username = username;
@@ -66,24 +64,6 @@ public class User implements Serializable {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     * Gets the password of the user.
-     *
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Sets the password of the user.
-     *
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**

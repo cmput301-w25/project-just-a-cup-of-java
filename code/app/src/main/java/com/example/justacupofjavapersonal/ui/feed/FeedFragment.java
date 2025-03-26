@@ -48,8 +48,8 @@ public class FeedFragment extends Fragment {
         Date t4 = new Date(System.currentTimeMillis() - 300525030L);
 
         // Create user objects
-        User user1 = new User("person", "a", "a", "a", "a", "a", "a");
-        User user2 = new User("person also", "a", "a", "a", "a", "a", "a");
+        User user1 = new User("person", "a", "a",  "a", "a", "a");
+        User user2 = new User("person also", "a",  "a", "a", "a", "a");
 
         // Pass user IDs instead of full User objects
         Mood m1 = new Mood(EmotionalState.HAPPINESS, t1);

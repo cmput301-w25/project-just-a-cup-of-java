@@ -194,7 +194,6 @@ public class AddMoodEventFragment extends Fragment {
                 String moodEntry = "Mood: " + moodToDelete.getEmotion() + "\n" +
                         "Social Situation: " + moodToDelete.getSocialSituation() + "\n" +
                         "Trigger: " + moodToDelete.getTrigger() + "\n" +
-                        "Why: " + moodToDelete.getWhyFeel() + "\n" +
                         "Privacy: " + moodToDelete.getPrivacy() + "\n" +
                         "Time: " + moodToDelete.getTime();
                 moodsForDate.remove(moodEntry);

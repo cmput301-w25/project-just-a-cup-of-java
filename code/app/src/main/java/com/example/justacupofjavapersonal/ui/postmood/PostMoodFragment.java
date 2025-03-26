@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -43,13 +44,13 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private EditText optionalTriggerEditText;
     private Spinner socialSituationSpinner;
     private EditText whyFeelEditText;
-    private Button postButton;
+    private CardView postButton;
     private ImageView addPhotoImageView;
 
     private Uri selectedImageUri;
     private TextView dateTextView;
     private TextView timeTextView;
-    private Button addMoodButton;
+    private CardView addMoodButton;
     private String selectedMood = "Add Emotional State";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -64,9 +65,9 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
      * Called to do initial creation of a fragment.
      * This is called after onAttach(Activity) and before onCreateView(LayoutInflater, ViewGroup, Bundle).
      *
-     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment
-     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
-     *                  The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                           The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
      * @return Return the View for the fragment's UI, or null.
      */
@@ -82,7 +83,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
      * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
      * It is safe to perform operations on views in this method.
      *
-     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param view               The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
      */
     @Override
@@ -160,49 +161,19 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         socialSituationSpinner.setAdapter(adapter);
         socialSituationSpinner.setSelection(0);
 
-        // Find the "Add Emotional State" button
-        View addMoodButton = view.findViewById(R.id.addEmoStateButton);
 
-        // Ensure button is not null
         if (addMoodButton != null) {
             // Open Mood Selector Dialog when button is clicked
             addMoodButton.setOnClickListener(v -> {
-                MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment(this);
+                MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment();
+                moodDialog.setMoodSelectionListener(PostMoodFragment.this);
                 moodDialog.show(getParentFragmentManager(), "MoodSelector");
             });
         } else {
             Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
-//WORKING
-//        postButton.setOnClickListener(v -> {
-//            Bundle bundle = new Bundle();
-//
-//            // Retrieve selected date and mood
-//            String selectedDate = dateTextView.getText().toString();
-//            //added
-//            String selectedTime = timeTextView.getText().toString();
-//            //added
-//            String selectedMood = this.selectedMood;
-//            String selectedSocialSituation = socialSituationSpinner.getSelectedItem().toString();
-//            String optionalTrigger = optionalTriggerEditText.getText().toString();
-//
-//            bundle.putString("selectedDate", selectedDate);
-//            //added
-//            bundle.putString("selectedTime", selectedTime);
-//            //added
-//            bundle.putString("selectedMood", selectedMood);
-//            bundle.putString("selectedSocialSituation", selectedSocialSituation);
-//            bundle.putString("optionalTrigger", optionalTrigger);
-//
-//
-//            NavController navController = Navigation.findNavController(v);
-//            navController.navigate(R.id.navigation_add_mood, bundle);
-//        });
-        //WORKING
 
-        //NEW TRY
         postButton.setOnClickListener(v -> {
-            // Show the privacy selection dialog first
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle("Select Privacy Option");
 
@@ -230,7 +201,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 if (isChecked) privateCheckBox.setChecked(false);
             });
 
-            // Set the "Post" button action in the dialog
             builder.setPositiveButton("Post", null); // Override below to prevent auto-dismiss
 
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -256,7 +226,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                     moodPost.setEmotion(selectedMood);
                     moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                     moodPost.setTrigger(optionalTriggerEditText.getText().toString());
-                    moodPost.setWhyFeel(whyFeelEditText.getText().toString());
                     moodPost.setPrivacy(privacySetting); // Save the privacy setting
 
                     // Prepare data bundle to send to AddMoodEventFragment
@@ -266,11 +235,9 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                     result.putString("selectedMood", moodPost.getEmotion());
                     result.putString("selectedSocialSituation", moodPost.getSocialSituation());
                     result.putString("optionalTrigger", moodPost.getTrigger());
-                    result.putString("whyFeel", moodPost.getWhyFeel());
                     result.putString("privacySetting", privacySetting);
 
                     firebaseDB = new FirebaseDB();
-                    //YOU HAVE TO BE LOGGED IN FOR THE POST BUTTON TO WORK
                     FirebaseUser currentUser = mAuth.getCurrentUser();
 
                     if (currentUser != null) {
@@ -280,15 +247,9 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                                     if (documentSnapshot.exists()) {
                                         user = documentSnapshot.toObject(User.class);
                                         firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
-
-                                        // Send data to AddMoodEventFragment **only after Firebase upload**
                                         getParentFragmentManager().setFragmentResult("moodEvent", result);
-
-                                        // Navigate back **only after Firebase upload succeeds**
                                         NavController navController = Navigation.findNavController(v);
                                         navController.popBackStack();
-
-                                        // Dismiss dialog only after everything is done
                                         dialog.dismiss();
                                     }
                                 });
@@ -297,8 +258,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                     }
                 });
             });
-
-            // Show the dialog
             dialog.show();
         });
     }
@@ -309,9 +268,21 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
      */
     @Override
     public void onMoodSelected(String mood) {
-        selectedMood = mood;
+        selectedMood = mood;  // Store the selected mood
+
+        // Check if the CardView is not null
         if (addMoodButton != null) {
-            addMoodButton.setText(mood);
+            // Find the TextView inside the CardView
+            TextView textViewInsideCard = addMoodButton.findViewById(R.id.cardTextView);
+
+            // Check if the TextView is not null and set the text
+            if (textViewInsideCard != null) {
+                textViewInsideCard.setText(mood);  // Update the text of the TextView inside the CardView
+            } else {
+                Log.e("PostMoodFragment", "TextView inside CardView not found!");
+            }
+        } else {
+            Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
     }
 }
