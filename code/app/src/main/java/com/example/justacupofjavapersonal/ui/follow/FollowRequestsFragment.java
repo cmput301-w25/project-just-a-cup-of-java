@@ -67,7 +67,7 @@ public class FollowRequestsFragment extends Fragment {
                 Toast.makeText(requireContext(), "Denied Follow Request", Toast.LENGTH_LONG).show();
                 adapter.removeItem(position);
             }
-        });
+        }, db);
 
         binding.recyclerView.setAdapter(adapter);
         // Get NavController for navigating between fragments

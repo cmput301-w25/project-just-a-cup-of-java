@@ -22,9 +22,10 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     private OnItemClickListener listener;
     private FirebaseDB db;
 
-    public UserRequestAdapter(List<User> userList, OnItemClickListener listener) {
+    public UserRequestAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
         this.userList = userList;
         this.listener = listener;
+        this.db = db;
     }
 
     public interface OnItemClickListener {
