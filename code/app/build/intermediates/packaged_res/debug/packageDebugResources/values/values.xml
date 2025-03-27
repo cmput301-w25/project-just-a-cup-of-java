@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emotion_options">
+        <item>Select an emotion</item>
+        <item>@string/emotion_anger</item>
+        <item>@string/emotion_confusion</item>
+        <item>@string/emotion_disgust</item>
+        <item>@string/emotion_fear</item>
+        <item>@string/emotion_happiness</item>
+        <item>@string/emotion_sadness</item>
+        <item>@string/emotion_shame</item>
+        <item>@string/emotion_surprise</item>
+    </string-array>
+    <string-array name="social_situation_options">
+        <item>Select a social situation</item>
+        <item>@string/social_situation_alone</item>
+        <item>@string/social_situation_one_other_person</item>
+        <item>@string/social_situation_two_or_several_people</item>
+        <item>@string/social_situation_crowd</item>
+    </string-array>
+    <color name="black">#FF000000</color>
+    <color name="light_gray">#FFD9D9D9</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <item name="navigation_moodhistory" type="id"/>
+    <string name="app_name">just a cup of java personal</string>
+    <string name="default_web_client_id" translatable="false">727983894490-ln4dciqqjv7vn90hjfqevd8ftbrrcfp1.apps.googleusercontent.com</string>
+    <string name="emotion_anger">Anger</string>
+    <string name="emotion_confusion">Confusion</string>
+    <string name="emotion_disgust">Disgust</string>
+    <string name="emotion_fear">Fear</string>
+    <string name="emotion_happiness">Happiness</string>
+    <string name="emotion_sadness">Sadness</string>
+    <string name="emotion_shame">Shame</string>
+    <string name="emotion_surprise">Surprise</string>
+    <string name="gcm_defaultSenderId" translatable="false">727983894490</string>
+    <string name="google_api_key" translatable="false">AIzaSyAjQFNvnxdjmorgGIec8Dsd9e0TLBJgmaY</string>
+    <string name="google_app_id" translatable="false">1:727983894490:android:41f3c346c21d7e42ad1ae3</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAjQFNvnxdjmorgGIec8Dsd9e0TLBJgmaY</string>
+    <string name="google_storage_bucket" translatable="false">justacupofjava301.firebasestorage.app</string>
+    <string name="project_id" translatable="false">justacupofjava301</string>
+    <string name="select_emotion_prompt">Select an emotion</string>
+    <string name="select_social_prompt">Select an emotion</string>
+    <string name="selected_date">Selected Date:</string>
+    <string name="social_situation_alone">Alone</string>
+    <string name="social_situation_crowd">With a crowd</string>
+    <string name="social_situation_one_other_person">With one other person</string>
+    <string name="social_situation_two_or_several_people">With two to several people</string>
+    <string name="title_feed">Feed</string>
+    <string name="title_home">Home</string>
+    <string name="title_notifications">Notifications</string>
+    <style name="Theme.JustACupOfJavaPersonal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        
+    </style>
+</resources>

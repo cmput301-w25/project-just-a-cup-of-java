@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="6dp"
+    card_view:cardBackgroundColor="#5A9999">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="Posted on: 24-03-2025"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <!-- Emotion -->
+        <TextView
+            android:id="@+id/emotionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@id/dateTextView"
+            android:layout_marginTop="0dp"
+            android:text="AWKWARD 😅"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <!-- Social + Time + Privacy -->
+        <TextView
+            android:id="@+id/detailsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emotionTextView"
+            android:layout_marginTop="4dp"
+            android:text="10:22 PM • Public"
+            android:textColor="#EEEEEE"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Trigger -->
+        <TextView
+            android:id="@+id/socialSituation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detailsTextView"
+            android:layout_marginTop="6dp"
+            android:text="@string/social_situation_two_or_several_people"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+
+        <!-- Why -->
+        <TextView
+            android:id="@+id/triggerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/socialSituation"
+            android:layout_marginTop="4dp"
+            android:text="Why: she's soooooooo bad
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+
+
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+
+        <!-- Delete -->
+
+        <!-- Edit -->
+
+        <ImageButton
+            android:id="@+id/deleteMoodButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignBottom="@id/socialSituation"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="27dp"
+            android:layout_marginBottom="2dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Delete"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_delete"
+            app:tint="#FFCDD2" />
+
+        <ImageButton
+            android:id="@+id/editMoodButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignBottom="@+id/socialSituation"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@id/deleteMoodButton"
+            android:background="@android:color/transparent"
+            android:contentDescription="Edit"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_menu_edit"
+            app:tint="#E0E0E0" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
