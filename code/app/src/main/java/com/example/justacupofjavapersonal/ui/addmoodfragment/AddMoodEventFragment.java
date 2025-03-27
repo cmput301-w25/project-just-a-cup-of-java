@@ -112,30 +112,6 @@ public class AddMoodEventFragment extends Fragment {
         final String[] selectedSocialSituationWrapper = {selectedSocialSituation};
         final String[] optionalTriggerWrapper = {optionalTrigger};
 
-        // 🔹 Listen for the mood event from PostMoodFragment
-//        getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
-//            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
-//            String selectedTime = bundle.getString("selectedTime", "No time selected");
-//            String selectedMood = bundle.getString("selectedMood", "");
-//            String whyFeel = bundle.getString("whyFeel", "");
-//            String privacySetting = bundle.getString("privacySetting", "Private");
-//            selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
-//            optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
-//
-//            Mood newMood = new Mood();
-//            newMood.setDate(newSelectedDate);
-//            newMood.setTime(selectedTime);
-//            newMood.setEmotion(selectedMood);
-//            newMood.setWhyFeel(whyFeel);
-//            newMood.setPrivacy(privacySetting);
-//            newMood.setSocialSituation(selectedSocialSituationWrapper[0]);
-//            newMood.setTrigger(optionalTriggerWrapper[0]);
-//
-//            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
-//            loadMoodsForDate(newSelectedDate);  // This will fetch updated Firestore data
-//            viewModel.addMood(newMood);  // Add to ViewModel (optional)
-//            selectedDate = newSelectedDate;
-//        });
 
         // Handle "Add Mood" button click
         binding.addingMood.setOnClickListener(v -> {

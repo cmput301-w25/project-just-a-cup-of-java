@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("androidx.navigation.safeargs")
+    alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.gms.google-services")
 }
 
@@ -53,13 +53,10 @@ dependencies {
     androidTestImplementation(libs.espresso.core) // Use this version from libs.versions.toml
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.android.material:material:1.10.0")
     implementation("com.prolificinteractive:material-calendarview:1.4.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.fragment:fragment-testing:1.5.7")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.7.7")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.8.5")
     androidTestImplementation("androidx.test:core:1.5.0")
 }

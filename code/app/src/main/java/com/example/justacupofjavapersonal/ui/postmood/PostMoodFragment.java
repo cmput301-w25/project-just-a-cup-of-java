@@ -221,12 +221,15 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
                     // Initialize moodPost AFTER selecting privacy
                     moodPost = new Mood();
+                    moodPost.isDeserializing = false;
                     moodPost.setDate(dateTextView.getText().toString());
                     moodPost.setTime(timeTextView.getText().toString());
                     moodPost.setEmotion(selectedMood);
                     moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                     moodPost.setTrigger(optionalTriggerEditText.getText().toString());
                     moodPost.setPrivacy(privacySetting); // Save the privacy setting
+
+                    Log.d("PostMoodFragment", "Timestamp after creation: " + (moodPost.getTimestamp() != null ? moodPost.getTimestamp().toDate().toString() : "null"));
 
                     // Prepare data bundle to send to AddMoodEventFragment
                     Bundle result = new Bundle();
