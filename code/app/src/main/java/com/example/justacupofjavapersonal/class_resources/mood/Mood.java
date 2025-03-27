@@ -17,7 +17,7 @@ public class Mood {
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
-    private byte[] photo; // Optional
+    private String photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
@@ -69,7 +69,7 @@ public class Mood {
      * @param location        the location of the mood event (optional)
      */
     public Mood(EmotionalState state, Date postDate,
-                String trigger, byte[] photo, String socialSituation, Location location) {
+                String trigger, String photo, String socialSituation, Location location) {
         this(state, postDate);
         this.setTrigger(trigger);
         this.setPhoto(photo);
@@ -178,7 +178,7 @@ public class Mood {
      *
      * @return the photo as a byte array or null if not set
      */
-    public byte[] getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
@@ -188,10 +188,8 @@ public class Mood {
      * @param photo the photo to set (max 65536 bytes)
      * @throws IllegalArgumentException if the photo exceeds 65536 bytes
      */
-    public void setPhoto(byte[] photo) {
-        if (photo != null && photo.length > 65536) {
-            throw new IllegalArgumentException("Photo must be under 65536 bytes.");
-        }
+    public void setPhoto(String photo) {
+
         this.photo = photo;
         this.hasPhoto = photo != null;
     }

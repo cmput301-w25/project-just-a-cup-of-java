@@ -113,29 +113,40 @@ public class AddMoodEventFragment extends Fragment {
         final String[] optionalTriggerWrapper = {optionalTrigger};
 
         // 🔹 Listen for the mood event from PostMoodFragment
-//        getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
-//            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
-//            String selectedTime = bundle.getString("selectedTime", "No time selected");
-//            String selectedMood = bundle.getString("selectedMood", "");
-//            String whyFeel = bundle.getString("whyFeel", "");
-//            String privacySetting = bundle.getString("privacySetting", "Private");
-//            selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
-//            optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
-//
-//            Mood newMood = new Mood();
-//            newMood.setDate(newSelectedDate);
-//            newMood.setTime(selectedTime);
-//            newMood.setEmotion(selectedMood);
-//            newMood.setWhyFeel(whyFeel);
-//            newMood.setPrivacy(privacySetting);
-//            newMood.setSocialSituation(selectedSocialSituationWrapper[0]);
-//            newMood.setTrigger(optionalTriggerWrapper[0]);
-//
-//            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
-//            loadMoodsForDate(newSelectedDate);  // This will fetch updated Firestore data
-//            viewModel.addMood(newMood);  // Add to ViewModel (optional)
-//            selectedDate = newSelectedDate;
-//        });
+        getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
+            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
+            String selectedTime = bundle.getString("selectedTime", "No time selected");
+            String selectedMood = bundle.getString("selectedMood", "");
+            String whyFeel = bundle.getString("whyFeel", "");
+            String privacySetting = bundle.getString("privacySetting", "Private");
+            String socialSituation = bundle.getString("selectedSocialSituation", "No social situation");
+            String trigger = bundle.getString("optionalTrigger", "No trigger");
+            String photoBase64 = bundle.getString("photoBase64", null);
+
+            Mood newMood = new Mood();
+            newMood.setDate(newSelectedDate);
+            newMood.setTime(selectedTime);
+            newMood.setEmotion(selectedMood);
+            newMood.setWhyFeel(whyFeel);
+            newMood.setPrivacy(privacySetting);
+            newMood.setSocialSituation(socialSituation);
+            newMood.setTrigger(trigger);
+            if (photoBase64 != null) {
+                newMood.setPhoto(photoBase64);
+            }
+
+            // Update ViewModel and list
+            viewModel.addMood(newMood);
+            moodList.add(newMood);
+            moodAdapter.notifyDataSetChanged();
+
+            // Update UI
+            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
+            selectedDate = newSelectedDate;
+
+            Log.d("MoodResult", "Mood received and added for date: " + newSelectedDate);
+        });
+
 
         // Handle "Add Mood" button click
         binding.addingMood.setOnClickListener(v -> {
