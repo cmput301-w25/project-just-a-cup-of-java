@@ -1,6 +1,7 @@
 package com.example.justacupofjavapersonal.ui.moodhistory;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,18 @@ import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.addmoodfragment.MoodActionsAdapter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MoodHistoryFragment extends Fragment {
 
@@ -69,22 +76,31 @@ public class MoodHistoryFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user != null) {
-            db.collection("moods")
-                    .whereEqualTo("uid", user.getUid())
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        moodList.clear();
-                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            Mood mood = doc.toObject(Mood.class);
-                            moodList.add(mood);
-                        }
-                        moodAdapter.notifyDataSetChanged();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Error fetching moods: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
+        if (user == null) {
+            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        // Load moods for the current user, sorted by timestamp in descending order - I touched this
+        db.collection("moods")
+                .whereEqualTo("uid", user.getUid()) // Only load moods for the current user - I touched this
+                .orderBy("timestamp", Query.Direction.DESCENDING) // Sort by timestamp - I touched this
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    moodList.clear(); // Clear the existing list - I touched this
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Mood mood = doc.toObject(Mood.class); // Convert document to Mood object - I touched this
+                        if (mood != null) {
+                            moodList.add(mood); // Add to the list - I touched this
+                        }
+                    }
+                    moodAdapter.notifyDataSetChanged(); // Update the RecyclerView - I touched this
+                    Log.d("MoodHistory", "Loaded " + moodList.size() + " moods"); // I touched this
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("MoodHistory", "Error loading moods", e); // I touched this
+                    Toast.makeText(getContext(), "Error loading moods", Toast.LENGTH_SHORT).show(); // I touched this
+                });
     }
 
     private void deleteMood(int position) {
