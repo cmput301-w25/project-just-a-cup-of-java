@@ -107,7 +107,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Mood mood = item.getMood();
             MoodViewHolder moodHolder = (MoodViewHolder) holder;
             //moodHolder.profilePicture.setImageResource(mood.getUser().getProfilePicture());
-                // on hold until database is put here
+            // on hold until database is put here
             if (mood.getSocialSituation() != null) {
                 switch (mood.getSocialSituation()) {
                     case "ALONE":
@@ -147,7 +147,6 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 moodHolder.feedTime.setText("now");
             }
 
-
             // i dont have any other moods rn lol
             switch (mood.getState()) {
                 case HAPPINESS:
@@ -159,7 +158,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             moodHolder.containsPhoto.setVisibility(mood.hasPhoto() ? View.VISIBLE : View.GONE);
-            moodHolder.containsExplanation.setVisibility(mood.hasTrigger() ? View.VISIBLE : View.GONE);
+            moodHolder.containsExplanation.setVisibility(mood.getWhyFeel() != null ? View.VISIBLE : View.GONE);
             moodHolder.containsLocation.setVisibility(mood.hasLocation() ? View.VISIBLE : View.GONE);
         } else if (holder instanceof DateViewHolder) {
             ((DateViewHolder) holder).dayText.setText(item.getDateHeader());

@@ -7,8 +7,7 @@ import com.example.justacupofjavapersonal.class_resources.User;
 import java.util.Date;
 
 /**
- * Represents a Mood event with details such as emotional state, triggers,
- * social situations, location, and optional photo.
+ * Represents a Mood event with details such as emotional state, social situations, location, and optional photo.
  */
 public class Mood {
 
@@ -16,21 +15,19 @@ public class Mood {
     private String privacy;
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
-    private String trigger; // Max 20 characters, optional
-    private String photo; // Optional
+    private String photo; // Optional, Base64-encoded string
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
     private Location location; // Optional
+    private String whyFeel; // Added to store the "Reason? max 200 characters" input
 
     private String date;
-    private String whyFeel; // Add this field
     private String time;
 
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
     private boolean hasSocialSituation = false;
-    private boolean hasTrigger = false;
 
     /**
      * Constructs a Mood object with mandatory fields.
@@ -52,10 +49,10 @@ public class Mood {
         this.postDate = postDate;
 
         // Optional fields default to null
-        this.trigger = null;
         this.photo = null;
         this.socialSituation = null;
         this.location = null;
+        this.whyFeel = null; // Initialize whyFeel
     }
 
     /**
@@ -63,22 +60,19 @@ public class Mood {
      *
      * @param state           the emotional state of the user
      * @param postDate        the date and time the mood was posted
-     * @param trigger         the trigger for the mood (optional, max 20 characters)
-     * @param photo           a photo associated with the mood (optional, max 65536 bytes)
+     * @param photo           a photo associated with the mood (optional, Base64-encoded string)
      * @param socialSituation the social situation when the mood was recorded (optional)
      * @param location        the location of the mood event (optional)
      */
-    public Mood(EmotionalState state, Date postDate,
-                String trigger, String photo, String socialSituation, Location location) {
+    public Mood(EmotionalState state, Date postDate, String photo, String socialSituation, Location location) {
         this(state, postDate);
-        this.setTrigger(trigger);
         this.setPhoto(photo);
         this.setSocialSituation(socialSituation);
         this.setLocation(location);
     }
 
     public Mood() {
-        //Empty constructor for firebase
+        // Empty constructor for Firebase
     }
 
     /**
@@ -119,29 +113,6 @@ public class Mood {
     }
 
     /**
-     * Gets the trigger of the mood event.
-     *
-     * @return the trigger or null if not set
-     */
-    public String getTrigger() {
-        return trigger;
-    }
-
-    /**
-     * Sets the trigger of the mood event, ensuring it does not exceed 20 characters.
-     *
-     * @param trigger the trigger to set (max 20 characters)
-     * @throws IllegalArgumentException if the trigger exceeds 20 characters
-     */
-    public void setTrigger(String trigger) {
-        if (trigger.length() > 20) {
-            throw new IllegalArgumentException("Trigger must be 20 characters at most.");
-        }
-        this.trigger = trigger;
-        this.hasTrigger = trigger != null && !trigger.isEmpty();
-    }
-
-    /**
      * Gets the post date of the mood event.
      *
      * @return the post date
@@ -172,24 +143,21 @@ public class Mood {
         return moodID;
     }
 
-
     /**
      * Gets the photo associated with the mood event.
      *
-     * @return the photo as a byte array or null if not set
+     * @return the photo as a Base64-encoded string or null if not set
      */
     public String getPhoto() {
         return photo;
     }
 
     /**
-     * Sets the photo associated with the mood event, ensuring it does not exceed 65536 bytes.
+     * Sets the photo associated with the mood event.
      *
-     * @param photo the photo to set (max 65536 bytes)
-     * @throws IllegalArgumentException if the photo exceeds 65536 bytes
+     * @param photo the photo to set (Base64-encoded string)
      */
     public void setPhoto(String photo) {
-
         this.photo = photo;
         this.hasPhoto = photo != null;
     }
@@ -211,6 +179,24 @@ public class Mood {
     public void setLocation(Location location) {
         this.location = location;
         this.hasLocation = location != null;
+    }
+
+    /**
+     * Gets the reason (whyFeel) for the mood event.
+     *
+     * @return the reason or null if not set
+     */
+    public String getWhyFeel() {
+        return whyFeel;
+    }
+
+    /**
+     * Sets the reason (whyFeel) for the mood event.
+     *
+     * @param whyFeel the reason to set
+     */
+    public void setWhyFeel(String whyFeel) {
+        this.whyFeel = whyFeel;
     }
 
     /**
@@ -241,30 +227,12 @@ public class Mood {
     }
 
     /**
-     * Checks if a trigger is associated with the mood event.
-     *
-     * @return true if a trigger is present, false otherwise
-     */
-    public boolean hasTrigger() {
-        return hasTrigger;
-    }
-
-    /**
      * Returns a string representation of the Mood object, excluding the photo for privacy.
      *
      * @return a string representation of the Mood object
      */
-
-
     public String getEmotion() {
         return emotion;
-    }
-    public String getWhyFeel() {
-        return whyFeel;
-    }
-
-    public void setWhyFeel(String whyFeel) {
-        this.whyFeel = whyFeel;
     }
 
     public void setPrivacy(String privacy) {
@@ -295,21 +263,15 @@ public class Mood {
         this.time = time;
     }
 
-
     @Override
     public String toString() {
         return "Mood{" +
                 "moodID=" + moodID +
                 ", uid='" + uid + '\'' +
                 ", postDate=" + postDate +
-                ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
-                ", emotionalState=" + state +
                 ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
                 ", photo=" + (photo == null ? "None" : "Available") +
                 ", location=" + (location == null ? "None" : location.toString()) +
                 '}';
     }
-
-
 }
-

@@ -62,11 +62,9 @@ public class FeedFragment extends Fragment {
         l1.setLongitude(1.0);
 
         m1.setPhoto(null);
-        m2.setTrigger("trigger");
         m2.setLocation(l1);
         m3.setSocialSituation("WITH_TWO_TO_SEVERAL");
         m4.setPhoto(null);
-        m4.setTrigger("trigger");
         m4.setLocation(l1);
         m4.setSocialSituation("WITH_ONE_OTHER");
 

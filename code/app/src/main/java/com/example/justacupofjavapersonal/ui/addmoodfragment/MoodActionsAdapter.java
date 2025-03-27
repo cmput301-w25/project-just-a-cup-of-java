@@ -1,10 +1,16 @@
 package com.example.justacupofjavapersonal.ui.addmoodfragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,15 +64,35 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     @Override
     public void onBindViewHolder(@NonNull MoodViewHolder holder, int position) {
         Mood mood = moodList.get(position);
-        // Format the Mood object into a string for display
-        String moodEntry = "Mood: " + mood.getEmotion() + "\n" +
-                "Social Situation: " + mood.getSocialSituation() + "\n" +
-                "Trigger: " + mood.getTrigger() + "\n" +
-                "Why: " + mood.getWhyFeel() + "\n" +
-                "Privacy: " + mood.getPrivacy() + "\n" +
-                "Time: " + mood.getTime();
-        holder.moodTextView.setText(moodEntry);
 
+        // Bind data to the views based on the new XML structure
+        holder.socialSituation.setText(mood.getSocialSituation());
+        holder.emotionTextView.setText(mood.getEmotion());
+        holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
+        holder.triggerTextView.setText("Reason: " + mood.getWhyFeel());
+
+        // "View Image" button click listener
+        holder.viewImageButton.setOnClickListener(v -> {
+            // Create a dialog to display the image
+            Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog_image_view);
+
+            ImageView imageView = dialog.findViewById(R.id.dialogImageView);
+            ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+            if (mood.getPhoto() != null) {
+                byte[] decodedString = Base64.decode(mood.getPhoto(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageView.setImageBitmap(decodedByte);
+            } else {
+                // Show a placeholder if no photo exists
+                imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+
+            closeButton.setOnClickListener(v1 -> dialog.dismiss());
+            dialog.show();
+        });
+
+        // Set the click listener for delete button
         holder.deleteButton.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION) {
@@ -84,24 +110,24 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     public int getItemCount() {
         return moodList.size();
     }
-    
+
     /**
      * ViewHolder class for displaying moods in a RecyclerView.
      * This class holds the reference to the TextView that displays the mood and the delete button.
      */
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
-        TextView moodTextView;
-        ImageButton deleteButton;
+        TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
+        View deleteButton; // Using View to avoid casting issues
+        ImageButton viewImageButton; // Reverted to ImageButton
 
-        /**
-         * Constructor for the MoodViewHolder.
-         *
-         * @param itemView the view for the view holder
-         */
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
-            moodTextView = itemView.findViewById(R.id.moodTextView);
+            emotionTextView = itemView.findViewById(R.id.emotionTextView);
+            socialSituation = itemView.findViewById(R.id.socialSituation);
+            detailsTextView = itemView.findViewById(R.id.detailsTextView);
+            triggerTextView = itemView.findViewById(R.id.triggerTextView);
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
+            viewImageButton = itemView.findViewById(R.id.viewImageButton);
         }
     }
 

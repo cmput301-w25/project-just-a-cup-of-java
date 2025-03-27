@@ -73,13 +73,11 @@ public class AddMoodEventFragment extends Fragment {
 
         // Retrieve values from arguments (Navigated from HomeFragment or PostMoodFragment)
         String selectedSocialSituation = "No social situation";
-        String optionalTrigger = "No trigger";
 
         if (getArguments() != null) {
             String calendarSelectedDate = AddMoodEventFragmentArgs.fromBundle(getArguments()).getSelectedDate();
             selectedMood = getArguments().getString("selectedMood", "");
             selectedSocialSituation = getArguments().getString("selectedSocialSituation", "No social situation");
-            optionalTrigger = getArguments().getString("optionalTrigger", "No trigger");
 
             viewModel.initializeSelectedDate(calendarSelectedDate);
 
@@ -87,7 +85,6 @@ public class AddMoodEventFragment extends Fragment {
                 Mood initialMood = new Mood();
                 initialMood.setEmotion(selectedMood);
                 initialMood.setSocialSituation(selectedSocialSituation);
-                initialMood.setTrigger(optionalTrigger);
                 initialMood.setDate(calendarSelectedDate);
                 moodList.add(initialMood);
             }
@@ -108,45 +105,53 @@ public class AddMoodEventFragment extends Fragment {
             moodMap.clear();
         });
 
-
         final String[] selectedSocialSituationWrapper = {selectedSocialSituation};
-        final String[] optionalTriggerWrapper = {optionalTrigger};
 
         // 🔹 Listen for the mood event from PostMoodFragment
         getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
-            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
-            String selectedTime = bundle.getString("selectedTime", "No time selected");
-            String selectedMood = bundle.getString("selectedMood", "");
-            String whyFeel = bundle.getString("whyFeel", "");
-            String privacySetting = bundle.getString("privacySetting", "Private");
-            String socialSituation = bundle.getString("selectedSocialSituation", "No social situation");
-            String trigger = bundle.getString("optionalTrigger", "No trigger");
-            String photoBase64 = bundle.getString("photoBase64", null);
+            if ("moodEvent".equals(requestKey)) {
+                String newSelectedDate = bundle.getString("selectedDate", "No date selected");
+                String selectedTime = bundle.getString("selectedTime", "No time selected");
+                String selectedMood = bundle.getString("selectedMood", "");
+                String whyFeel = bundle.getString("whyFeel", "");
+                String privacySetting = bundle.getString("privacySetting", "Private");
+                String socialSituation = bundle.getString("selectedSocialSituation", "No social situation");
+                String photoBase64 = bundle.getString("photoBase64", null);
 
-            Mood newMood = new Mood();
-            newMood.setDate(newSelectedDate);
-            newMood.setTime(selectedTime);
-            newMood.setEmotion(selectedMood);
-            newMood.setWhyFeel(whyFeel);
-            newMood.setPrivacy(privacySetting);
-            newMood.setSocialSituation(socialSituation);
-            newMood.setTrigger(trigger);
-            if (photoBase64 != null) {
-                newMood.setPhoto(photoBase64);
+                Mood newMood = new Mood();
+                newMood.setDate(newSelectedDate);
+                newMood.setTime(selectedTime);
+                newMood.setEmotion(selectedMood);
+                newMood.setWhyFeel(whyFeel);
+                newMood.setPrivacy(privacySetting);
+                newMood.setSocialSituation(socialSituation);
+                if (photoBase64 != null) {
+                    newMood.setPhoto(photoBase64);
+                }
+
+                // Save the mood to Firestore
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null) {
+                    newMood.setUid(currentUser.getUid());
+                    FirebaseDB firebaseDB = new FirebaseDB();
+                    firebaseDB.addMoodtoDB(newMood, currentUser.getUid());
+                }
+
+                // Add the mood to the local list immediately (for offline support)
+                moodList.add(newMood);
+                moodAdapter.notifyDataSetChanged();
+
+                // Update ViewModel
+                viewModel.addMood(newMood);
+
+                // Update UI
+                binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
+                loadMoodsForDate(newSelectedDate); // Refresh the list from Firestore
+                selectedDate = newSelectedDate;
+
+                Log.d("MoodResult", "Mood received and added for date: " + newSelectedDate);
             }
-
-            // Update ViewModel and list
-            viewModel.addMood(newMood);
-            moodList.add(newMood);
-            moodAdapter.notifyDataSetChanged();
-
-            // Update UI
-            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
-            selectedDate = newSelectedDate;
-
-            Log.d("MoodResult", "Mood received and added for date: " + newSelectedDate);
         });
-
 
         // Handle "Add Mood" button click
         binding.addingMood.setOnClickListener(v -> {
@@ -161,7 +166,6 @@ public class AddMoodEventFragment extends Fragment {
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.navigation_post_mood, bundle);
         });
-
 
         return view;
     }
@@ -188,7 +192,7 @@ public class AddMoodEventFragment extends Fragment {
      * Deletes a mood from the mood list and updates the mood map for the selected date.
      *
      * @param position The position of the mood to delete in the mood list.
-     *                  Must be a valid index within the bounds of the mood list.
+     *                 Must be a valid index within the bounds of the mood list.
      */
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
@@ -204,8 +208,7 @@ public class AddMoodEventFragment extends Fragment {
                 ArrayList<String> moodsForDate = moodMap.get(selectedDate);
                 String moodEntry = "Mood: " + moodToDelete.getEmotion() + "\n" +
                         "Social Situation: " + moodToDelete.getSocialSituation() + "\n" +
-                        "Trigger: " + moodToDelete.getTrigger() + "\n" +
-                        "Why: " + moodToDelete.getWhyFeel() + "\n" +
+                        "Reason: " + moodToDelete.getWhyFeel() + "\n" +
                         "Privacy: " + moodToDelete.getPrivacy() + "\n" +
                         "Time: " + moodToDelete.getTime();
                 moodsForDate.remove(moodEntry);
@@ -213,7 +216,6 @@ public class AddMoodEventFragment extends Fragment {
             }
         }
     }
-
 
     /**
      * Generates a list of dates representing the week (Sunday to Saturday) for the given selected date.
@@ -279,7 +281,6 @@ public class AddMoodEventFragment extends Fragment {
         binding.weekRecyclerView.setAdapter(weekAdapter);
     }
 
-
     /**
      * Loads the moods specific to the selected date and updates the mood list.
      *
@@ -303,17 +304,13 @@ public class AddMoodEventFragment extends Fragment {
                             }
                         }
                         moodAdapter.notifyDataSetChanged();
+                        Log.d("AddMoodEventFragment", "Fetched " + queryDocumentSnapshots.size() + " moods for date: " + date);
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "Error fetching moods: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
         }
     }
-
-
-
-
-
 
     /**
      * Converts a date in the format "EEE dd" to the full date format "dd-MM-yyyy".
@@ -336,9 +333,6 @@ public class AddMoodEventFragment extends Fragment {
             return "Invalid Date";
         }
     }
-
-
-
 
     /**
      * Called when the view previously created by onCreateView has been detached from the fragment.
