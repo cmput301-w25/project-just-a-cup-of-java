@@ -51,13 +51,13 @@
             android:textSize="18sp"
             android:textStyle="bold" />
         </LinearLayout>
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Follow"-->
-<!--            android:backgroundTint="#5A9999"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:id="@+id/follow_button"/>-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Follow"
+            android:backgroundTint="#5A9999"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/follow_button"/>
 
     </LinearLayout>
 

@@ -144,12 +144,12 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             // Show whyFeel text if not null
-            if (mood.getWhyFeel() != null && !mood.getWhyFeel().isEmpty()) {
-                moodHolder.whyFeelText.setText("Why: " + mood.getWhyFeel());
-                moodHolder.whyFeelText.setVisibility(View.VISIBLE);
-            } else {
-                moodHolder.whyFeelText.setVisibility(View.GONE);
-            }
+//            if (mood.getWhyFeel() != null && !mood.getWhyFeel().isEmpty()) {
+//                moodHolder.whyFeelText.setText("Why: " + mood.getWhyFeel());
+//                moodHolder.whyFeelText.setVisibility(View.VISIBLE);
+//            } else {
+//                moodHolder.whyFeelText.setVisibility(View.GONE);
+//            }
             //moodHolder.profilePicture.setImageResource(mood.getUser().getProfilePicture());
                 // on hold until database is put here
             if (mood.getSocialSituation() != null) {
@@ -176,7 +176,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String emotion = mood.getEmotion() != null ? mood.getEmotion() : "No emotion";
             moodHolder.feedName.setText(emotion);
             if (mood.getPostDate() != null) {
-                long timeDifference = System.currentTimeMillis() - mood.getPostDate().toDate().getTime();
+                long timeDifference = System.currentTimeMillis() - mood.getPostDate().getTime();
                 long seconds = timeDifference / 1000;
                 long minutes = seconds / 60;
                 long hours = minutes / 60;

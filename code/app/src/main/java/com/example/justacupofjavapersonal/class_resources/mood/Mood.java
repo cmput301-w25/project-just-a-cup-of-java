@@ -32,12 +32,12 @@ public class Mood implements Serializable {
     private Timestamp timestamp;
 
 
-    private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+    //private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
 
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
-    private Timestamp postDate;
+    //private Timestamp postDate;
 
     private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
@@ -170,16 +170,7 @@ public class Mood implements Serializable {
         this.moodID = moodID;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
 
     /**
      * Gets the post date of the mood event.
@@ -366,13 +357,13 @@ public class Mood implements Serializable {
     public Timestamp getTimestamp() { // Added getter for timestamp - I touched this
         return timestamp;
     }
-    public Timestamp getPostDate() {
-        return postDate;
-    }
+//    public Timestamp getPostDate() {
+//        return postDate;
+//    }
 
-    public void setPostDate(Timestamp postDate) {
-        this.postDate = postDate;
-    }
+//    public void setPostDate(Timestamp postDate) {
+//        this.postDate = postDate;
+//    }
     @PropertyName("timestamp")
     public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
         this.timestamp = timestamp;

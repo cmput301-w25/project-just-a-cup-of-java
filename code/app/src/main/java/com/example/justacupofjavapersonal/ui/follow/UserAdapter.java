@@ -60,7 +60,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
             userName = itemView.findViewById(R.id.userName);
-           // followButton = itemView.findViewById(R.id.follow_button);
+            followButton = itemView.findViewById(R.id.follow_button);
         }
 
         public void bind(User user, OnItemClickListener listener, int position) {
