@@ -1,11 +1,9 @@
 package com.example.justacupofjavapersonal.class_resources;
 
-import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.justacupofjavapersonal.class_resources.mood.EmotionalState;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -15,20 +13,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.example.justacupofjavapersonal.class_resources.User;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
-import org.w3c.dom.Document;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +105,7 @@ public class FirebaseDB {
                     });
         }
     }
+
     public interface OnUsersRetrievedListener {
         void onUsersRetrieved(List<User> userList);
     }
@@ -368,8 +361,6 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("FollowRequest", "Request rejected failure"));
     }
 
-
-
     /**
      * To be implemented
      * @param follower
@@ -379,8 +370,26 @@ public class FirebaseDB {
 
     /**
      * To be implemented
-     * @param follower
-     * @param followee
+     *
+     * @param currUserID
      */
-    public void getFollowers(User follower, User followee) {}
+    public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
+        db.collection("follows")
+                .document(currUserID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> followingIds = (List<String>) documentSnapshot.get("following");
+
+                        if (followingIds == null || followingIds.isEmpty()) {
+                            listener.onUsersRetrieved(new ArrayList<>());
+                            return;
+                        }
+
+                        fetchUsersFromUid(followingIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Get Following", "Error fetching following", e));
+    }
+
 }
