@@ -1,5 +1,6 @@
 package com.example.justacupofjavapersonal.class_resources.mood;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,11 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public MoodDateAdapter(List<FeedItem> feedList) {
         this.feedList = feedList;
     }
+    public void updateList(List<FeedItem> newList) {
+        feedList.clear();
+        feedList.addAll(newList);
+        notifyDataSetChanged();
+    }
 
     /**
      * ViewHolder class for displaying mood-related data in a RecyclerView.
@@ -33,6 +39,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView socialSituation, moodIndicator;
         ImageView containsPhoto, containsExplanation, containsLocation;
         TextView feedName, feedTime;
+        TextView socialSituationText,triggerText,whyFeelText;
 
         public MoodViewHolder(View itemView) {
             super(itemView);
@@ -44,6 +51,9 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             containsPhoto = itemView.findViewById(R.id.containsPhoto);
             containsExplanation = itemView.findViewById(R.id.containsExplanation);
             containsLocation = itemView.findViewById(R.id.containsLocation);
+            socialSituationText = itemView.findViewById(R.id.socialSituationText);
+            triggerText = itemView.findViewById(R.id.triggerText);
+            whyFeelText = itemView.findViewById(R.id.whyFeelText);
         }
     }
 
@@ -104,8 +114,42 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         FeedItem item = feedList.get(position);
 
         if (holder instanceof MoodViewHolder) {
+            MoodViewHolder moodHolder = (MoodViewHolder) holder; // ✅ move this up
+
             Mood mood = item.getMood();
-            MoodViewHolder moodHolder = (MoodViewHolder) holder;
+            moodHolder.profilePicture.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), UserMoodActivity.class);
+                intent.putExtra("userUid", mood.getUid());
+                v.getContext().startActivity(intent);
+            });
+
+            moodHolder.feedName.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), UserMoodActivity.class);
+                intent.putExtra("userUid", mood.getUid());
+                v.getContext().startActivity(intent);
+            });
+            if (mood.getSocialSituation() != null && !mood.getSocialSituation().isEmpty()) {
+                moodHolder.socialSituationText.setText("Social: " + mood.getSocialSituation());
+                moodHolder.socialSituationText.setVisibility(View.VISIBLE);
+            } else {
+                moodHolder.socialSituationText.setVisibility(View.GONE);
+            }
+
+            // Show trigger text if not null
+            if (mood.getTrigger() != null && !mood.getTrigger().isEmpty()) {
+                moodHolder.triggerText.setText("Trigger: " + mood.getTrigger());
+                moodHolder.triggerText.setVisibility(View.VISIBLE   );
+            } else {
+                moodHolder.triggerText.setVisibility(View.GONE);
+            }
+
+            // Show whyFeel text if not null
+            if (mood.getWhyFeel() != null && !mood.getWhyFeel().isEmpty()) {
+                moodHolder.whyFeelText.setText("Why: " + mood.getWhyFeel());
+                moodHolder.whyFeelText.setVisibility(View.VISIBLE);
+            } else {
+                moodHolder.whyFeelText.setVisibility(View.GONE);
+            }
             //moodHolder.profilePicture.setImageResource(mood.getUser().getProfilePicture());
                 // on hold until database is put here
             if (mood.getSocialSituation() != null) {
@@ -128,35 +172,50 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
 
-            moodHolder.feedName.setText(mood.getUid());
-            long timeDifference = System.currentTimeMillis() - mood.getPostDate().getTime();
-            long seconds = timeDifference / 1000;
-            long minutes = seconds / 60;
-            long hours = minutes / 60;
-            long days = hours / 24;
+            //moodHolder.feedName.setText(mood.getUid());
+            String emotion = mood.getEmotion() != null ? mood.getEmotion() : "No emotion";
+            moodHolder.feedName.setText(emotion);
+            if (mood.getPostDate() != null) {
+                long timeDifference = System.currentTimeMillis() - mood.getPostDate().toDate().getTime();
+                long seconds = timeDifference / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                long days = hours / 24;
 
-            if (days > 0) {
-                moodHolder.feedTime.setText(days + " days ago");
-            } else if (hours > 0) {
-                moodHolder.feedTime.setText(hours + " hours ago");
-            } else if (minutes > 0) {
-                moodHolder.feedTime.setText(minutes + " minutes ago");
-            } else if (seconds > 1){
-                moodHolder.feedTime.setText(seconds + " seconds ago");
+                if (days > 0) {
+                    moodHolder.feedTime.setText(days + " days ago");
+                } else if (hours > 0) {
+                    moodHolder.feedTime.setText(hours + " hours ago");
+                } else if (minutes > 0) {
+                    moodHolder.feedTime.setText(minutes + " minutes ago");
+                } else if (seconds > 1) {
+                    moodHolder.feedTime.setText(seconds + " seconds ago");
+                } else {
+                    moodHolder.feedTime.setText("now");
+                }
+            } else if (mood.getDate() != null) {
+                moodHolder.feedTime.setText(mood.getDate()); // fallback to string-based date
             } else {
-                moodHolder.feedTime.setText("now");
+                moodHolder.feedTime.setText("Unknown date");
             }
+
 
 
             // i dont have any other moods rn lol
-            switch (mood.getState()) {
-                case HAPPINESS:
-                    moodHolder.moodIndicator.setImageResource(R.drawable.mood_happy);
-                    break;
-                default:
-                    moodHolder.moodIndicator.setVisibility(View.GONE);
-                    break;
+            if (mood.getState() != null) {
+                switch (mood.getState()) {
+                    case HAPPINESS:
+                        moodHolder.moodIndicator.setImageResource(R.drawable.mood_happy);
+                        break;
+                    // add other emotion cases if needed
+                    default:
+                        moodHolder.moodIndicator.setVisibility(View.GONE);
+                        break;
+                }
+            } else {
+                moodHolder.moodIndicator.setVisibility(View.GONE);
             }
+
 
             moodHolder.containsPhoto.setVisibility(mood.hasPhoto() ? View.VISIBLE : View.GONE);
             moodHolder.containsExplanation.setVisibility(mood.hasTrigger() ? View.VISIBLE : View.GONE);
@@ -164,6 +223,7 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (holder instanceof DateViewHolder) {
             ((DateViewHolder) holder).dayText.setText(item.getDateHeader());
         }
+
     }
 
     /**

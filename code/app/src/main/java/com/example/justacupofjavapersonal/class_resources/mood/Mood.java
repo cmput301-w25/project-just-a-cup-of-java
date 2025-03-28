@@ -1,6 +1,8 @@
 package com.example.justacupofjavapersonal.class_resources.mood;
 
 import android.location.Location;
+import com.google.firebase.Timestamp;
+
 
 import com.example.justacupofjavapersonal.class_resources.User;
 
@@ -14,9 +16,13 @@ public class Mood {
 
     private String moodID; // Immutable: Unique ID for the mood event
     private String privacy;
+    private Timestamp timestamp;
+
     private String uid; // Mutable: Unique username, with setter
-    private Date postDate; // Immutable: Date and time of the mood event
+    //private Date postDate; //REMOVING FOR NOW Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
+    private Timestamp postDate;
+
     private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
@@ -49,7 +55,7 @@ public class Mood {
         this.moodID = moodID;
         this.uid = uid;
         this.state = state;
-        this.postDate = postDate;
+        //this.postDate = postDate;
 
         // Optional fields default to null
         this.trigger = null;
@@ -118,6 +124,7 @@ public class Mood {
         this.state = state;
     }
 
+
     /**
      * Gets the trigger of the mood event.
      *
@@ -133,12 +140,34 @@ public class Mood {
      * @param trigger the trigger to set (max 20 characters)
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
+//    public void setTrigger(String trigger) {
+//        if (trigger.length() > 20) {
+//            throw new IllegalArgumentException("Trigger must be 20 characters at most.");
+//        }
+//        this.trigger = trigger;
+//        this.hasTrigger = trigger != null && !trigger.isEmpty();
+//    }
     public void setTrigger(String trigger) {
-        if (trigger.length() > 20) {
-            throw new IllegalArgumentException("Trigger must be 20 characters at most.");
+        if (trigger != null && trigger.length() > 200) {
+            throw new IllegalArgumentException("Trigger must be 200 characters at most.");
         }
         this.trigger = trigger;
         this.hasTrigger = trigger != null && !trigger.isEmpty();
+    }
+
+    public void setMoodID(String moodID) {
+        this.moodID = moodID;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**
@@ -146,9 +175,10 @@ public class Mood {
      *
      * @return the post date
      */
-    public Date getPostDate() {
-        return postDate;
-    }
+//    public Date getPostDate() {
+//        return postDate;
+//    } removing for now
+
 
     /**
      * Gets the unique identifier of the user.
@@ -291,7 +321,13 @@ public class Mood {
     public void setTime(String time) {
         this.time = time;
     }
+    public Timestamp getPostDate() {
+        return postDate;
+    }
 
+    public void setPostDate(Timestamp postDate) {
+        this.postDate = postDate;
+    }
 
     @Override
     public String toString() {

@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.Timestamp;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +45,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private EditText optionalTriggerEditText;
     private Spinner socialSituationSpinner;
     private EditText whyFeelEditText;
+
     private Button postButton;
     private ImageView addPhotoImageView;
 
@@ -279,6 +282,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (documentSnapshot.exists()) {
                                         user = documentSnapshot.toObject(User.class);
+                                        moodPost.setPostDate(Timestamp.now());
                                         firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
 
                                         // Send data to AddMoodEventFragment **only after Firebase upload**

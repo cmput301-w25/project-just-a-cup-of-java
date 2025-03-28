@@ -31,6 +31,9 @@ import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Fragment for User info.
  */
@@ -168,7 +171,6 @@ public class UserInfoFragment extends Fragment {
             return;
         }
 
-        navController.navigate(R.id.navigation_home);
         db.collection("users")
                 .whereEqualTo("username", username)
                 .get()
@@ -185,15 +187,21 @@ public class UserInfoFragment extends Fragment {
                         if (usernameTaken) {
                             editUsername.setError("Username already taken");
                         } else {
-                            user.setName(name);
-                            user.setUsername(username);
-                            user.setEmail(email);
-                            user.setBio(bio);
+                            // Build a map to store in Firestore
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("name", name);
+                            updates.put("username", username);
+                            updates.put("usernameLowercase", username.toLowerCase()); // ✅ Add lowercase field
+                            updates.put("email", email);
+                            updates.put("bio", bio);
+                            updates.put("uid", user.getUid());
 
                             db.collection("users").document(user.getUid())
-                                    .set(user)
-                                    .addOnSuccessListener(aVoid ->
-                                            Toast.makeText(getContext(), "Profile saved successfully", Toast.LENGTH_SHORT).show())
+                                    .update(updates)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Profile saved successfully", Toast.LENGTH_SHORT).show();
+                                        navController.navigate(R.id.navigation_home);
+                                    })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(getContext(), "Failed to save profile", Toast.LENGTH_SHORT).show());
                         }
