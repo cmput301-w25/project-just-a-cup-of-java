@@ -15,10 +15,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> userList;
+    private List<String> requests;
     private OnItemClickListener listener;
     private FirebaseDB db;
 
@@ -45,6 +47,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.bind(userList.get(position), listener, position);
     }
 
+    private void loadRequests(String userID) {
+        db.getAllRequestIds(userID, users -> {
+            requests.clear();
+            requests.addAll(users);
+        });
+    }
+
     @Override
     public int getItemCount() {
         return userList.size();
@@ -63,16 +72,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
+            requests = new ArrayList<>();
+            if (FirebaseAuth.getInstance().getCurrentUser() != null){
+                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-            //Set user profile picture
+                followButton.setText(requests.contains(user.getUid()) ? "Requested" : "Follow");
+                //Set user profile picture
 
-            followButton.setOnClickListener(v -> {
-                listener.onFollowClick(position);
-                followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Folllow");
-                if (FirebaseAuth.getInstance().getCurrentUser() != null){
-                    db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                }
-            });
+                followButton.setOnClickListener(v -> {
+                    listener.onFollowClick(position);
+
+                    followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
+
+
+                        if (!requests.contains(user.getUid())) {
+                            db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                        }
+                        if (followButton.getText().toString().equals("Follow")) {
+                            db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                        }
+                });
+            }
         }
     }
 }
