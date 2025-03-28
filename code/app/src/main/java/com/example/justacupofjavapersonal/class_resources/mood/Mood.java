@@ -9,11 +9,13 @@ import com.google.firebase.Timestamp;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
-import java.io.Serializable;
 
+import java.io.Serializable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -150,7 +152,6 @@ public class Mood implements Serializable {
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
     public void setTrigger(String trigger) {
-
         this.trigger = trigger;
         this.hasTrigger = trigger != null && !trigger.isEmpty();
     }
@@ -292,6 +293,8 @@ public class Mood implements Serializable {
         return date;
     }
 
+
+
     public String getTime() {
         return time;
     }
@@ -351,7 +354,6 @@ public class Mood implements Serializable {
                 ", uid='" + uid + '\'' +
                 ", postDate=" + postDate +
                 ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
-                ", emotionalState=" + state +
                 ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
                 ", photo=" + (photo == null ? "None" : "Available") +
                 ", location=" + (location == null ? "None" : location.toString()) +

@@ -173,7 +173,6 @@ public class AddMoodEventFragment extends Fragment {
         });
     }
 
-
     /**
      * Deletes a mood from the mood list and updates the mood map for the selected date.
      *
@@ -335,5 +334,3 @@ public class AddMoodEventFragment extends Fragment {
         binding = null;
     }
 }
-
-

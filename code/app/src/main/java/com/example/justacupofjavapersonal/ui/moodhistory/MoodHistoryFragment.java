@@ -1,6 +1,7 @@
 package com.example.justacupofjavapersonal.ui.moodhistory;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,18 @@ import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.addmoodfragment.MoodActionsAdapter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MoodHistoryFragment extends Fragment {
 
@@ -37,18 +44,15 @@ public class MoodHistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mood_history, container, false);
 
-        // Calendar button
         Button calendarButton = view.findViewById(R.id.button);
         calendarButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_navigation_moodHistory_to_home);
         });
 
-        // Filter button
         Button filterButton = view.findViewById(R.id.filterbutton);
         filterButton.setOnClickListener(v -> {
             MoodFilterDialog dialog = new MoodFilterDialog((recentWeek, emotion, reasonKeyword) -> {
-                // Future: Apply filters
                 System.out.println("Filters applied: RecentWeek=" + recentWeek + ", Emotion=" + emotion + ", Reason=" + reasonKeyword);
             });
             dialog.show(getParentFragmentManager(), "MoodFilterDialog");
@@ -69,22 +73,30 @@ public class MoodHistoryFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user != null) {
-            db.collection("moods")
-                    .whereEqualTo("uid", user.getUid())
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        moodList.clear();
-                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            Mood mood = doc.toObject(Mood.class);
+        if (user == null) {
+            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.collection("moods")
+                .whereEqualTo("uid", user.getUid())
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    moodList.clear();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Mood mood = doc.toObject(Mood.class);
+                        if (mood != null) {
                             moodList.add(mood);
                         }
-                        moodAdapter.notifyDataSetChanged();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Error fetching moods: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
+                    }
+                    moodAdapter.notifyDataSetChanged();
+                    Log.d("MoodHistory", "Loaded " + moodList.size() + " moods");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("MoodHistory", "Error loading moods", e);
+                    Toast.makeText(getContext(), "Error loading moods", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void deleteMood(int position) {
