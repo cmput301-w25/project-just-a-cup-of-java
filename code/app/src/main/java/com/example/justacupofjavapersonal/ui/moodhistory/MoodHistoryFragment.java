@@ -44,18 +44,15 @@ public class MoodHistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mood_history, container, false);
 
-        // Calendar button
         Button calendarButton = view.findViewById(R.id.button);
         calendarButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_navigation_moodHistory_to_home);
         });
 
-        // Filter button
         Button filterButton = view.findViewById(R.id.filterbutton);
         filterButton.setOnClickListener(v -> {
             MoodFilterDialog dialog = new MoodFilterDialog((recentWeek, emotion, reasonKeyword) -> {
-                // Future: Apply filters
                 System.out.println("Filters applied: RecentWeek=" + recentWeek + ", Emotion=" + emotion + ", Reason=" + reasonKeyword);
             });
             dialog.show(getParentFragmentManager(), "MoodFilterDialog");
@@ -81,25 +78,24 @@ public class MoodHistoryFragment extends Fragment {
             return;
         }
 
-        // Load moods for the current user, sorted by timestamp in descending order - I touched this
         db.collection("moods")
-                .whereEqualTo("uid", user.getUid()) // Only load moods for the current user - I touched this
-                .orderBy("timestamp", Query.Direction.DESCENDING) // Sort by timestamp - I touched this
+                .whereEqualTo("uid", user.getUid())
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    moodList.clear(); // Clear the existing list - I touched this
+                    moodList.clear();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        Mood mood = doc.toObject(Mood.class); // Convert document to Mood object - I touched this
+                        Mood mood = doc.toObject(Mood.class);
                         if (mood != null) {
-                            moodList.add(mood); // Add to the list - I touched this
+                            moodList.add(mood);
                         }
                     }
-                    moodAdapter.notifyDataSetChanged(); // Update the RecyclerView - I touched this
-                    Log.d("MoodHistory", "Loaded " + moodList.size() + " moods"); // I touched this
+                    moodAdapter.notifyDataSetChanged();
+                    Log.d("MoodHistory", "Loaded " + moodList.size() + " moods");
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("MoodHistory", "Error loading moods", e); // I touched this
-                    Toast.makeText(getContext(), "Error loading moods", Toast.LENGTH_SHORT).show(); // I touched this
+                    Log.e("MoodHistory", "Error loading moods", e);
+                    Toast.makeText(getContext(), "Error loading moods", Toast.LENGTH_SHORT).show();
                 });
     }
 
