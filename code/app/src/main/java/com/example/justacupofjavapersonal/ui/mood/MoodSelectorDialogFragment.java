@@ -19,6 +19,9 @@ import java.util.Arrays;
  * MoodSelectorDialogFragment is a dialog fragment that allows the user to select a mood from a list of moods.
  */
 public class MoodSelectorDialogFragment extends DialogFragment {
+
+    private MoodSelectionListener moodSelectionListener;
+
     public MoodSelectorDialogFragment() {
 
     }
@@ -29,8 +32,13 @@ public class MoodSelectorDialogFragment extends DialogFragment {
     public interface MoodSelectionListener {
         void onMoodSelected(String mood);
     }
+
+    public void setMoodSelectionListener(MoodSelectionListener listener) {
+        this.moodSelectionListener = listener;
+    }
+
+
     private GridView moodGridView;
-    private MoodSelectionListener moodSelectionListener;
 
     /**
      * Constructor for the MoodSelectorDialogFragment.

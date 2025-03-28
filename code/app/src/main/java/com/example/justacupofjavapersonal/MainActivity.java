@@ -17,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.justacupofjavapersonal.databinding.ActivityMainBinding;
+import com.google.firebase.FirebaseApp;
 
 /**
  * Entry point of the application.
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
 
-    
+
     /**
      * Called when the activity is starting. This is where most initialization should go:
      * calling setContentView(int) to inflate the activity's UI, using findViewById(int) to programmatically interact
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        FirebaseApp.initializeApp(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_feed, R.id.navigation_notifications)
                 .build();
         NavigationUI.setupWithNavController(binding.topAppBar, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(binding.navView, navController);
+
         binding.navView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 

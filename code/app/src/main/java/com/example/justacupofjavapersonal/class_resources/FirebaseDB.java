@@ -110,6 +110,7 @@ public class FirebaseDB {
         void onUsersRetrieved(List<User> userList);
     }
 
+
     public void getAllUsers(OnUsersRetrievedListener listener) {
         db.collection("users").get().addOnCompleteListener(task -> {
             List<User> userList = new ArrayList<>();
@@ -122,6 +123,7 @@ public class FirebaseDB {
             listener.onUsersRetrieved(userList);
         });
     }
+
 
     public void searchUsers(String search, OnUsersRetrievedListener listener) {
         if (search.isEmpty()) {
@@ -146,6 +148,10 @@ public class FirebaseDB {
                 });
     }
 
+
+
+
+
     /**
      *
      */
@@ -168,6 +174,8 @@ public class FirebaseDB {
      */
     public void addMoodtoDB(Mood mood, String uid) {
         String moodID = db.collection("moods").document().getId();
+        //mood.setMoodID(moodID); // ✅ set it BEFORE saving
+        mood.setUid(uid);       // ✅ and set UID too
 
         db.collection("moods").document(moodID)
                 .set(mood)
@@ -241,6 +249,29 @@ public class FirebaseDB {
         return userMoods;
     }
 
+    /**
+     * Updates the entire Mood document in Firestore using its moodID.
+     * Replaces the document with the latest Mood data.
+     * @param mood The Mood object with updated info (must include moodID)
+     */
+    public void updateMoodInDB(Mood mood) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null && mood.getMoodID() != null) {
+            db.collection("moods")
+                    .document(mood.getMoodID())
+                    .set(mood)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("FirebaseDB", "Mood updated successfully.");
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FirebaseDB", "Failed to update mood: " + e.getMessage());
+                    });
+        } else {
+            Log.e("FirebaseDB", "Invalid user or moodID. Cannot update mood.");
+        }
+    }
 
     /**
      * To be implemented
@@ -335,9 +366,7 @@ public class FirebaseDB {
      * @param follower
      * @param followee
      */
-    public void removeFollower(User follower, User followee) {
-
-    }
+    public void removeFollower(User follower, User followee) {}
 
     /**
      * To be implemented
