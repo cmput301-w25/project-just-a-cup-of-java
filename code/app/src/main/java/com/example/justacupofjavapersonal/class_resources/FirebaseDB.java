@@ -341,6 +341,7 @@ public class FirebaseDB {
 
     /**
      * To be implemented
+     *
      * @param currUserID
      */
     public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
@@ -359,7 +360,7 @@ public class FirebaseDB {
                         fetchUsersFromUid(followingIds, listener);
                     }
                 })
-                .addOnFailureListener(e -> Log.e("Get Followering", "Error fetching following", e));
+                .addOnFailureListener(e -> Log.e("Get Following", "Error fetching following", e));
     }
 
 }
