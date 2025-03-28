@@ -1,26 +1,42 @@
 package com.example.justacupofjavapersonal.class_resources.mood;
 
 import android.location.Location;
+import android.util.Log;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
 
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.PropertyName;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.io.Serializable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
- * Represents a Mood event with details such as emotional state, social situations, location, and optional photo.
+ * Represents a Mood event with details such as emotional state, triggers,
+ * social situations, location, and optional photo.
  */
-public class Mood {
+public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
     private String privacy;
+
+    private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
-    private String photo; // Optional, Base64-encoded string
+    private String trigger; // Max 20 characters, optional
+    private String photo; // Changed to String for Base64
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
     private Location location; // Optional
-    private String whyFeel; // Added to store the "Reason? max 200 characters" input
 
     private String date;
     private String time;
@@ -28,6 +44,9 @@ public class Mood {
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
     private boolean hasSocialSituation = false;
+    private boolean hasTrigger = false;
+
+    public transient boolean isDeserializing = false; // Transient flag to skip updateTimestamp during deserialization - I touched this
 
     /**
      * Constructs a Mood object with mandatory fields.
@@ -49,10 +68,10 @@ public class Mood {
         this.postDate = postDate;
 
         // Optional fields default to null
+        this.trigger = null;
         this.photo = null;
         this.socialSituation = null;
         this.location = null;
-        this.whyFeel = null; // Initialize whyFeel
     }
 
     /**
@@ -60,19 +79,23 @@ public class Mood {
      *
      * @param state           the emotional state of the user
      * @param postDate        the date and time the mood was posted
-     * @param photo           a photo associated with the mood (optional, Base64-encoded string)
+     * @param trigger         the trigger for the mood (optional, max 20 characters)
+     * @param photo           a photo associated with the mood (optional, max 65536 bytes)
      * @param socialSituation the social situation when the mood was recorded (optional)
      * @param location        the location of the mood event (optional)
      */
-    public Mood(EmotionalState state, Date postDate, String photo, String socialSituation, Location location) {
+    public Mood(EmotionalState state, Date postDate,
+                String trigger, String photo, String socialSituation, Location location) {
         this(state, postDate);
+        this.setTrigger(trigger);
         this.setPhoto(photo);
         this.setSocialSituation(socialSituation);
         this.setLocation(location);
     }
 
     public Mood() {
-        // Empty constructor for Firebase
+        // Empty constructor for Firebase - I touched this
+        this.isDeserializing = true; // Set flag during deserialization - I touched this
     }
 
     /**
@@ -113,6 +136,26 @@ public class Mood {
     }
 
     /**
+     * Gets the trigger of the mood event.
+     *
+     * @return the trigger or null if not set
+     */
+    public String getTrigger() {
+        return trigger;
+    }
+
+    /**
+     * Sets the trigger of the mood event, ensuring it does not exceed 20 characters.
+     *
+     * @param trigger the trigger to set (max 20 characters)
+     * @throws IllegalArgumentException if the trigger exceeds 20 characters
+     */
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+        this.hasTrigger = trigger != null && !trigger.isEmpty();
+    }
+
+    /**
      * Gets the post date of the mood event.
      *
      * @return the post date
@@ -143,10 +186,14 @@ public class Mood {
         return moodID;
     }
 
+    public void setMoodID(String moodID) {
+        this.moodID = moodID;
+    }
+
     /**
      * Gets the photo associated with the mood event.
      *
-     * @return the photo as a Base64-encoded string or null if not set
+     * @return the photo as a Base64 string or null if not set
      */
     public String getPhoto() {
         return photo;
@@ -155,7 +202,7 @@ public class Mood {
     /**
      * Sets the photo associated with the mood event.
      *
-     * @param photo the photo to set (Base64-encoded string)
+     * @param photo the Base64-encoded photo string to set
      */
     public void setPhoto(String photo) {
         this.photo = photo;
@@ -179,24 +226,6 @@ public class Mood {
     public void setLocation(Location location) {
         this.location = location;
         this.hasLocation = location != null;
-    }
-
-    /**
-     * Gets the reason (whyFeel) for the mood event.
-     *
-     * @return the reason or null if not set
-     */
-    public String getWhyFeel() {
-        return whyFeel;
-    }
-
-    /**
-     * Sets the reason (whyFeel) for the mood event.
-     *
-     * @param whyFeel the reason to set
-     */
-    public void setWhyFeel(String whyFeel) {
-        this.whyFeel = whyFeel;
     }
 
     /**
@@ -227,10 +256,14 @@ public class Mood {
     }
 
     /**
-     * Returns a string representation of the Mood object, excluding the photo for privacy.
+     * Checks if a trigger is associated with the mood event.
      *
-     * @return a string representation of the Mood object
+     * @return true if a trigger is present, false otherwise
      */
+    public boolean hasTrigger() {
+        return hasTrigger;
+    }
+
     public String getEmotion() {
         return emotion;
     }
@@ -251,16 +284,55 @@ public class Mood {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getTime() {
         return time;
     }
 
+    private void updateTimestamp() {
+        if (date == null || time == null) {
+            throw new IllegalStateException("Date and time must not be null when updating timestamp");
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.US);
+            Log.d("Mood", "Parsing date and time: " + date + " " + time);
+            Date parsedDate = sdf.parse(date + " " + time);
+            if (parsedDate == null) {
+                throw new ParseException("Parsed date is null", 0);
+            }
+            this.timestamp = new Timestamp(parsedDate);
+            Log.d("Mood", "Timestamp set to: " + this.timestamp.toDate().toString());
+        } catch (ParseException e) {
+            Log.e("Mood", "Failed to parse date and time: " + date + " " + time, e);
+            this.timestamp = Timestamp.now();
+            Log.d("Mood", "Falling back to current timestamp: " + this.timestamp.toDate().toString());
+        }
+    }
+
+    public void setDate(String date) {
+        if (date == null || date.isEmpty()) {
+            throw new IllegalArgumentException("Date must not be null or empty");
+        }
+        this.date = date;
+    }
+
     public void setTime(String time) {
+        if (time == null || time.isEmpty()) {
+            throw new IllegalArgumentException("Time must not be null or empty");
+        }
         this.time = time;
+        if (!isDeserializing) { // Only update timestamp if not deserializing - I touched this
+            updateTimestamp();
+        }
+    }
+
+    @PropertyName("timestamp")
+    public Timestamp getTimestamp() { // Added getter for timestamp - I touched this
+        return timestamp;
+    }
+
+    @PropertyName("timestamp")
+    public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -269,6 +341,7 @@ public class Mood {
                 "moodID=" + moodID +
                 ", uid='" + uid + '\'' +
                 ", postDate=" + postDate +
+                ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
                 ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
                 ", photo=" + (photo == null ? "None" : "Available") +
                 ", location=" + (location == null ? "None" : location.toString()) +

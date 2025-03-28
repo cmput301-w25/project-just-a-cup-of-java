@@ -16,13 +16,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,13 +55,13 @@ public class FirebaseDB {
             String email = updates.get("email").toString();
             user.updateEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                           Log.d("Update User Profile", "Email updated");
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("Update User Profile", "Email updated");
                             }
                         }
-                     });
+                    });
         } else if (updates.containsKey("password")) {
             FirebaseUser user = auth.getCurrentUser();
             String password = updates.get("password").toString();
@@ -91,6 +95,70 @@ public class FirebaseDB {
         return userData[0];
     }
 
+    private void fetchUsersFromUid(List<String> userIDs, OnUsersRetrievedListener listener) {
+        List<User> userList = new ArrayList<>();
+
+        for (String uid : userIDs) {
+            db.collection("users")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            User user = documentSnapshot.toObject(User.class);
+                            userList.add(user);
+                        }
+                        if (userList.size() == userIDs.size()) {
+                            listener.onUsersRetrieved(userList);
+                        }
+                    });
+        }
+    }
+    public interface OnUsersRetrievedListener {
+        void onUsersRetrieved(List<User> userList);
+    }
+
+
+    public void getAllUsers(OnUsersRetrievedListener listener) {
+        db.collection("users").get().addOnCompleteListener(task -> {
+            List<User> userList = new ArrayList<>();
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    User user = document.toObject(User.class);
+                    userList.add(user);
+                }
+            }
+            listener.onUsersRetrieved(userList);
+        });
+    }
+
+
+    public void searchUsers(String search, OnUsersRetrievedListener listener) {
+        if (search.isEmpty()) {
+            getAllUsers(listener);
+            return;
+        }
+
+        db.collection("users")
+                .orderBy("name")
+                .startAt(search)
+                .endAt(search + "\uf8ff")
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<User> searchedList = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            User user = documentSnapshot.toObject(User.class);
+                            searchedList.add(user);
+                        }
+                    }
+                    listener.onUsersRetrieved(searchedList);
+                });
+    }
+
+
+
+
+
     /**
      *
      */
@@ -113,6 +181,8 @@ public class FirebaseDB {
      */
     public void addMoodtoDB(Mood mood, String uid) {
         String moodID = db.collection("moods").document().getId();
+        //mood.setMoodID(moodID); // ✅ set it BEFORE saving
+        mood.setUid(uid);       // ✅ and set UID too
 
         db.collection("moods").document(moodID)
                 .set(mood)
@@ -186,6 +256,29 @@ public class FirebaseDB {
         return userMoods;
     }
 
+    /**
+     * Updates the entire Mood document in Firestore using its moodID.
+     * Replaces the document with the latest Mood data.
+     * @param mood The Mood object with updated info (must include moodID)
+     */
+    public void updateMoodInDB(Mood mood) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null && mood.getMoodID() != null) {
+            db.collection("moods")
+                    .document(mood.getMoodID())
+                    .set(mood)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("FirebaseDB", "Mood updated successfully.");
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FirebaseDB", "Failed to update mood: " + e.getMessage());
+                    });
+        } else {
+            Log.e("FirebaseDB", "Invalid user or moodID. Cannot update mood.");
+        }
+    }
 
     /**
      * To be implemented
@@ -196,34 +289,98 @@ public class FirebaseDB {
     }
 
     /**
-     * Adds a follower to
-     * @param follower
-     * @param followee
+     * Adds a following relation to the database.
+     * Followee is the one being followed, follower is the one following
+     *
+     * @param batch
+     * @param followerID
+     * @param followeeID
      */
-    public void addFollower(@NonNull User follower, @NonNull User followee) {
-        Map<String, Object> following = new HashMap<>();
-        following.put("follower",follower.getUid());
+    public void addFollower(WriteBatch batch, @NonNull String followerID, @NonNull String followeeID) {
         // Followee is the one being followed, the name of the document
         // Use update so that the old information isn't overwritten
-        db.collection("following").document(followee.getUid()).update(following);
+        // Add to collection the users that are following a specified user
+        DocumentReference followedByRef = db.collection("followedBy").document(followeeID);
+        batch.set(followedByRef,
+                Collections.singletonMap("followers", FieldValue.arrayUnion(followerID)),
+                SetOptions.merge()
+        );
 
+        // Add to the follows collection. The follows collection holds the users the
+        // that a specified user is following
+        DocumentReference followsRef =  db.collection("follows").document(followerID);
+        batch.set(followsRef,
+                Collections.singletonMap("following", FieldValue.arrayUnion(followeeID)),
+                SetOptions.merge()
+        );
     }
+
+    public void sendRequest(String currUserID, String requestedID) {
+        //Store the follow requests in a collection "requests"
+        // Each document will have a requesteeID
+        // The requesteeID document will store all the userIDs of the users
+        // that have requested to follow
+        DocumentReference requestRef = db.collection("requests").document(requestedID);
+        requestRef.set(
+                Collections.singletonMap("requesters", FieldValue.arrayUnion(currUserID)),
+                SetOptions.merge()
+        );
+    }
+
+    public void getAllRequests(String userID, OnUsersRetrievedListener listener) {
+        db.collection("requests")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> requesterIds = (List<String>) documentSnapshot.get("requesters");
+
+                        if (requesterIds == null || requesterIds.isEmpty()) {
+                            listener.onUsersRetrieved(new ArrayList<>());
+                            return;
+                        }
+
+                        fetchUsersFromUid(requesterIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+
+    public void acceptRequest(String currUserID, String requesterID) {
+        WriteBatch batch = db.batch();
+
+        DocumentReference docRef = db.collection("requests").document(currUserID);
+
+        addFollower(batch, currUserID,  requesterID);
+
+        batch.update(docRef, "requesters", FieldValue.arrayRemove(requesterID));
+
+        batch.commit()
+                .addOnSuccessListener(a -> Log.d("FollowRequest", "Request accepted successfully"))
+                .addOnFailureListener(e -> Log.e("FollowRequest", "Request accept failure",e));
+    }
+
+    public void removeRequest(String currUserID, String requesterID) {
+        DocumentReference docRef = db.collection("requests").document(currUserID);
+
+        docRef.update("requesters", FieldValue.arrayRemove(requesterID))
+                .addOnSuccessListener(a -> Log.d("FollowRequest", "Request rejected success"))
+                .addOnFailureListener(e -> Log.e("FollowRequest", "Request rejected failure"));
+    }
+
+
 
     /**
      * To be implemented
      * @param follower
      * @param followee
      */
-    public void removeFollower(User follower, User followee) {
-
-    }
+    public void removeFollower(User follower, User followee) {}
 
     /**
      * To be implemented
      * @param follower
      * @param followee
      */
-    public void getFollowers(User follower, User followee) {
-
-    }
+    public void getFollowers(User follower, User followee) {}
 }

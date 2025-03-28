@@ -1,17 +1,22 @@
 package com.example.justacupofjavapersonal.ui.postmood;
 
+import android.app.AlertDialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -27,6 +32,7 @@ import androidx.navigation.Navigation;
 
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
+import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,28 +40,31 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-/**
- * PostMoodFragment is a fragment that allows the user to post a mood event.
- */
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText whyFeelEditText;
+    private EditText optionalTriggerEditText;
     private Spinner socialSituationSpinner;
-    private CardView postButton; // Changed from Button to CardView
+    private EditText whyFeelEditText;
+    private CardView postButton;
     private ImageView addPhotoImageView;
+    private ImageView photoPreview; // Added for photo preview
+    private String selectedMood = "Add Emotional State";
     private Uri selectedImageUri;
+    private String photoBase64; // To store the Base64-encoded photo
     private TextView dateTextView;
     private TextView timeTextView;
-    private CardView addMoodButton; // Changed to CardView to match XML
-    private TextView cardTextView; // Added to reference the TextView inside addEmoStateButton
-    private String selectedMood = "Add Emotional State";
+    private CardView addMoodButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
     private FirebaseDB firebaseDB;
+
+    private User user;
     private Mood moodPost;
-    private int editPosition = -1;
-    private boolean isEditing = false;
+    private Mood moodToEdit;
+    private boolean isEditMode = false;
 
     @Nullable
     @Override
@@ -69,37 +78,28 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        whyFeelEditText = view.findViewById(R.id.whyFeel);
+        optionalTriggerEditText = view.findViewById(R.id.triggerText);
         socialSituationSpinner = view.findViewById(R.id.socialSituationSpinner);
+        whyFeelEditText = view.findViewById(R.id.whyFeel);
         addPhotoImageView = view.findViewById(R.id.addPhoto);
+        photoPreview = view.findViewById(R.id.photoPreview); // Initialize photo preview
         dateTextView = view.findViewById(R.id.dateTextView);
         timeTextView = view.findViewById(R.id.timeTextView);
         addMoodButton = view.findViewById(R.id.addEmoStateButton);
-        cardTextView = view.findViewById(R.id.cardTextView); // Initialize the TextView inside addEmoStateButton
         postButton = view.findViewById(R.id.postmoodbutton);
-
-        // Initialize moodPost
-        moodPost = new Mood();
-
-        // Set up addPhotoImageView click listener
-        addPhotoImageView.setOnClickListener(v -> {
-            Log.d("PostMoodFragment", "Add Photo button clicked - Verifying click event");
-            Toast.makeText(getContext(), "Photo button clicked", Toast.LENGTH_SHORT).show();
-            openImagePicker();
-        });
 
         Bundle args = getArguments();
         if (args != null) {
             String selectedDate = args.getString("selectedDate", "No date passed");
-            String selectedTime = args.getString("selectedTime", "No time selected");
+            String selectedTime = args.getString("selectedTime", "No time passed");
+
+            Log.d("PostMoodFragment", "Received Date: " + selectedDate);
+            Log.d("PostMoodFragment", "Received Time: " + selectedTime);
+
             dateTextView.setText(selectedDate);
             timeTextView.setText(selectedTime);
-            if (args.containsKey("moodData")) {
-                isEditing = true;
-                editPosition = args.getInt("editPosition", -1);
-                String moodData = args.getString("moodData");
-                populateExistingMood(moodData);
-            }
+        } else {
+            Log.e("PostMoodFragment", "No arguments received!");
         }
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
@@ -109,7 +109,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         ) {
             @Override
             public boolean isEnabled(int position) {
-                // Disable the first item ("Select a social situation") to prevent selection
                 return position != 0;
             }
 
@@ -118,7 +117,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = (TextView) view;
                 if (position == 0) {
-                    // Grey out the first item
                     textView.setTextColor(getResources().getColor(android.R.color.darker_gray));
                 } else {
                     textView.setTextColor(getResources().getColor(android.R.color.black));
@@ -131,119 +129,194 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         socialSituationSpinner.setAdapter(adapter);
         socialSituationSpinner.setSelection(0);
 
-        // Ensure addMoodButton is not null
-        if (addMoodButton != null) {
-            // Open Mood Selector Dialog when button is clicked
-            addMoodButton.setOnClickListener(v -> {
-                MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment(this);
-                moodDialog.show(getParentFragmentManager(), "MoodSelector");
-            });
-        } else {
-            Log.e("PostMoodFragment", "AddEmoStateButton is null!");
+        addMoodButton.setOnClickListener(v -> {
+            MoodSelectorDialogFragment moodDialog = new MoodSelectorDialogFragment();
+            moodDialog.setMoodSelectionListener(PostMoodFragment.this);
+            moodDialog.show(getParentFragmentManager(), "MoodSelector");
+        });
+
+        // Add photo button click listener
+        addPhotoImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        });
+
+        if (args != null && args.containsKey("moodToEdit")) {
+            isEditMode = true;
+            moodToEdit = (Mood) args.getSerializable("moodToEdit");
+
+            if (moodToEdit != null) {
+                selectedMood = moodToEdit.getEmotion();
+                updateMoodButtonUI(selectedMood);
+
+                dateTextView.setText(moodToEdit.getDate());
+                timeTextView.setText(moodToEdit.getTime());
+                optionalTriggerEditText.setText(moodToEdit.getTrigger());
+
+                setSpinnerToValue(socialSituationSpinner, moodToEdit.getSocialSituation());
+
+                TextView postText = postButton.findViewById(R.id.cardTextView);
+                if (postText != null) postText.setText("Edit");
+
+                // If the mood has a photo, display it
+                if (moodToEdit.getPhoto() != null) {
+                    try {
+                        byte[] decodedString = Base64.decode(moodToEdit.getPhoto(), Base64.DEFAULT);
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        photoPreview.setImageBitmap(decodedByte);
+                        photoPreview.setVisibility(View.VISIBLE);
+                        photoBase64 = moodToEdit.getPhoto(); // Store the existing photo
+                    } catch (Exception e) {
+                        Log.e("PostMoodFragment", "Error decoding photo: " + e.getMessage());
+                    }
+                }
+            }
         }
 
         postButton.setOnClickListener(v -> {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Select Privacy Option");
 
-            // Do not reinitialize moodPost here; use the existing instance
-            // moodPost = new Mood(); // Removed this line
+            LinearLayout layout = new LinearLayout(requireContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
 
-            Bundle result = new Bundle();
-            result.putString("selectedDate", dateTextView.getText().toString());
-            result.putString("selectedTime", timeTextView.getText().toString());
-            result.putString("selectedMood", selectedMood);
-            result.putString("selectedSocialSituation", socialSituationSpinner.getSelectedItem().toString());
-            result.putString("whyFeel", whyFeelEditText.getText().toString());
-            result.putString("privacySetting", "Private"); // Default privacy setting
-            if (isEditing) {
-                result.putInt("editPosition", editPosition);
-            }
-            // Pass the photo data
-            result.putString("photoBase64", moodPost.getPhoto());
-            if (selectedImageUri != null) {
-                result.putString("photoUri", selectedImageUri.toString());
-            }
+            CheckBox privateCheckBox = new CheckBox(requireContext());
+            privateCheckBox.setText("Private");
 
-            // Debug the photo field
-            Log.d("PostMoodFragment", "Photo after posting: " + (moodPost.getPhoto() != null ? "Present" : "Null"));
-            Toast.makeText(getContext(), "Mood posted, check the image", Toast.LENGTH_SHORT).show();
+            CheckBox publicCheckBox = new CheckBox(requireContext());
+            publicCheckBox.setText("Public");
 
-            // Save to Firestore
-            firebaseDB = new FirebaseDB();
-            assert currentUser != null;
-            moodPost.setUid(currentUser.getUid());
-            firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
+            layout.addView(privateCheckBox);
+            layout.addView(publicCheckBox);
+            builder.setView(layout);
 
-            getParentFragmentManager().setFragmentResult("moodEvent", result);
-            NavController navController = Navigation.findNavController(v);
-            navController.popBackStack();
+            privateCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) publicCheckBox.setChecked(false);
+            });
+
+            publicCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) privateCheckBox.setChecked(false);
+            });
+
+            builder.setPositiveButton(isEditMode ? "Edit" : "Post", null);
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog dialog = builder.create();
+
+            dialog.setOnShowListener(d -> {
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(buttonView -> {
+                    if (!privateCheckBox.isChecked() && !publicCheckBox.isChecked()) {
+                        Toast.makeText(requireContext(), "Please select Private or Public", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String privacySetting = privateCheckBox.isChecked() ? "Private" : "Public";
+                    firebaseDB = new FirebaseDB();
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+
+                    if (isEditMode && moodToEdit != null) {
+                        moodToEdit.setEmotion(selectedMood);
+                        moodToEdit.setTrigger(optionalTriggerEditText.getText().toString());
+                        moodToEdit.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
+                        moodToEdit.setPrivacy(privacySetting);
+                        moodToEdit.setPhoto(photoBase64); // Update the photo
+
+                        firebaseDB.updateMoodInDB(moodToEdit);
+                        Toast.makeText(requireContext(), "Mood updated!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else {
+                        moodPost = new Mood();
+                        moodPost.isDeserializing = false;
+                        moodPost.setDate(dateTextView.getText().toString());
+                        moodPost.setTime(timeTextView.getText().toString());
+                        moodPost.setEmotion(selectedMood);
+                        moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
+                        moodPost.setTrigger(optionalTriggerEditText.getText().toString());
+                        moodPost.setPrivacy(privacySetting);
+                        moodPost.setPhoto(photoBase64); // Set the photo
+
+                        Bundle result = new Bundle();
+                        result.putString("selectedDate", moodPost.getDate());
+                        result.putString("selectedTime", moodPost.getTime());
+                        result.putString("selectedMood", moodPost.getEmotion());
+                        result.putString("selectedSocialSituation", moodPost.getSocialSituation());
+                        result.putString("optionalTrigger", moodPost.getTrigger());
+                        result.putString("privacySetting", privacySetting);
+                        result.putString("photoBase64", photoBase64); // Pass the photo
+
+                        if (currentUser != null) {
+                            db.collection("users").document(currentUser.getUid())
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            user = documentSnapshot.toObject(User.class);
+                                            firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
+                                            getParentFragmentManager().setFragmentResult("moodEvent", result);
+                                            NavController navController = Navigation.findNavController(view);
+                                            navController.popBackStack();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            });
+
+            dialog.show();
         });
     }
 
-    private void populateExistingMood(String moodData) {
-        String[] dataParts = moodData.split("\n");
-        if (dataParts.length >= 2) {
-            selectedMood = dataParts[0].replace("Mood: ", "");
-            if (cardTextView != null) {
-                cardTextView.setText(selectedMood);
-            }
-        }
-    }
-
-    // New method to open the image picker
-    private void openImagePicker() {
-        Log.d("PostMoodFragment", "Launching image picker intent");
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        try {
-            if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-                Log.d("PostMoodFragment", "Image picker intent launched successfully");
-            } else {
-                Log.e("PostMoodFragment", "No app available to handle image picker intent");
-                Toast.makeText(getContext(), "No gallery app available", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Log.e("PostMoodFragment", "Error launching image picker: " + e.getMessage());
-            Toast.makeText(getContext(), "Failed to open image picker", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Handle the result of the image picker
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("PostMoodFragment", "onActivityResult called, requestCode: " + requestCode + ", resultCode: " + resultCode);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
             try {
-                // Convert the image to Bitmap
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
-                // Compress and convert to base64
+                photoPreview.setImageBitmap(bitmap);
+                photoPreview.setVisibility(View.VISIBLE);
+
+                // Convert the bitmap to Base64
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos); // 50% quality to reduce size
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] imageBytes = baos.toByteArray();
-                String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-                if (moodPost == null) {
-                    moodPost = new Mood(); // Initialize if null to avoid NullPointerException
-                }
-                moodPost.setPhoto(base64Image); // Set the base64 string in the Mood object
-                addPhotoImageView.setImageURI(selectedImageUri); // Preview the image
-                Log.d("PostMoodFragment", "Image successfully processed and set");
-            } catch (Exception e) {
-                Log.e("PostMoodFragment", "Error converting image to base64: " + e.getMessage());
-                Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+                photoBase64 = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            } catch (IOException e) {
+                Log.e("PostMoodFragment", "Error loading image: " + e.getMessage());
+                Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Log.d("PostMoodFragment", "Image picker failed or canceled");
         }
     }
 
     @Override
     public void onMoodSelected(String mood) {
         selectedMood = mood;
-        if (cardTextView != null) {
-            cardTextView.setText(mood);
+        updateMoodButtonUI(selectedMood);
+    }
+
+    private void setSpinnerToValue(Spinner spinner, String value) {
+        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).toString().equalsIgnoreCase(value)) {
+                spinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    private void updateMoodButtonUI(String mood) {
+        if (addMoodButton != null) {
+            TextView textViewInsideCard = addMoodButton.findViewById(R.id.cardTextView);
+            if (textViewInsideCard != null) {
+                textViewInsideCard.setText(mood);
+            } else {
+                Log.e("PostMoodFragment", "TextView inside CardView not found!");
+            }
+        } else {
+            Log.e("PostMoodFragment", "AddEmoStateButton is null!");
         }
     }
 }
