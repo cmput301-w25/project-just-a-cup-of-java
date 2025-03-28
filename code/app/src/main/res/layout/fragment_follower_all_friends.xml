@@ -16,34 +16,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Search Bar for other Users -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_holder"
-        android:id="@+id/search_holder">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@id/button_holder"
+       android:id="@+id/search_holder">
 
-        <EditText
-            android:id="@+id/user_search"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginTop="8dp"
-            android:hint="Search..."
-            app:layout_constraintHorizontal_weight="1" />
+       <EditText
+           android:id="@+id/user_search"
+           android:layout_width="300dp"
+           android:layout_height="wrap_content"
+           android:layout_margin="16dp"
+           android:layout_marginTop="8dp"
+           android:hint="Search..."
+           app:layout_constraintHorizontal_weight="1" />
 
-        <ImageButton
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            app:srcCompat="@android:drawable/ic_menu_search"/>
+       <ImageButton
+           android:id="@+id/search_button"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_gravity="center_vertical"
+           app:srcCompat="@android:drawable/ic_menu_search"/>
 
 
-    </LinearLayout>
+   </LinearLayout>
 
 
 
@@ -104,97 +104,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--IQRAS WORKING CODE-->
-
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<androidx.constraintlayout.widget.ConstraintLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent">-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView2"-->
-<!--        android:layout_width="188dp"-->
-<!--        android:layout_height="121dp"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:src="@drawable/image"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    &lt;!&ndash; Search Bar for other Users &ndash;&gt;-->
-
-<!--    <androidx.appcompat.widget.SearchView-->
-<!--        android:id="@+id/user_search_view"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:iconifiedByDefault="false"-->
-<!--        android:queryHint="Search..."-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_weight="1"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/button_holder" />-->
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:id="@+id/button_holder"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.136">-->
-
-<!--        <Button-->
-<!--            android:id="@+id/friends_button_friends_fragment"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginStart="32dp"-->
-<!--            android:backgroundTint="#e08e79"-->
-<!--            android:text="All Friends"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/follower_requests"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.136"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/user_search_view"-->
-<!--            android:clickable="false"/>-->
-
-<!--        <Button-->
-<!--            android:id="@+id/follower_requests_friends"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginEnd="76dp"-->
-<!--            android:backgroundTint="#5A9999"-->
-<!--            android:text="Requests"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.136"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/user_search_view"/>-->
-
-<!--    </LinearLayout>-->
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recyclerView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:clipToPadding="false"-->
-<!--        android:scrollbars="vertical"-->
-<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/user_search_view"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        tools:listitem="@layout/item_user_follow" />-->
-
-
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--Garricks follwoing code testing-->

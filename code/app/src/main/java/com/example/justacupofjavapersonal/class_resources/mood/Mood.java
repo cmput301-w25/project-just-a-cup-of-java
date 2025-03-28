@@ -3,23 +3,39 @@ package com.example.justacupofjavapersonal.class_resources.mood;
 import android.location.Location;
 import com.google.firebase.Timestamp;
 
+import android.util.Log;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
 
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.PropertyName;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.io.Serializable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Represents a Mood event with details such as emotional state, triggers,
  * social situations, location, and optional photo.
  */
-public class Mood {
+public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
     private String privacy;
     private Timestamp timestamp;
 
+
+    private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+
     private String uid; // Mutable: Unique username, with setter
-    //private Date postDate; //REMOVING FOR NOW Immutable: Date and time of the mood event
+    private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
     private Timestamp postDate;
 
@@ -30,13 +46,14 @@ public class Mood {
     private Location location; // Optional
 
     private String date;
-    private String whyFeel; // Add this field
     private String time;
 
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
     private boolean hasSocialSituation = false;
     private boolean hasTrigger = false;
+
+    public transient boolean isDeserializing = false; // Transient flag to skip updateTimestamp during deserialization - I touched this
 
     /**
      * Constructs a Mood object with mandatory fields.
@@ -55,7 +72,7 @@ public class Mood {
         this.moodID = moodID;
         this.uid = uid;
         this.state = state;
-        //this.postDate = postDate;
+        this.postDate = postDate;
 
         // Optional fields default to null
         this.trigger = null;
@@ -84,7 +101,8 @@ public class Mood {
     }
 
     public Mood() {
-        //Empty constructor for firebase
+        // Empty constructor for Firebase - I touched this
+        this.isDeserializing = true; // Set flag during deserialization - I touched this
     }
 
     /**
@@ -140,13 +158,6 @@ public class Mood {
      * @param trigger the trigger to set (max 20 characters)
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
-//    public void setTrigger(String trigger) {
-//        if (trigger.length() > 20) {
-//            throw new IllegalArgumentException("Trigger must be 20 characters at most.");
-//        }
-//        this.trigger = trigger;
-//        this.hasTrigger = trigger != null && !trigger.isEmpty();
-//    }
     public void setTrigger(String trigger) {
         if (trigger != null && trigger.length() > 200) {
             throw new IllegalArgumentException("Trigger must be 200 characters at most.");
@@ -175,10 +186,9 @@ public class Mood {
      *
      * @return the post date
      */
-//    public Date getPostDate() {
-//        return postDate;
-//    } removing for now
-
+    public Date getPostDate() {
+        return postDate;
+    }
 
     /**
      * Gets the unique identifier of the user.
@@ -189,6 +199,10 @@ public class Mood {
         return uid;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     /**
      * Gets the unique mood ID.
      *
@@ -197,6 +211,7 @@ public class Mood {
     public String getMoodID() {
         return moodID;
     }
+
 
     /**
      * Gets the photo associated with the mood event.
@@ -286,13 +301,6 @@ public class Mood {
     public String getEmotion() {
         return emotion;
     }
-    public String getWhyFeel() {
-        return whyFeel;
-    }
-
-    public void setWhyFeel(String whyFeel) {
-        this.whyFeel = whyFeel;
-    }
 
     public void setPrivacy(String privacy) {
         this.privacy = privacy;
@@ -310,16 +318,53 @@ public class Mood {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+
 
     public String getTime() {
         return time;
     }
 
+
+    private void updateTimestamp() {
+        if (date == null || time == null) {
+            throw new IllegalStateException("Date and time must not be null when updating timestamp");
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.US);
+            Log.d("Mood", "Parsing date and time: " + date + " " + time);
+            Date parsedDate = sdf.parse(date + " " + time);
+            if (parsedDate == null) {
+                throw new ParseException("Parsed date is null", 0);
+            }
+            this.timestamp = new Timestamp(parsedDate);
+            Log.d("Mood", "Timestamp set to: " + this.timestamp.toDate().toString());
+        } catch (ParseException e) {
+            Log.e("Mood", "Failed to parse date and time: " + date + " " + time, e);
+            this.timestamp = Timestamp.now();
+            Log.d("Mood", "Falling back to current timestamp: " + this.timestamp.toDate().toString());
+        }
+    }
+
+    public void setDate(String date) {
+        if (date == null || date.isEmpty()) {
+            throw new IllegalArgumentException("Date must not be null or empty");
+        }
+        this.date = date;
+    }
+
     public void setTime(String time) {
+        if (time == null || time.isEmpty()) {
+            throw new IllegalArgumentException("Time must not be null or empty");
+        }
         this.time = time;
+        if (!isDeserializing) { // Only update timestamp if not deserializing - I touched this
+            updateTimestamp();
+        }
+    }
+
+    @PropertyName("timestamp")
+    public Timestamp getTimestamp() { // Added getter for timestamp - I touched this
+        return timestamp;
     }
     public Timestamp getPostDate() {
         return postDate;
@@ -327,6 +372,10 @@ public class Mood {
 
     public void setPostDate(Timestamp postDate) {
         this.postDate = postDate;
+    }
+    @PropertyName("timestamp")
+    public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -336,7 +385,6 @@ public class Mood {
                 ", uid='" + uid + '\'' +
                 ", postDate=" + postDate +
                 ", trigger='" + (trigger == null ? "None" : trigger) + '\'' +
-                ", emotionalState=" + state +
                 ", socialSituation=" + (socialSituation == null ? "None" : socialSituation) +
                 ", photo=" + (photo == null ? "None" : "Available") +
                 ", location=" + (location == null ? "None" : location.toString()) +
