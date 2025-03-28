@@ -47,13 +47,13 @@ public class FirebaseDB {
             String email = updates.get("email").toString();
             user.updateEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                           Log.d("Update User Profile", "Email updated");
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("Update User Profile", "Email updated");
                             }
                         }
-                     });
+                    });
         } else if (updates.containsKey("password")) {
             FirebaseUser user = auth.getCurrentUser();
             String password = updates.get("password").toString();
@@ -106,10 +106,11 @@ public class FirebaseDB {
         }
     }
 
-    public interface OnUsersRetrievedListener {
-        void onUsersRetrieved(List<User> userList);
-    }
-
+//    public interface OnUsersRetrievedListener {
+//        void onUsersRetrieved(List<User> userList);
+//
+//        void onUsersRetrievedFailed(Exception e);
+//    }
 
     public void getAllUsers(OnUsersRetrievedListener listener) {
         db.collection("users").get().addOnCompleteListener(task -> {
@@ -123,7 +124,6 @@ public class FirebaseDB {
             listener.onUsersRetrieved(userList);
         });
     }
-
 
     public void searchUsers(String search, OnUsersRetrievedListener listener) {
         if (search.isEmpty()) {
@@ -147,10 +147,6 @@ public class FirebaseDB {
                     listener.onUsersRetrieved(searchedList);
                 });
     }
-
-
-
-
 
     /**
      *
@@ -370,7 +366,6 @@ public class FirebaseDB {
 
     /**
      * To be implemented
-     *
      * @param currUserID
      */
     public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
@@ -389,7 +384,11 @@ public class FirebaseDB {
                         fetchUsersFromUid(followingIds, listener);
                     }
                 })
-                .addOnFailureListener(e -> Log.e("Get Following", "Error fetching following", e));
+                .addOnFailureListener(e -> Log.e("Get Followering", "Error fetching following", e));
+    }
+    public interface OnUsersRetrievedListener {
+        void onUsersRetrieved(List<User> userList);
+        void onUsersRetrievedFailed(Exception e); // Add this if missing
     }
 
 }

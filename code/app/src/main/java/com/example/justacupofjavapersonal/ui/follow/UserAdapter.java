@@ -1,3 +1,4 @@
+////IQRAS WORKING CODE
 package com.example.justacupofjavapersonal.ui.follow;
 
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         ImageView profilePicture;
         TextView userName;
         Button followButton;
+
         public UserViewHolder(View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
@@ -64,12 +66,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
 
-            //Set user profile picture
-
             followButton.setOnClickListener(v -> {
                 listener.onFollowClick(position);
-                followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Folllow");
-                if (FirebaseAuth.getInstance().getCurrentUser() != null){
+
+                String currentText = followButton.getText().toString();
+                followButton.setText(currentText.equals("Follow") ? "Requested" : "Follow");
+
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
                 }
             });

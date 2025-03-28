@@ -1,6 +1,8 @@
 package com.example.justacupofjavapersonal.class_resources.mood;
 
 import android.location.Location;
+import com.google.firebase.Timestamp;
+
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,17 +29,25 @@ public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
     private String privacy;
-    private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+    private Timestamp timestamp;
+
+
+    //private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
+    //private Timestamp postDate;
+
     private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
     private Location location; // Optional
+
     private String date;
     private String time;
+
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
     private boolean hasSocialSituation = false;
@@ -132,6 +142,7 @@ public class Mood implements Serializable {
         this.state = state;
     }
 
+
     /**
      * Gets the trigger of the mood event.
      *
@@ -148,9 +159,18 @@ public class Mood implements Serializable {
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
     public void setTrigger(String trigger) {
+        if (trigger != null && trigger.length() > 200) {
+            throw new IllegalArgumentException("Trigger must be 200 characters at most.");
+        }
         this.trigger = trigger;
         this.hasTrigger = trigger != null && !trigger.isEmpty();
     }
+
+    public void setMoodID(String moodID) {
+        this.moodID = moodID;
+    }
+
+
 
     /**
      * Gets the post date of the mood event.
@@ -337,7 +357,13 @@ public class Mood implements Serializable {
     public Timestamp getTimestamp() { // Added getter for timestamp - I touched this
         return timestamp;
     }
+//    public Timestamp getPostDate() {
+//        return postDate;
+//    }
 
+//    public void setPostDate(Timestamp postDate) {
+//        this.postDate = postDate;
+//    }
     @PropertyName("timestamp")
     public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
         this.timestamp = timestamp;
