@@ -27,9 +27,7 @@ public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
     private String privacy;
-
     private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
-
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
@@ -38,10 +36,8 @@ public class Mood implements Serializable {
     private String emotion;
     private String socialSituation; // Optional
     private Location location; // Optional
-
     private String date;
     private String time;
-
     private boolean hasPhoto = false;
     private boolean hasLocation = false;
     private boolean hasSocialSituation = false;
