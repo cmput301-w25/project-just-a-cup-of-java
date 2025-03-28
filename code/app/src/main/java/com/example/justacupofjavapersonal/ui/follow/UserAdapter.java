@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,10 +20,12 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> userList;
     private OnItemClickListener listener;
+    private FirebaseDB db;
 
-    public UserAdapter(List<User> userList, OnItemClickListener listener) {
+    public UserAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
         this.userList = userList;
         this.listener = listener;
+        this.db = db;
     }
 
     public interface OnItemClickListener {
@@ -46,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return userList.size();
     }
 
-    public static class UserViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         TextView userName;
         Button followButton;
@@ -65,6 +69,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             followButton.setOnClickListener(v -> {
                 listener.onFollowClick(position);
                 followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Folllow");
+                if (FirebaseAuth.getInstance().getCurrentUser() != null){
+                    db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                }
             });
         }
     }

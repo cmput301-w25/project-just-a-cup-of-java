@@ -112,31 +112,6 @@ public class AddMoodEventFragment extends Fragment {
         final String[] selectedSocialSituationWrapper = {selectedSocialSituation};
         final String[] optionalTriggerWrapper = {optionalTrigger};
 
-        // 🔹 Listen for the mood event from PostMoodFragment
-//        getParentFragmentManager().setFragmentResultListener("moodEvent", this, (requestKey, bundle) -> {
-//            String newSelectedDate = bundle.getString("selectedDate", "No date selected");
-//            String selectedTime = bundle.getString("selectedTime", "No time selected");
-//            String selectedMood = bundle.getString("selectedMood", "");
-//            String whyFeel = bundle.getString("whyFeel", "");
-//            String privacySetting = bundle.getString("privacySetting", "Private");
-//            selectedSocialSituationWrapper[0] = bundle.getString("selectedSocialSituation", selectedSocialSituationWrapper[0]);
-//            optionalTriggerWrapper[0] = bundle.getString("optionalTrigger", optionalTriggerWrapper[0]);
-//
-//            Mood newMood = new Mood();
-//            newMood.setDate(newSelectedDate);
-//            newMood.setTime(selectedTime);
-//            newMood.setEmotion(selectedMood);
-//            newMood.setWhyFeel(whyFeel);
-//            newMood.setPrivacy(privacySetting);
-//            newMood.setSocialSituation(selectedSocialSituationWrapper[0]);
-//            newMood.setTrigger(optionalTriggerWrapper[0]);
-//
-//            binding.selectedDateTextView.setText("Selected Date: " + newSelectedDate);
-//            loadMoodsForDate(newSelectedDate);  // This will fetch updated Firestore data
-//            viewModel.addMood(newMood);  // Add to ViewModel (optional)
-//            selectedDate = newSelectedDate;
-//        });
-
         // Handle "Add Mood" button click
         binding.addingMood.setOnClickListener(v -> {
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
@@ -156,22 +131,48 @@ public class AddMoodEventFragment extends Fragment {
     }
 
     /**
+     * Edits a mood in the mood list and updates the mood map for the selected date.
+     *
+     * @param position The position of the mood to edit in the mood list.
+     */
+    private void editMood(int position) {
+        if (position >= 0 && position < moodList.size()) {
+            Mood moodToEdit = moodList.get(position);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("moodToEdit", moodToEdit); // 🔹 Make sure Mood implements Serializable
+            bundle.putInt("editPosition", position); // Optional, in case you want to update UI after edit
+
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.navigation_post_mood, bundle);
+        }
+    }
+
+
+    /**
      * Sets up the RecyclerView for displaying mood events.
      * Initializes the MoodActionsAdapter with the current context and mood list,
      * and sets it to the RecyclerView. Also configures the RecyclerView with a
      * LinearLayoutManager.
      */
     private void setupMoodRecyclerView() {
-        moodAdapter = new MoodActionsAdapter(getContext(), moodList, position -> deleteMood(position));
+        moodAdapter = new MoodActionsAdapter(
+                getContext(),
+                moodList,
+                position -> deleteMood(position), // already existing delete
+                position -> editMood(position)    // 🔹 new edit handler
+        );
+
         binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.moodListView.setAdapter(moodAdapter);
 
         viewModel.getMoodList().observe(getViewLifecycleOwner(), updatedMoodList -> {
             moodList.clear();
-            moodList.addAll(updatedMoodList);  // Assuming ViewModel also uses List<Mood>
+            moodList.addAll(updatedMoodList);
             moodAdapter.notifyDataSetChanged();
         });
     }
+
 
     /**
      * Deletes a mood from the mood list and updates the mood map for the selected date.
@@ -194,7 +195,6 @@ public class AddMoodEventFragment extends Fragment {
                 String moodEntry = "Mood: " + moodToDelete.getEmotion() + "\n" +
                         "Social Situation: " + moodToDelete.getSocialSituation() + "\n" +
                         "Trigger: " + moodToDelete.getTrigger() + "\n" +
-                        "Why: " + moodToDelete.getWhyFeel() + "\n" +
                         "Privacy: " + moodToDelete.getPrivacy() + "\n" +
                         "Time: " + moodToDelete.getTime();
                 moodsForDate.remove(moodEntry);
@@ -326,9 +326,6 @@ public class AddMoodEventFragment extends Fragment {
         }
     }
 
-
-
-
     /**
      * Called when the view previously created by onCreateView has been detached from the fragment.
      */
@@ -338,3 +335,5 @@ public class AddMoodEventFragment extends Fragment {
         binding = null;
     }
 }
+
+

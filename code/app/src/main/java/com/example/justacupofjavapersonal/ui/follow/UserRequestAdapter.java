@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import java.util.List;
 public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.UserRequestViewHolder> {
     private List<User> userList;
     private OnItemClickListener listener;
+    private FirebaseDB db;
 
     public UserRequestAdapter(List<User> userList, OnItemClickListener listener) {
         this.userList = userList;
@@ -49,7 +52,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
 
 
-    public static class UserRequestViewHolder extends RecyclerView.ViewHolder {
+    public class UserRequestViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         TextView userName;
         Button acceptButton;
@@ -69,6 +72,9 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
             acceptButton.setOnClickListener(v -> {
                 listener.onAcceptClick(position);
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    db.acceptRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                }
 
                 // Accept follow, add to following
                 // Remove item from list
@@ -77,6 +83,9 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             denyButton.setOnClickListener(v -> {
                 listener.onDenyClick(position);
                 // Remove from list, nothing happens
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                }
             });
 
         }

@@ -14,8 +14,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.databinding.FragmentFollowRequestsBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,9 @@ public class FollowRequestsFragment extends Fragment {
     private FragmentFollowRequestsBinding binding;
     private UserRequestAdapter adapter;
     private List<User> userList;
+
+    private FirebaseDB db;
+    private FirebaseUser currUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,11 +42,18 @@ public class FollowRequestsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        db = new FirebaseDB();
+        currUser = FirebaseAuth.getInstance().getCurrentUser();
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         userList = new ArrayList<>();
-        userList.add(new User("Panda Express"));
-        userList.add(new User("PF Changs"));
+        if (currUser != null) {
+            loadRequests(currUser.getUid());
+        } else { //Placeholder requests
+            userList.add(new User("Panda Express"));
+            userList.add(new User("PF Changs"));
+        }
 
         adapter = new UserRequestAdapter(userList, new UserRequestAdapter.OnItemClickListener() {
             @Override
@@ -62,6 +75,14 @@ public class FollowRequestsFragment extends Fragment {
 
         binding.friendsButtonRequestsFragment.setOnClickListener(v -> {
             navController.navigate(R.id.action_navigation_follower_requests_to_notifications);
+        });
+    }
+
+    private void loadRequests(String userID) {
+        db.getAllRequests(userID, users -> {
+            userList.clear();
+            userList.addAll(users);
+            adapter.notifyDataSetChanged();
         });
     }
 
