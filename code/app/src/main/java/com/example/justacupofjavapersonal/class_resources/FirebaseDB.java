@@ -277,8 +277,6 @@ public class FirebaseDB {
         );
     }
 
-
-
     public void sendRequest(String currUserID, String requestedID) {
         //Store the follow requests in a collection "requests"
         // Each document will have a requesteeID
@@ -343,14 +341,25 @@ public class FirebaseDB {
 
     /**
      * To be implemented
-     * @param follower
-     * @param followee
+     * @param currUserID
      */
-    public void getFollowers(User follower, User followee) {
+    public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
+        db.collection("follows")
+                .document(currUserID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> followingIds = (List<String>) documentSnapshot.get("following");
 
+                        if (followingIds == null || followingIds.isEmpty()) {
+                            listener.onUsersRetrieved(new ArrayList<>());
+                            return;
+                        }
+
+                        fetchUsersFromUid(followingIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Get Followering", "Error fetching following", e));
     }
 
-    public void getFollowing(User user) {
-
-    }
 }
