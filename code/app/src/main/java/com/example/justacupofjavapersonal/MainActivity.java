@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -62,14 +63,34 @@ public class MainActivity extends AppCompatActivity {
         binding.navView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.navigation_home) {
-                // If already on home, clear the back stack and go to home
-                navController.popBackStack(R.id.navigation_home, false);
-                navController.navigate(R.id.navigation_home);
-                return true;
+            // If current destination is already the selected item, do nothing
+            if (itemId == navController.getCurrentDestination().getId()) {
+                return false;
             }
 
-            return NavigationUI.onNavDestinationSelected(item, navController);
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .setPopUpTo(navController.getGraph().getStartDestinationId(), false)
+                    .build();
+
+            try {
+                navController.navigate(itemId, null, navOptions);
+                return true;
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace(); // just in case there's no matching action
+                return false;
+            }
+//            int itemId = item.getItemId();
+//
+//            if (itemId == R.id.navigation_home) {
+//                // If already on home, clear the back stack and go to home
+//                navController.popBackStack(R.id.navigation_home, false);
+//                navController.navigate(R.id.navigation_home);
+//                return true;
+//            }
+//
+//            return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
 
