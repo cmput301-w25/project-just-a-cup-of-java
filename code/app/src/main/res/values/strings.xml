@@ -13,13 +13,14 @@
         <item>@string/social_situation_crowd</item>
     </string-array>
 
-    <string name="emotion_anger">Anger</string>
+    <string name="emotion_anger">Angry</string>
     <string name="emotion_confusion">Confusion</string>
     <string name="emotion_disgust">Disgust</string>
     <string name="emotion_fear">Fear</string>
-    <string name="emotion_happiness">Happiness</string>
-    <string name="emotion_sadness">Sadness</string>
+    <string name="emotion_happiness">Happy</string>
+    <string name="emotion_sadness">Sad</string>
     <string name="emotion_shame">Shame</string>
+    <string name="emotion_awkward">Awkward</string>
     <string name="emotion_surprise">Surprise</string>
     <string name="select_emotion_prompt">Select an emotion</string>
 
@@ -30,6 +31,7 @@
         <item>@string/emotion_confusion</item>
         <item>@string/emotion_disgust</item>
         <item>@string/emotion_fear</item>
+        <item>@string/emotion_awkward</item>
         <item>@string/emotion_happiness</item>
         <item>@string/emotion_sadness</item>
         <item>@string/emotion_shame</item>
@@ -38,7 +40,7 @@
 
     <string name="app_name">just a cup of java personal</string>
     <string name="title_home">Home</string>
-    <string name="title_feed">Feed</string>
+    <string name="title_feed">Followers</string>
     <string name="title_notifications">Notifications</string>
     <string name="selected_date">Selected Date:</string>
 

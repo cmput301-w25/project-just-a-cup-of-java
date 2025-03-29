@@ -179,6 +179,25 @@ public class AddMoodEventFragment extends Fragment {
     }
 
     /**
+     * Edits a mood in the mood list and updates the mood map for the selected date.
+     *
+     * @param position The position of the mood to edit in the mood list.
+     */
+    private void editMood(int position) {
+        if (position >= 0 && position < moodList.size()) {
+            Mood moodToEdit = moodList.get(position);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("moodToEdit", moodToEdit); // 🔹 Make sure Mood implements Serializable
+            bundle.putInt("editPosition", position); // Optional, in case you want to update UI after edit
+
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.navigation_post_mood, bundle);
+        }
+    }
+
+
+    /**
      * Sets up the RecyclerView for displaying mood events.
      * Initializes the MoodActionsAdapter with the current context and mood list,
      * and sets it to the RecyclerView. Also configures the RecyclerView with a
@@ -190,6 +209,13 @@ public class AddMoodEventFragment extends Fragment {
                 moodList,
                 position -> deleteMood(position),
                 position -> editMood(position)
+        );
+
+        moodAdapter = new MoodActionsAdapter(
+                getContext(),
+                moodList,
+                position -> deleteMood(position), // already existing delete
+                position -> editMood(position)    // 🔹 new edit handler
         );
 
         binding.moodListView.setLayoutManager(new LinearLayoutManager(getContext()));

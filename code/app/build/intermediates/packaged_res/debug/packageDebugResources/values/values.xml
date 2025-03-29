@@ -6,6 +6,7 @@
         <item>@string/emotion_confusion</item>
         <item>@string/emotion_disgust</item>
         <item>@string/emotion_fear</item>
+        <item>@string/emotion_awkward</item>
         <item>@string/emotion_happiness</item>
         <item>@string/emotion_sadness</item>
         <item>@string/emotion_shame</item>
@@ -31,12 +32,13 @@
     <item name="navigation_moodhistory" type="id"/>
     <string name="app_name">just a cup of java personal</string>
     <string name="default_web_client_id" translatable="false">727983894490-ln4dciqqjv7vn90hjfqevd8ftbrrcfp1.apps.googleusercontent.com</string>
-    <string name="emotion_anger">Anger</string>
+    <string name="emotion_anger">Angry</string>
+    <string name="emotion_awkward">Awkward</string>
     <string name="emotion_confusion">Confusion</string>
     <string name="emotion_disgust">Disgust</string>
     <string name="emotion_fear">Fear</string>
-    <string name="emotion_happiness">Happiness</string>
-    <string name="emotion_sadness">Sadness</string>
+    <string name="emotion_happiness">Happy</string>
+    <string name="emotion_sadness">Sad</string>
     <string name="emotion_shame">Shame</string>
     <string name="emotion_surprise">Surprise</string>
     <string name="gcm_defaultSenderId" translatable="false">727983894490</string>
@@ -52,7 +54,7 @@
     <string name="social_situation_crowd">With a crowd</string>
     <string name="social_situation_one_other_person">With one other person</string>
     <string name="social_situation_two_or_several_people">With two to several people</string>
-    <string name="title_feed">Feed</string>
+    <string name="title_feed">Followers</string>
     <string name="title_home">Home</string>
     <string name="title_notifications">Notifications</string>
     <style name="Theme.JustACupOfJavaPersonal" parent="Theme.MaterialComponents.DayNight.NoActionBar">

@@ -12,11 +12,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.justacupofjavapersonal.databinding.ActivityMainBinding;
+import com.google.firebase.FirebaseApp;
 
 /**
  * Entry point of the application.
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
 
-    
+
     /**
      * Called when the activity is starting. This is where most initialization should go:
      * calling setContentView(int) to inflate the activity's UI, using findViewById(int) to programmatically interact
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        FirebaseApp.initializeApp(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -56,18 +59,38 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_feed, R.id.navigation_notifications)
                 .build();
         NavigationUI.setupWithNavController(binding.topAppBar, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(binding.navView, navController);
+
         binding.navView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.navigation_home) {
-                // If already on home, clear the back stack and go to home
-                navController.popBackStack(R.id.navigation_home, false);
-                navController.navigate(R.id.navigation_home);
-                return true;
+            // If current destination is already the selected item, do nothing
+            if (itemId == navController.getCurrentDestination().getId()) {
+                return false;
             }
 
-            return NavigationUI.onNavDestinationSelected(item, navController);
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .setPopUpTo(navController.getGraph().getStartDestinationId(), false)
+                    .build();
+
+            try {
+                navController.navigate(itemId, null, navOptions);
+                return true;
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace(); // just in case there's no matching action
+                return false;
+            }
+//            int itemId = item.getItemId();
+//
+//            if (itemId == R.id.navigation_home) {
+//                // If already on home, clear the back stack and go to home
+//                navController.popBackStack(R.id.navigation_home, false);
+//                navController.navigate(R.id.navigation_home);
+//                return true;
+//            }
+//
+//            return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
 

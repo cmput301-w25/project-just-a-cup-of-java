@@ -62,6 +62,12 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
         holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
         holder.triggerTextView.setText("Reason: " + mood.getTrigger());
 
+        holder.socialSituation.setText(mood.getSocialSituation());
+        holder.emotionTextView.setText(mood.getEmotion());
+        holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
+        holder.triggerTextView.setText("Reason: " + mood.getTrigger());
+
+        // Delete button
         // Show or hide the "View Image" button based on whether a photo exists
         if (mood.getPhoto() != null && !mood.getPhoto().isEmpty()) {
             holder.viewImageButton.setVisibility(View.VISIBLE);
@@ -118,6 +124,8 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
         ImageButton deleteButton, editButton;
         Button viewImageButton; // Changed to Button to avoid ClassCastException
+        TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
+        ImageButton deleteButton, editButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,6 +136,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
             editButton = itemView.findViewById(R.id.editMoodButton);
             viewImageButton = itemView.findViewById(R.id.viewImageButton);
+            editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
         }
     }
 

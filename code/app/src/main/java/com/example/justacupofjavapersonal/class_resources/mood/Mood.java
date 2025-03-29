@@ -5,6 +5,12 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
+import com.google.firebase.Timestamp;
+
+import android.util.Log;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
 
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.google.firebase.firestore.PropertyName;
@@ -14,6 +20,14 @@ import java.io.Serializable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import com.google.firebase.firestore.PropertyName;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.io.Serializable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 import java.util.Date;
 import java.util.Locale;
@@ -29,10 +43,18 @@ public class Mood implements Serializable {
 
     private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
 
+    private Timestamp timestamp;
+
+
+    //private Timestamp timestamp; // this will be used when querying the database. Allows us to sort
+
     private String uid; // Mutable: Unique username, with setter
     private Date postDate; // Immutable: Date and time of the mood event
     private String trigger; // Max 20 characters, optional
     private String photo; // Changed to String for Base64
+    //private Timestamp postDate;
+
+    private byte[] photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
@@ -135,6 +157,7 @@ public class Mood implements Serializable {
         this.state = state;
     }
 
+
     /**
      * Gets the trigger of the mood event.
      *
@@ -151,9 +174,18 @@ public class Mood implements Serializable {
      * @throws IllegalArgumentException if the trigger exceeds 20 characters
      */
     public void setTrigger(String trigger) {
+        if (trigger != null && trigger.length() > 200) {
+            throw new IllegalArgumentException("Trigger must be 200 characters at most.");
+        }
         this.trigger = trigger;
         this.hasTrigger = trigger != null && !trigger.isEmpty();
     }
+
+    public void setMoodID(String moodID) {
+        this.moodID = moodID;
+    }
+
+
 
     /**
      * Gets the post date of the mood event.
@@ -308,6 +340,33 @@ public class Mood implements Serializable {
         }
     }
 
+
+
+    public String getTime() {
+        return time;
+    }
+
+
+    private void updateTimestamp() {
+        if (date == null || time == null) {
+            throw new IllegalStateException("Date and time must not be null when updating timestamp");
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.US);
+            Log.d("Mood", "Parsing date and time: " + date + " " + time);
+            Date parsedDate = sdf.parse(date + " " + time);
+            if (parsedDate == null) {
+                throw new ParseException("Parsed date is null", 0);
+            }
+            this.timestamp = new Timestamp(parsedDate);
+            Log.d("Mood", "Timestamp set to: " + this.timestamp.toDate().toString());
+        } catch (ParseException e) {
+            Log.e("Mood", "Failed to parse date and time: " + date + " " + time, e);
+            this.timestamp = Timestamp.now();
+            Log.d("Mood", "Falling back to current timestamp: " + this.timestamp.toDate().toString());
+        }
+    }
+
     public void setDate(String date) {
         if (date == null || date.isEmpty()) {
             throw new IllegalArgumentException("Date must not be null or empty");
@@ -329,7 +388,17 @@ public class Mood implements Serializable {
     public Timestamp getTimestamp() { // Added getter for timestamp - I touched this
         return timestamp;
     }
+//    public Timestamp getPostDate() {
+//        return postDate;
+//    }
 
+    @PropertyName("timestamp")
+    public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
+        this.timestamp = timestamp;
+    }
+//    public void setPostDate(Timestamp postDate) {
+//        this.postDate = postDate;
+//    }
     @PropertyName("timestamp")
     public void setTimestamp(Timestamp timestamp) { // Added setter for timestamp - I touched this
         this.timestamp = timestamp;

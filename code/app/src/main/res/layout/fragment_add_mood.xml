@@ -4,62 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Mood Summary -->
-
-    <!-- Social Situation Summary -->
-
-    <!-- Trigger Summary -->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/moodSummaryTextView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:paddingTop="8dp"-->
-    <!--        android:text="Mood: "-->
-    <!--        android:textSize="16sp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/socialSituationSummaryTextView"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/socialSituationSummaryTextView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:paddingTop="8dp"-->
-    <!--        android:text="Social Situation: "-->
-    <!--        android:textSize="16sp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/weekRecyclerView"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.098"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintVertical_bias="0.448" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/triggerSummaryTextView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:paddingTop="8dp"-->
-    <!--        android:text="Trigger: "-->
-    <!--        android:textSize="16sp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/weekRecyclerView"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.045"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintVertical_bias="0.793" />-->
-
-    <!--    List view-->
-    <!--        android:id="@+id/moodListView"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        tools:layout_editor_absoluteX="-16dp" />-->
-
-
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="188dp"
@@ -117,9 +61,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moodListView"
         android:layout_width="396dp"
-        android:layout_height="395dp"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="90dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"

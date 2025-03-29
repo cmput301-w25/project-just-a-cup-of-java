@@ -35,6 +35,7 @@ import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -225,6 +226,14 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                     String privacySetting = privateCheckBox.isChecked() ? "Private" : "Public";
                     firebaseDB = new FirebaseDB();
                     FirebaseUser currentUser = mAuth.getCurrentUser();
+                    firebaseDB = new FirebaseDB();
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+
+                    if (isEditMode && moodToEdit != null) {
+                        moodToEdit.setEmotion(selectedMood);
+                        moodToEdit.setTrigger(optionalTriggerEditText.getText().toString());
+                        moodToEdit.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
+                        moodToEdit.setPrivacy(privacySetting);
 
                     if (isEditMode && moodToEdit != null) {
                         moodToEdit.setEmotion(selectedMood);
@@ -272,6 +281,30 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         } else {
                             Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show();
                         }
+                        Bundle result = new Bundle();
+                        result.putString("selectedDate", moodPost.getDate());
+                        result.putString("selectedTime", moodPost.getTime());
+                        result.putString("selectedMood", moodPost.getEmotion());
+                        result.putString("selectedSocialSituation", moodPost.getSocialSituation());
+                        result.putString("optionalTrigger", moodPost.getTrigger());
+                        result.putString("privacySetting", privacySetting);
+
+                        if (currentUser != null) {
+                            db.collection("users").document(currentUser.getUid())
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            user = documentSnapshot.toObject(User.class);
+                                            firebaseDB.addMoodtoDB(moodPost, currentUser.getUid());
+                                            getParentFragmentManager().setFragmentResult("moodEvent", result);
+                                            NavController navController = Navigation.findNavController(v);
+                                            navController.popBackStack();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             });
@@ -305,6 +338,30 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     @Override
     public void onMoodSelected(String mood) {
         selectedMood = mood;
+
+        if (addMoodButton != null) {
+            TextView textViewInsideCard = addMoodButton.findViewById(R.id.cardTextView);
+            if (textViewInsideCard != null) {
+                textViewInsideCard.setText(mood);
+            } else {
+                Log.e("PostMoodFragment", "TextView inside CardView not found!");
+            }
+        } else {
+            Log.e("PostMoodFragment", "AddEmoStateButton is null!");
+        }
+    }
+
+    private void setSpinnerToValue(Spinner spinner, String value) {
+        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).toString().equalsIgnoreCase(value)) {
+                spinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    private void updateMoodButtonUI(String mood) {
         updateMoodButtonUI(selectedMood);
     }
 
@@ -328,6 +385,10 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             }
         } else {
             Log.e("PostMoodFragment", "AddEmoStateButton is null!");
+            TextView textViewInsideCard = addMoodButton.findViewById(R.id.cardTextView);
+            if (textViewInsideCard != null) {
+                textViewInsideCard.setText(mood);
+            }
         }
     }
 }
