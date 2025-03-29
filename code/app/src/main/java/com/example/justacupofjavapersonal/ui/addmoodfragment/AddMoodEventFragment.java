@@ -163,8 +163,15 @@ public class AddMoodEventFragment extends Fragment {
             Mood moodToEdit = moodList.get(position);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("moodToEdit", moodToEdit);
-            bundle.putInt("editPosition", position);
+            bundle.putString("editDate", moodToEdit.getDate());
+            bundle.putString("editTime", moodToEdit.getTime());
+            bundle.putString("editMood", moodToEdit.getEmotion());
+            bundle.putString("editSocialSituation", moodToEdit.getSocialSituation());
+            bundle.putString("editTrigger", moodToEdit.getTrigger());
+            bundle.putString("editPrivacy", moodToEdit.getPrivacy());
+            //bundle.putString("editPhoto", moodToEdit.getPhoto());
+            bundle.putString("editMoodID", moodToEdit.getMoodID());
+            bundle.putInt("editPosition", position); // Keep this if you're using it later
 
             Navigation.findNavController(requireView())
                     .navigate(R.id.navigation_post_mood, bundle);

@@ -141,37 +141,48 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
-        if (args != null && args.containsKey("moodToEdit")) {
+        if (args != null && args.containsKey("editDate")) {
             isEditMode = true;
-            moodToEdit = (Mood) args.getSerializable("moodToEdit");
 
-            if (moodToEdit != null) {
-                selectedMood = moodToEdit.getEmotion();
-                updateMoodButtonUI(selectedMood);
+            // Rebuild moodToEdit manually (optional – just reuse fields directly if you want)
+            moodToEdit = new Mood();
+            moodToEdit.setDate(args.getString("editDate"));
+            moodToEdit.setTime(args.getString("editTime"));
+            moodToEdit.setEmotion(args.getString("editMood"));
+            moodToEdit.setSocialSituation(args.getString("editSocialSituation"));
+            moodToEdit.setTrigger(args.getString("editTrigger"));
+            moodToEdit.setPrivacy(args.getString("editPrivacy"));
+            moodToEdit.setPhoto(args.getString("editPhoto"));
+            moodToEdit.setMoodID(args.getString("editMoodID")); // Optional if you need it
 
-                dateTextView.setText(moodToEdit.getDate());
-                timeTextView.setText(moodToEdit.getTime());
-                optionalTriggerEditText.setText(moodToEdit.getTrigger());
+            moodToEdit.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                setSpinnerToValue(socialSituationSpinner, moodToEdit.getSocialSituation());
+            // Use values to populate UI
+            selectedMood = moodToEdit.getEmotion();
+            updateMoodButtonUI(selectedMood);
 
-                TextView postText = postButton.findViewById(R.id.cardTextView);
-                if (postText != null) postText.setText("Edit");
+            dateTextView.setText(moodToEdit.getDate());
+            timeTextView.setText(moodToEdit.getTime());
+            optionalTriggerEditText.setText(moodToEdit.getTrigger());
 
-                // If the mood has a photo, display it
-                if (moodToEdit.getPhoto() != null) {
-                    try {
-                        byte[] decodedString = Base64.decode(moodToEdit.getPhoto(), Base64.DEFAULT);
-                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        photoPreview.setImageBitmap(decodedByte);
-                        photoPreview.setVisibility(View.VISIBLE);
-                        photoBase64 = moodToEdit.getPhoto(); // Store the existing photo
-                    } catch (Exception e) {
-                        Log.e("PostMoodFragment", "Error decoding photo: " + e.getMessage());
-                    }
+            setSpinnerToValue(socialSituationSpinner, moodToEdit.getSocialSituation());
+
+            TextView postText = postButton.findViewById(R.id.cardTextView);
+            if (postText != null) postText.setText("Edit");
+
+            if (moodToEdit.getPhoto() != null) {
+                try {
+                    byte[] decodedString = Base64.decode(moodToEdit.getPhoto(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    photoPreview.setImageBitmap(decodedByte);
+                    photoPreview.setVisibility(View.VISIBLE);
+                    photoBase64 = moodToEdit.getPhoto(); // Keep current photo
+                } catch (Exception e) {
+                    Log.e("PostMoodFragment", "Error decoding photo: " + e.getMessage());
                 }
             }
         }
+
 
         postButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
