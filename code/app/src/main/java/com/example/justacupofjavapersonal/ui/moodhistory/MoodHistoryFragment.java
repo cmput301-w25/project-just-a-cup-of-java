@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class MoodHistoryFragment extends Fragment {
 
@@ -128,17 +129,18 @@ public class MoodHistoryFragment extends Fragment {
 
 
             Log.d("MoodFilter", "From DB Emotion: " + mood.getEmotion());
-//            String adjustedEmotion = mood.getEmotion().substring(0, mood.getEmotion().length() - 3); // used this so that I could remove the emoji stored within the db before comparison
-//            Log.d("MoodFilter", "Adjusted Emotion: " + adjustedEmotion);
             Log.d("MoodFilter", "Filter Emotion: " + emotion);
             if (emotion != null && !emotion.isEmpty() && !mood.getEmotion().toLowerCase().contains(emotion.toLowerCase())) {
                 matches = false;
             }
 
-            if (reasonKeyword != null && !reasonKeyword.isEmpty() &&
-                    !mood.getTrigger().toLowerCase().contains(reasonKeyword.toLowerCase())) {
-                matches = false;
+            if (reasonKeyword != null && !reasonKeyword.isEmpty()) {
+                String regex = "\\b" + Pattern.quote(reasonKeyword.toLowerCase()) + "\\b";
+                if (!mood.getTrigger().toLowerCase().matches(".*" + regex + ".*")) {
+                    matches = false;
+                }
             }
+
 
             if (matches) {
                 filteredList.add(mood);

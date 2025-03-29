@@ -193,8 +193,22 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         moodToEdit.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                         moodToEdit.setPrivacy(privacySetting);
 
+                        MaterialToolbar toolbar = requireActivity().findViewById(R.id.topAppBar);
+                        toolbar.setTitle("Edit Mood");
+
+                        // Set button text
+                        TextView buttonText = postButton.findViewById(R.id.cardTextView);
+                        if (buttonText != null) {
+                            buttonText.setText("Edit");
+                        }
+
+
                         firebaseDB.updateMoodInDB(moodToEdit);
                         Toast.makeText(requireContext(), "Mood updated!", Toast.LENGTH_SHORT).show();
+
+                        // Navigate back to AddMoodFragment
+                        NavController navController = Navigation.findNavController(view);
+                        navController.popBackStack();
                         dialog.dismiss();
                     } else {
                         moodPost = new Mood();
