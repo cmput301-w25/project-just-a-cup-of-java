@@ -1,3 +1,4 @@
+////IQRAS WORKING CODE
 package com.example.justacupofjavapersonal.ui.follow;
 
 import android.util.Log;
@@ -18,13 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> userList;
     private List<String> requests;
     private OnItemClickListener listener;
     private FirebaseDB db;
-
+    private List<String> requests;
     public UserAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
         this.userList = userList;
         this.listener = listener;
@@ -47,6 +49,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
         holder.bind(userList.get(position), listener, position);
     }
+    private void loadRequests(String userID) {
+        db.getAllRequestIds(userID, users -> {
+            requests.clear();
+            requests.addAll(users);
+        });
+    }
 
     private void loadRequests(String currUserID, String user, Button followButton) {
         db.getAllRequestedIds(currUserID, users -> {
@@ -61,10 +69,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return userList.size();
     }
 
+
     public class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         TextView userName;
         Button followButton;
+
         public UserViewHolder(View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
@@ -75,10 +85,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
             requests = new ArrayList<>();
+
             if (FirebaseAuth.getInstance().getCurrentUser() != null){
                 loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(),followButton);
                 Log.d("Requests IDs", "Fetched Request UIDs");
                 Log.d("Requests IDs", "Requests: " + requests);
+
 
 
                 //Set user profile picture
@@ -96,6 +108,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                         }
                 });
             }
+
         }
     }
 }

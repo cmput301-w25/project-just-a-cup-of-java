@@ -47,13 +47,13 @@ public class FirebaseDB {
             String email = updates.get("email").toString();
             user.updateEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                           Log.d("Update User Profile", "Email updated");
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("Update User Profile", "Email updated");
                             }
                         }
-                     });
+                    });
         } else if (updates.containsKey("password")) {
             FirebaseUser user = auth.getCurrentUser();
             String password = updates.get("password").toString();
@@ -106,10 +106,11 @@ public class FirebaseDB {
         }
     }
 
-    public interface OnUsersRetrievedListener {
-        void onUsersRetrieved(List<User> userList);
-    }
-
+//    public interface OnUsersRetrievedListener {
+//        void onUsersRetrieved(List<User> userList);
+//
+//        void onUsersRetrievedFailed(Exception e);
+//    }
 
     public void getAllUsers(OnUsersRetrievedListener listener) {
         db.collection("users").get().addOnCompleteListener(task -> {
@@ -123,7 +124,6 @@ public class FirebaseDB {
             listener.onUsersRetrieved(userList);
         });
     }
-
 
     public void searchUsers(String search, OnUsersRetrievedListener listener) {
         if (search.isEmpty()) {
@@ -147,10 +147,6 @@ public class FirebaseDB {
                     listener.onUsersRetrieved(searchedList);
                 });
     }
-
-
-
-
 
     /**
      *
@@ -334,6 +330,7 @@ public class FirebaseDB {
     }
 
     public void getAllRequests(String userID, OnUsersRetrievedListener listener) {
+
         db.collection("requests")
                 .document(userID)
                 .get()
@@ -347,6 +344,23 @@ public class FirebaseDB {
                         }
 
                         fetchUsersFromUid(requesterIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+    public void getAllRequestIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("requests")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> requesterIds = (List<String>) documentSnapshot.get("requesters");
+
+                        if (requesterIds == null || requesterIds.isEmpty()) {
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(requesterIds);
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
@@ -417,7 +431,6 @@ public class FirebaseDB {
 
     /**
      * To be implemented
-     *
      * @param currUserID
      */
     public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
@@ -436,7 +449,17 @@ public class FirebaseDB {
                         fetchUsersFromUid(followingIds, listener);
                     }
                 })
-                .addOnFailureListener(e -> Log.e("Get Following", "Error fetching following", e));
+                .addOnFailureListener(e -> Log.e("Get Followering", "Error fetching following", e));
+    }
+    public interface OnUsersRetrievedListener {
+        void onUsersRetrieved(List<User> userList);
+        void onUsersRetrievedFailed(Exception e); // Add this if missing
+    }
+    /**
+     *  Interface only for retrieving IDs
+     */
+    public interface OnUserIdsRetrievedListener {
+        void onUserIdsRetrieved(List<String> idList);
     }
 
 }
