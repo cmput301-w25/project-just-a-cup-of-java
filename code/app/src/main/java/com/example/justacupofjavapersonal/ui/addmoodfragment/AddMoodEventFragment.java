@@ -122,17 +122,18 @@ public class AddMoodEventFragment extends Fragment {
             String privacy = result.getString("privacySetting");
             String photo = result.getString("photoBase64");
 
-            Mood newMood = new Mood();
-            newMood.setDate(date);
-            newMood.setTime(time);
-            newMood.setEmotion(mood);
-            newMood.setSocialSituation(socialSituation);
-            newMood.setTrigger(trigger);
-            newMood.setPrivacy(privacy);
-            newMood.setPhoto(photo); // Set the photo
-
-            moodList.add(newMood);
-            moodAdapter.notifyDataSetChanged();
+            // loads moods on local not neccesary since retreive moods from firebase comment out
+            //Mood newMood = new Mood();
+            //newMood.setDate(date);
+            //newMood.setTime(time);
+            //newMood.setEmotion(mood);
+            //newMood.setSocialSituation(socialSituation);
+            //newMood.setTrigger(trigger);
+            //newMood.setPrivacy(privacy);
+            //newMood.setPhoto(photo); // Set the photo
+            //moodList.add(newMood);
+            //moodAdapter.notifyDataSetChanged();
+            //loadMoodsForDate(date);
         });
 
         // Handle "Add Mood" button click
