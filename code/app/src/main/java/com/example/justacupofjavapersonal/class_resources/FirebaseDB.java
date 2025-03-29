@@ -15,6 +15,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
@@ -414,5 +415,39 @@ public class FirebaseDB {
     public interface OnUserIdsRetrievedListener {
         void onUserIdsRetrieved(List<String> idList);
     }
+    public void getUserMoods(String uid, OnMoodLoadedListener listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        CollectionReference moodsRef = db.collection("moods");
+
+        Query query;
+        if (uid.equals(currentUser.getUid())) {
+            // Show all moods (private and public) for the current user
+            query = moodsRef.whereEqualTo("uid", uid);
+        } else {
+            // Show only public moods for other users
+            query = moodsRef.whereEqualTo("uid", uid)
+                    .whereEqualTo("privacy", "Public");
+        }
+
+        query.orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Mood> moodList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Mood mood = doc.toObject(Mood.class);
+                        if (mood != null) {
+                            moodList.add(mood);
+                        }
+                    }
+                    listener.onMoodsLoaded(moodList);
+                })
+                .addOnFailureListener(e -> listener.onMoodsLoadedFailed(e));
+    }
+//    public interface OnMoodLoadedListener {
+//        void onMoodsLoaded(List<Mood> moods);
+//        void onMoodsLoadedFailed(Exception e);
+//    }
 
 }

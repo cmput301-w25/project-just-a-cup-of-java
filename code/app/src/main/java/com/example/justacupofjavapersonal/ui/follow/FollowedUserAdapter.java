@@ -65,10 +65,10 @@ public class FollowedUserAdapter extends RecyclerView.Adapter<FollowedUserAdapte
                     listener.onUserClick(user);
                 }
                 // 👇 This part opens UserMoodActivity with userUid and userName
-//                Intent intent = new Intent(itemView.getContext(), UserMoodActivity.class);
-//                intent.putExtra("userUid", user.getUid());
-//                intent.putExtra("userName", user.getEmail());
-//                itemView.getContext().startActivity(intent);
+                Intent intent = new Intent(itemView.getContext(), UserMoodActivity.class);
+                intent.putExtra("userUid", user.getUid());
+                intent.putExtra("userName", user.getName());
+                itemView.getContext().startActivity(intent);
             });
         }
     }

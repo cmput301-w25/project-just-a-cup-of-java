@@ -110,37 +110,51 @@ public class UserMoodActivity extends AppCompatActivity {
 
 
     private void fetchUserMoods(String uid) {
-        Log.d("UserMoodActivity", "Fetching moods for UID: " + uid);
+        com.example.justacupofjavapersonal.class_resources.FirebaseDB firebaseDB = new com.example.justacupofjavapersonal.class_resources.FirebaseDB();
+        firebaseDB.getUserMoods(uid, new com.example.justacupofjavapersonal.class_resources.FirebaseDB.OnMoodLoadedListener() {
+            @Override
+            public void onMoodsLoaded(List<Mood> moods) {
+                allMoods.clear();
+                allMoods.addAll(moods);
+                updateFeedItems();
+            }
 
-        db.collection("moods")
-                .whereEqualTo("uid", uid)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    Log.d("UserMoodActivity", "Got moods: " + querySnapshot.size());
-
-                    allMoods.clear(); // ✅ Step 1
-                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        Mood mood = doc.toObject(Mood.class);
-                        if (mood != null) {
-                            Log.d("UserMoodActivity", "Fetched mood: " + mood.getEmotion() + " | UID: " + mood.getUid());
-
-                            allMoods.add(mood); // ✅ Save all moods
-                        } else {
-                            Log.w("UserMoodActivity", "Skipped null mood");
-                        }
-                    }
-                    // ✅ Step 2: Sort by date descending
-// Step 2: Sort by date descending, null-safe
-                    allMoods.sort((a, b) -> {
-                        if (a.getPostDate() == null && b.getPostDate() == null) return 0;
-                        if (a.getPostDate() == null) return 1; // nulls last
-                        if (b.getPostDate() == null) return -1;
-                        return b.getPostDate().compareTo(a.getPostDate());
-                    });
-                    // ✅ Step 3: Use helper method to decide what to show
-                    updateFeedItems();
-                })
-                .addOnFailureListener(e -> Log.e("UserMoodActivity", "Error fetching moods", e));
+            @Override
+            public void onMoodsLoadedFailed(Exception e) {
+                Log.e("UserMoodActivity", "Error fetching moods", e);
+            }
+        });
+//        Log.d("UserMoodActivity", "Fetching moods for UID: " + uid);
+//
+//        db.collection("moods")
+//                .whereEqualTo("uid", uid)
+//                .get()
+//                .addOnSuccessListener(querySnapshot -> {
+//                    Log.d("UserMoodActivity", "Got moods: " + querySnapshot.size());
+//
+//                    allMoods.clear(); // ✅ Step 1
+//                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+//                        Mood mood = doc.toObject(Mood.class);
+//                        if (mood != null) {
+//                            Log.d("UserMoodActivity", "Fetched mood: " + mood.getEmotion() + " | UID: " + mood.getUid());
+//
+//                            allMoods.add(mood); // ✅ Save all moods
+//                        } else {
+//                            Log.w("UserMoodActivity", "Skipped null mood");
+//                        }
+//                    }
+//                    // ✅ Step 2: Sort by date descending
+//// Step 2: Sort by date descending, null-safe
+//                    allMoods.sort((a, b) -> {
+//                        if (a.getPostDate() == null && b.getPostDate() == null) return 0;
+//                        if (a.getPostDate() == null) return 1; // nulls last
+//                        if (b.getPostDate() == null) return -1;
+//                        return b.getPostDate().compareTo(a.getPostDate());
+//                    });
+//                    // ✅ Step 3: Use helper method to decide what to show
+//                    updateFeedItems();
+//                })
+//                .addOnFailureListener(e -> Log.e("UserMoodActivity", "Error fetching moods", e));
     }
 }
 
