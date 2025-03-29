@@ -211,6 +211,7 @@ navigation mobile_navigation
 string app_name
 string default_web_client_id
 string emotion_anger
+string emotion_awkward
 string emotion_confusion
 string emotion_disgust
 string emotion_fear
