@@ -459,9 +459,7 @@ public class FirebaseDB {
     /**
      *  Interface only for retrieving IDs
      */
-    public interface OnUserIdsRetrievedListener {
-        void onUserIdsRetrieved(List<String> idList);
-    }
+
     public void getUserMoods(String uid, OnMoodLoadedListener listener) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
