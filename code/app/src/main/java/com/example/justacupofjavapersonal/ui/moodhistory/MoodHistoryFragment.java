@@ -38,6 +38,8 @@ public class MoodHistoryFragment extends Fragment {
     private RecyclerView moodHistoryRecyclerView;
     private MoodHistoryAdapter moodAdapter;
     private ArrayList<Mood> moodList = new ArrayList<>();
+    private ArrayList<Mood> tempstorage = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -53,10 +55,11 @@ public class MoodHistoryFragment extends Fragment {
         Button filterButton = view.findViewById(R.id.filterbutton);
         filterButton.setOnClickListener(v -> {
             MoodFilterDialog dialog = new MoodFilterDialog((recentWeek, emotion, reasonKeyword) -> {
-                System.out.println("Filters applied: RecentWeek=" + recentWeek + ", Emotion=" + emotion + ", Reason=" + reasonKeyword);
+                applyFilters(recentWeek, emotion, reasonKeyword); // Apply the filter based on selected options
             });
             dialog.show(getParentFragmentManager(), "MoodFilterDialog");
         });
+
 
         // RecyclerView setup
         moodHistoryRecyclerView = view.findViewById(R.id.moodHistoryRecyclerView);
@@ -65,7 +68,6 @@ public class MoodHistoryFragment extends Fragment {
         moodHistoryRecyclerView.setAdapter(moodAdapter);
 
         loadAllMoods();
-
         return view;
     }
 
@@ -90,6 +92,7 @@ public class MoodHistoryFragment extends Fragment {
                             moodList.add(mood);
                         }
                     }
+                    tempstorage.addAll(moodList);
                     moodAdapter.notifyDataSetChanged();
                     Log.d("MoodHistory", "Loaded " + moodList.size() + " moods");
                 })
@@ -104,10 +107,44 @@ public class MoodHistoryFragment extends Fragment {
             Mood moodToDelete = moodList.get(position);
             moodList.remove(position);
             moodAdapter.notifyItemRemoved(position);
-
+            tempstorage.clear();
+            tempstorage.addAll(moodList);
             FirebaseDB firebaseDB = new FirebaseDB();
             firebaseDB.deleteMood(moodToDelete);
             Toast.makeText(getContext(), "Mood deleted", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void applyFilters(boolean recentWeek, String emotion, String reasonKeyword) {
+        ArrayList<Mood> filteredList = new ArrayList<>();
+
+        long oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
+        for (Mood mood : tempstorage) {
+            boolean matches = true;
+
+            if (recentWeek && mood.getTimestamp().getSeconds() * 1000 < oneWeekAgo) {
+                matches = false;
+            }
+
+
+            Log.d("MoodFilter", "From DB Emotion: " + mood.getEmotion());
+//            String adjustedEmotion = mood.getEmotion().substring(0, mood.getEmotion().length() - 3); // used this so that I could remove the emoji stored within the db before comparison
+//            Log.d("MoodFilter", "Adjusted Emotion: " + adjustedEmotion);
+            Log.d("MoodFilter", "Filter Emotion: " + emotion);
+            if (emotion != null && !emotion.isEmpty() && !mood.getEmotion().toLowerCase().contains(emotion.toLowerCase())) {
+                matches = false;
+            }
+
+            if (reasonKeyword != null && !reasonKeyword.isEmpty() &&
+                    !mood.getTrigger().toLowerCase().contains(reasonKeyword.toLowerCase())) {
+                matches = false;
+            }
+
+            if (matches) {
+                filteredList.add(mood);
+            }
+        }
+        moodAdapter.updateMoodList(filteredList);
+        moodAdapter.notifyDataSetChanged();
     }
 }

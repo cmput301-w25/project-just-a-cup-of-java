@@ -126,4 +126,10 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
     public interface OnMoodDeleteListener {
         void onMoodDelete(int position);
     }
+
+    public void updateMoodList(ArrayList<Mood> newMoodList) {
+        this.moodList.clear();
+        this.moodList.addAll(newMoodList);
+        notifyDataSetChanged();
+    }
 }
