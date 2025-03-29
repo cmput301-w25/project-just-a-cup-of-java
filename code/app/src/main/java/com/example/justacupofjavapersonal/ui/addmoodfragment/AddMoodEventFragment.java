@@ -67,9 +67,10 @@ public class AddMoodEventFragment extends Fragment {
 
         // Listen for result from PostMoodFragment
         getParentFragmentManager().setFragmentResultListener("moodEvent", getViewLifecycleOwner(), (requestKey, result) -> {
-            String date = result.getString("selectedDate");
-            loadMoodsForDate(date); // Refresh Firebase mood list
+            // We let Firebase handle updates automatically, so we don't manually reload or add the mood here
+            Log.d("AddMoodEventFragment", "Mood event received from PostMoodFragment, skipping local add to avoid duplication");
         });
+
 
         binding.addingMood.setOnClickListener(v -> {
             String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
@@ -108,7 +109,7 @@ public class AddMoodEventFragment extends Fragment {
             bundle.putString("editSocialSituation", moodToEdit.getSocialSituation());
             bundle.putString("editTrigger", moodToEdit.getTrigger());
             bundle.putString("editPrivacy", moodToEdit.getPrivacy());
-            bundle.putString("editPhoto", moodToEdit.getPhoto());
+            //bundle.putString("editPhoto", moodToEdit.getPhoto());
             bundle.putString("editMoodID", moodToEdit.getMoodID());
             bundle.putInt("editPosition", position);
 

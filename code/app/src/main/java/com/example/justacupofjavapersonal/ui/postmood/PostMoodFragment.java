@@ -113,7 +113,10 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 moodToEdit.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                 selectedMood = moodToEdit.getEmotion();
-                addMoodButton.setText(selectedMood);
+                TextView moodText = addMoodButton.findViewById(R.id.cardTextView);
+                if (moodText != null) {
+                    moodText.setText(selectedMood);
+                }
                 optionalTriggerEditText.setText(moodToEdit.getTrigger());
                 setSpinnerToValue(socialSituationSpinner, moodToEdit.getSocialSituation());
 
@@ -235,7 +238,10 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     public void onMoodSelected(String mood) {
         selectedMood = mood;
         if (addMoodButton != null) {
-            ((TextView) addMoodButton).setText(mood);
+            TextView moodText = addMoodButton.findViewById(R.id.cardTextView);
+            if (moodText != null) {
+                moodText.setText(mood);
+            }
         }
     }
 
