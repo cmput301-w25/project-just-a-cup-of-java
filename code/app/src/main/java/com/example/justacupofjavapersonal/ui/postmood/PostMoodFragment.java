@@ -29,6 +29,7 @@ import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -76,6 +77,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
         timeTextView = view.findViewById(R.id.timeTextView);
         addMoodButton = view.findViewById(R.id.addEmoStateButton);
         postButton = view.findViewById(R.id.postmoodbutton);
+
 
         Bundle args = getArguments();
         if (args != null) {
