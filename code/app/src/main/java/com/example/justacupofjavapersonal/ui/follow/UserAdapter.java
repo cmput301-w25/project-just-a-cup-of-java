@@ -1,5 +1,6 @@
 package com.example.justacupofjavapersonal.ui.follow;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +48,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.bind(userList.get(position), listener, position);
     }
 
-    private void loadRequests(String userID) {
-        db.getAllRequestIds(userID, users -> {
+    private void loadRequests(String currUserID, String user, Button followButton) {
+        db.getAllRequestedIds(currUserID, users -> {
             requests.clear();
             requests.addAll(users);
+            followButton.setText(requests.contains(user) ? "Requested" : "Follow");
         });
     }
 
@@ -74,16 +76,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             userName.setText(user.getName());
             requests = new ArrayList<>();
             if (FirebaseAuth.getInstance().getCurrentUser() != null){
-                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(),followButton);
+                Log.d("Requests IDs", "Fetched Request UIDs");
+                Log.d("Requests IDs", "Requests: " + requests);
 
-                followButton.setText(requests.contains(user.getUid()) ? "Requested" : "Follow");
+
                 //Set user profile picture
 
                 followButton.setOnClickListener(v -> {
                     listener.onFollowClick(position);
 
                     followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
-
 
                         if (!requests.contains(user.getUid())) {
                             db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
