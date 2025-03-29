@@ -15,6 +15,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
@@ -309,14 +310,28 @@ public class FirebaseDB {
         // Each document will have a requesteeID
         // The requesteeID document will store all the userIDs of the users
         // that have requested to follow
+        WriteBatch batch = db.batch();
+
         DocumentReference requestRef = db.collection("requests").document(requestedID);
-        requestRef.set(
+        batch.set(requestRef,
                 Collections.singletonMap("requesters", FieldValue.arrayUnion(currUserID)),
                 SetOptions.merge()
         );
+
+        // All the users that the current user has requested to follow
+        DocumentReference requestedByRef = db.collection("requestedBy").document(currUserID);
+        batch.set(requestedByRef,
+                Collections.singletonMap("requests", FieldValue.arrayUnion(requestedID)),
+                SetOptions.merge()
+        );
+
+        batch.commit()
+                .addOnSuccessListener(a -> Log.d("FollowRequest", "Request added successfully"))
+                .addOnFailureListener(e -> Log.e("FollowRequest", "Request add failure", e));
     }
 
     public void getAllRequests(String userID, OnUsersRetrievedListener listener) {
+
         db.collection("requests")
                 .document(userID)
                 .get()
@@ -330,6 +345,57 @@ public class FirebaseDB {
                         }
 
                         fetchUsersFromUid(requesterIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+    public void getAllRequestIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("requests")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> requesterIds = (List<String>) documentSnapshot.get("requesters");
+
+                        if (requesterIds == null || requesterIds.isEmpty()) {
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(requesterIds);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+
+
+    /**
+     *  Interface only for retrieving IDs
+     */
+    public interface OnUserIdsRetrievedListener {
+        void onUserIdsRetrieved(List<String> idList);
+    }
+
+
+    /**
+     * Retrieves the userids of all the users that the current user has requested to follow
+     *
+     * @param userID
+     * @param listener
+     */
+    public void getAllRequestedIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("requestedBy")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> requesterIds = (List<String>) documentSnapshot.get("requests");
+                        Log.d("RequestedIds", "Ids: " + requesterIds);
+                        if (requesterIds == null || requesterIds.isEmpty()) {
+                            Log.d("Requested Ids", "requesterIds == null");
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(requesterIds);
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
@@ -390,5 +456,45 @@ public class FirebaseDB {
         void onUsersRetrieved(List<User> userList);
         void onUsersRetrievedFailed(Exception e); // Add this if missing
     }
+    /**
+     *  Interface only for retrieving IDs
+     */
+    public interface OnUserIdsRetrievedListener {
+        void onUserIdsRetrieved(List<String> idList);
+    }
+    public void getUserMoods(String uid, OnMoodLoadedListener listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        CollectionReference moodsRef = db.collection("moods");
+
+        Query query;
+        if (uid.equals(currentUser.getUid())) {
+            // Show all moods (private and public) for the current user
+            query = moodsRef.whereEqualTo("uid", uid);
+        } else {
+            // Show only public moods for other users
+            query = moodsRef.whereEqualTo("uid", uid)
+                    .whereEqualTo("privacy", "Public");
+        }
+
+        query.orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Mood> moodList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Mood mood = doc.toObject(Mood.class);
+                        if (mood != null) {
+                            moodList.add(mood);
+                        }
+                    }
+                    listener.onMoodsLoaded(moodList);
+                })
+                .addOnFailureListener(e -> listener.onMoodsLoadedFailed(e));
+    }
+//    public interface OnMoodLoadedListener {
+//        void onMoodsLoaded(List<Mood> moods);
+//        void onMoodsLoadedFailed(Exception e);
+//    }
 
 }
