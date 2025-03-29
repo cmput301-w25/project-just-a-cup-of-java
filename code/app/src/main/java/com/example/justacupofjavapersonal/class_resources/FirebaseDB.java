@@ -455,11 +455,5 @@ public class FirebaseDB {
         void onUsersRetrieved(List<User> userList);
         void onUsersRetrievedFailed(Exception e); // Add this if missing
     }
-    /**
-     *  Interface only for retrieving IDs
-     */
-    public interface OnUserIdsRetrievedListener {
-        void onUserIdsRetrieved(List<String> idList);
-    }
 
 }
