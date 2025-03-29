@@ -317,6 +317,7 @@ public class FirebaseDB {
     }
 
     public void getAllRequests(String userID, OnUsersRetrievedListener listener) {
+
         db.collection("requests")
                 .document(userID)
                 .get()
@@ -330,6 +331,23 @@ public class FirebaseDB {
                         }
 
                         fetchUsersFromUid(requesterIds, listener);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+    public void getAllRequestIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("requests")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> requesterIds = (List<String>) documentSnapshot.get("requesters");
+
+                        if (requesterIds == null || requesterIds.isEmpty()) {
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(requesterIds);
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
@@ -389,6 +407,12 @@ public class FirebaseDB {
     public interface OnUsersRetrievedListener {
         void onUsersRetrieved(List<User> userList);
         void onUsersRetrievedFailed(Exception e); // Add this if missing
+    }
+    /**
+     *  Interface only for retrieving IDs
+     */
+    public interface OnUserIdsRetrievedListener {
+        void onUserIdsRetrieved(List<String> idList);
     }
 
 }
