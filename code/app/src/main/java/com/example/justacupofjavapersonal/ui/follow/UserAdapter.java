@@ -26,7 +26,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private List<String> requests;
     private OnItemClickListener listener;
     private FirebaseDB db;
-    private List<String> requests;
+    private List<String> followingIds;
     public UserAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
         this.userList = userList;
         this.listener = listener;
@@ -49,18 +49,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
         holder.bind(userList.get(position), listener, position);
     }
-    private void loadRequests(String userID) {
-        db.getAllRequestIds(userID, users -> {
-            requests.clear();
-            requests.addAll(users);
-        });
-    }
 
     private void loadRequests(String currUserID, String user, Button followButton) {
         db.getAllRequestedIds(currUserID, users -> {
             requests.clear();
             requests.addAll(users);
             followButton.setText(requests.contains(user) ? "Requested" : "Follow");
+        });
+    }
+
+    private void loadFollowingIds(String currUserID, String user, Button followButton) {
+        db.getAllRequestedIds(currUserID, users -> {
+            followingIds.clear();
+            followingIds.addAll(users);
+            followButton.setText(followingIds.contains(user) ? "Following" : "Follow");
         });
     }
 
@@ -85,9 +87,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
             requests = new ArrayList<>();
+            followingIds = new ArrayList<>();
 
             if (FirebaseAuth.getInstance().getCurrentUser() != null){
-                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(),followButton);
+                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
+                loadFollowingIds(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
                 Log.d("Requests IDs", "Fetched Request UIDs");
                 Log.d("Requests IDs", "Requests: " + requests);
 
@@ -98,14 +102,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 followButton.setOnClickListener(v -> {
                     listener.onFollowClick(position);
 
-                    followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
+                    if (followButton.getText().toString().equals("Follow")) {
+                        followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
+                    } else if (followButton.getText().toString().equals("Following")){
+                        followButton.setText("Follow");
+                    }
 
-                        if (!requests.contains(user.getUid())) {
-                            db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                        }
-                        if (followButton.getText().toString().equals("Follow")) {
-                            db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                        }
+                    if (!requests.contains(user.getUid())) {
+                        db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                    }
+                    if (followButton.getText().toString().equals("Follow")) {
+                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                    }
                 });
             }
 

@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firestore.v1.Write;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -400,6 +401,31 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
     }
 
+    /**
+     * Retrieves a list of the ids of all users that a user is following
+     *
+     * @param userID
+     * @param listener
+     */
+    public void getAllFollowingIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("follows")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> followingIds = (List<String>) documentSnapshot.get("following");
+
+                        if (followingIds == null || followingIds.isEmpty()) {
+                            Log.d("Requested Ids", "requesterIds == null");
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(followingIds);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+
     public void acceptRequest(String currUserID, String requesterID) {
         WriteBatch batch = db.batch();
 
@@ -423,11 +449,31 @@ public class FirebaseDB {
     }
 
     /**
-     * To be implemented
-     * @param follower
-     * @param followee
+     * Removes a user form the current user's following list
+     * @param followerId
+     * @param followeeId
      */
-    public void removeFollower(User follower, User followee) {}
+    public void removeFollowing(String followerId, String followeeId) {
+        WriteBatch batch = db.batch();
+
+        DocumentReference followedByRef = db.collection("followedBy").document(followeeId);
+        batch.set(followedByRef,
+                Collections.singletonMap("followers", FieldValue.arrayRemove(followerId)),
+                SetOptions.merge()
+        );
+
+        // Add to the follows collection. The follows collection holds the users the
+        // that a specified user is following
+        DocumentReference followsRef =  db.collection("follows").document(followerId);
+        batch.set(followsRef,
+                Collections.singletonMap("following", FieldValue.arrayRemove(followeeId)),
+                SetOptions.merge()
+        );
+
+        batch.commit()
+                .addOnSuccessListener(a -> Log.d("Following", "Following removed successfully"))
+                .addOnFailureListener(e -> Log.e("Following", "Following remove failure",e));
+    }
 
     /**
      * To be implemented
@@ -453,13 +499,8 @@ public class FirebaseDB {
     }
     public interface OnUsersRetrievedListener {
         void onUsersRetrieved(List<User> userList);
+
         void onUsersRetrievedFailed(Exception e); // Add this if missing
-    }
-    /**
-     *  Interface only for retrieving IDs
-     */
-    public interface OnUserIdsRetrievedListener {
-        void onUserIdsRetrieved(List<String> idList);
     }
 
 }
