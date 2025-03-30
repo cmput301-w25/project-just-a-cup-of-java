@@ -189,6 +189,9 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
 
                     firebaseDB.updateMoodInDB(moodToEdit);
                     Toast.makeText(requireContext(), "Mood updated!", Toast.LENGTH_SHORT).show();
+                    // ✅ Navigate back to AddMoodEventFragment
+                    NavController navController = Navigation.findNavController(requireView());
+                    navController.popBackStack();
                     dialog.dismiss();
                 } else {
                     Mood mood = new Mood();
