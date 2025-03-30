@@ -5,13 +5,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 
 import java.util.List;
 
@@ -40,6 +45,10 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView containsPhoto, containsExplanation, containsLocation;
         TextView feedName, feedTime;
         TextView socialSituationText,triggerText,whyFeelText;
+        ImageButton commentButton;
+
+
+
 
         public MoodViewHolder(View itemView) {
             super(itemView);
@@ -53,7 +62,11 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             containsLocation = itemView.findViewById(R.id.containsLocation);
             socialSituationText = itemView.findViewById(R.id.socialSituationText);
             triggerText = itemView.findViewById(R.id.triggerText);
-            whyFeelText = itemView.findViewById(R.id.whyFeelText);
+            commentButton = itemView.findViewById(R.id.CommentButton);
+
+
+
+
         }
     }
 
@@ -142,14 +155,6 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else {
                 moodHolder.triggerText.setVisibility(View.GONE);
             }
-
-            // Show whyFeel text if not null
-//            if (mood.getWhyFeel() != null && !mood.getWhyFeel().isEmpty()) {
-//                moodHolder.whyFeelText.setText("Why: " + mood.getWhyFeel());
-//                moodHolder.whyFeelText.setVisibility(View.VISIBLE);
-//            } else {
-//                moodHolder.whyFeelText.setVisibility(View.GONE);
-//            }
             //moodHolder.profilePicture.setImageResource(mood.getUser().getProfilePicture());
                 // on hold until database is put here
             if (mood.getSocialSituation() != null) {
@@ -220,9 +225,38 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             moodHolder.containsPhoto.setVisibility(mood.hasPhoto() ? View.VISIBLE : View.GONE);
             moodHolder.containsExplanation.setVisibility(mood.hasTrigger() ? View.VISIBLE : View.GONE);
             moodHolder.containsLocation.setVisibility(mood.hasLocation() ? View.VISIBLE : View.GONE);
+
+            // Handle comment button popup
+            moodHolder.commentButton.setOnClickListener(view -> {
+                LayoutInflater inflater = LayoutInflater.from(view.getContext());
+                View popupView = inflater.inflate(R.layout.popup_comment, null);
+
+                EditText commentInput = popupView.findViewById(R.id.commentInput);
+                Button postButton = popupView.findViewById(R.id.postCommentButton);
+
+                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
+                        .setView(popupView)
+                        .create();
+
+                postButton.setOnClickListener(p -> {
+                    String commentText = commentInput.getText().toString().trim();
+                    if (!commentText.isEmpty()) {
+                        FirebaseDB db = new FirebaseDB();
+                        db.addCommentToMood(mood.getMoodID(), commentText);
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            });
+
+
+
+
         } else if (holder instanceof DateViewHolder) {
             ((DateViewHolder) holder).dayText.setText(item.getDateHeader());
         }
+
 
     }
 

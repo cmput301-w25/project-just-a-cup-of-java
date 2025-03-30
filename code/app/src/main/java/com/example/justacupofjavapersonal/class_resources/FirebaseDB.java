@@ -22,6 +22,7 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -490,6 +491,26 @@ public class FirebaseDB {
                 })
                 .addOnFailureListener(e -> listener.onMoodsLoadedFailed(e));
     }
+
+    public void addCommentToMood(String moodID, String commentText) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        Map<String, Object> commentData = new HashMap<>();
+        commentData.put("userId", currentUser.getUid());
+        commentData.put("userName", currentUser.getDisplayName());  // or fetch your own user object
+        commentData.put("text", commentText);
+        commentData.put("timestamp", FieldValue.serverTimestamp());
+
+        db.collection("moods")
+                .document(moodID)
+                .collection("comments")
+                .add(commentData)
+                .addOnSuccessListener(doc -> Log.d("Comment", "Comment added"))
+                .addOnFailureListener(e -> Log.e("Comment", "Failed to add comment", e));
+    }
+
+
 //    public interface OnMoodLoadedListener {
 //        void onMoodsLoaded(List<Mood> moods);
 //        void onMoodsLoadedFailed(Exception e);

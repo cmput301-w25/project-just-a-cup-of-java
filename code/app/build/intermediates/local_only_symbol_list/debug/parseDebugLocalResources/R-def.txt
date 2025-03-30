@@ -38,6 +38,7 @@ drawable rectangle_bg
 drawable socialsituation1
 drawable socialsituation2
 drawable socialsituation3
+id CommentButton
 id accept_follow_button
 id action_navigation_change_password_to_navigation_user_info
 id action_navigation_follower_requests_to_notifications
@@ -73,6 +74,7 @@ id cardView2
 id changePasswordButton
 id change_picture
 id circularLayout
+id commentInput
 id confirmPasswordEditText
 id confirmPasswordLabel
 id container
@@ -114,12 +116,10 @@ id friends_button_requests_fragment
 id imageView
 id imageView2
 id imageView3
-id linearLayout
 id loginButton
 id loginIllustration
 id loginText
 id mobile_navigation
-id moodExtraDetails
 id moodGridView
 id moodHistoryRecyclerView
 id moodIndicator
@@ -140,6 +140,7 @@ id navigation_post_mood
 id navigation_user_info
 id passwordEditText
 id passwordLabel
+id postCommentButton
 id postmoodbutton
 id profilePicture
 id profile_image
@@ -172,7 +173,6 @@ id weekDayText
 id weekRecyclerView
 id welcomeText
 id whyFeel
-id whyFeelText
 layout activity_main
 layout activity_user
 layout change_password
@@ -202,6 +202,7 @@ layout mood_history
 layout mood_history_filter
 layout mood_history_item
 layout mood_list_item
+layout popup_comment
 layout user_profile_feed
 menu bottom_nav_menu
 menu top_app_bar_menu
