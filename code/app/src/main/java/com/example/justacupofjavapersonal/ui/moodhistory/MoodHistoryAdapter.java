@@ -1,6 +1,7 @@
 package com.example.justacupofjavapersonal.ui.moodhistory;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
@@ -82,8 +85,12 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
 
         // Optional: set edit button functionality later
         holder.editButton.setOnClickListener(v -> {
-            // TODO: Implement edit logic
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("moodToEdit", mood); // Mood must implement Serializable
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.navigation_post_mood, bundle);
         });
+
 
         holder.commentButton.setOnClickListener(v -> {
             CommentBottomSheet bottomSheet = new CommentBottomSheet(mood.getMoodID());
