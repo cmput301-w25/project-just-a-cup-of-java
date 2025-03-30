@@ -21,6 +21,7 @@ drawable default_profile
 drawable edit_text_border
 drawable filter
 drawable ic_add_photo
+drawable ic_comment
 drawable ic_dashboard_black_24dp
 drawable ic_home_black_24dp
 drawable ic_launcher_background
@@ -76,6 +77,11 @@ id changePasswordButton
 id change_picture
 id circularLayout
 id commentInput
+id commentSheetRoot
+id commentText
+id commentUserName
+id commentsRecyclerView
+id commentsTitle
 id confirmPasswordEditText
 id confirmPasswordLabel
 id container
@@ -184,6 +190,7 @@ layout dialog_mood_selector
 layout emotion_spinner_dialog
 layout fragment_add_mood
 layout fragment_all_moods
+layout fragment_comment_bottom_sheet
 layout fragment_dashboard
 layout fragment_each_day
 layout fragment_edit_mood
@@ -196,6 +203,7 @@ layout fragment_login
 layout fragment_notifications
 layout fragment_post_mood
 layout fragment_userinfo
+layout item_comment
 layout item_date_feed
 layout item_follow_requests
 layout item_mood
