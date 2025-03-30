@@ -71,23 +71,38 @@ public class AllFriendsFollowFragment extends Fragment {
         });
         loadUsers();
     }
-        private void loadUsers() {
-            String currentUserId = FirebaseDB.getCurrentUserId();
-
-            db.getFollowing(currentUserId, new FirebaseDB.OnUsersRetrievedListener() {
-                @Override
-                public void onUsersRetrieved(List<User> followedUsers) {
-                    userList.clear();
-                    userList.addAll(followedUsers);
-                    adapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onUsersRetrievedFailed(Exception e) {
-                    Toast.makeText(requireContext(), "Failed to load followed users", Toast.LENGTH_SHORT).show();
-                }
-            });
+//        private void loadUsers() {
+//            String currentUserId = FirebaseDB.getCurrentUserId();
+//
+//            db.getFollowing(currentUserId, new FirebaseDB.OnUsersRetrievedListener() {
+//                @Override
+//                public void onUsersRetrieved(List<User> followedUsers) {
+//                    userList.clear();
+//                    userList.addAll(followedUsers);
+//                    adapter.notifyDataSetChanged();
+//                }
+//
+//                @Override
+//                public void onUsersRetrievedFailed(Exception e) {
+//                    Toast.makeText(requireContext(), "Failed to load followed users", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+private void loadUsers() {
+    db.getAllUsers(new FirebaseDB.OnUsersRetrievedListener() {
+        @Override
+        public void onUsersRetrieved(List<User> users) {
+            userList.clear();
+            userList.addAll(users);
+            adapter.notifyDataSetChanged();
         }
+
+        @Override
+        public void onUsersRetrievedFailed(Exception e) {
+            Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
+        }
+    });
+}
 //            db.getAllUsers(new FirebaseDB.OnUsersRetrievedListener() {
 //                @Override
 //                public void onUsersRetrieved(List<User> users) {
@@ -116,6 +131,11 @@ public class AllFriendsFollowFragment extends Fragment {
                      Toast.makeText(requireContext(), "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                  }
              });
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUsers(); // 🔁 This ensures the full list is shown again
     }
 
     @Override

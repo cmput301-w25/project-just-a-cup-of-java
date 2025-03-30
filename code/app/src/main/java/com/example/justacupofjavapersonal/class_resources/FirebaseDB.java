@@ -26,6 +26,7 @@ import com.google.firestore.v1.Write;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -730,6 +731,8 @@ public class FirebaseDB {
                         Task<QuerySnapshot> moodTask = db.collection("moods")
                                 .whereEqualTo("uid", uid)
                                 .whereEqualTo("privacy", "Public")
+                                .orderBy("timestamp", Query.Direction.DESCENDING)
+                                .limit(3)
                                 .get();
                         moodTasks.add(moodTask);
                     }
@@ -748,9 +751,9 @@ public class FirebaseDB {
                             }
                         }
 
-                        Tasks.whenAllComplete(moodTasks).addOnSuccessListener(moodResults -> {
+                        Tasks.whenAllComplete(moodTasks).addOnSuccessListener(tasks -> {
                             int i = 0;
-                            for (Task<?> task : moodResults) {
+                            for (Task<?> task : tasks) {
                                 if (task.isSuccessful() && task.getResult() instanceof QuerySnapshot) {
                                     QuerySnapshot querySnapshot = (QuerySnapshot) task.getResult();
                                     List<Mood> moodList = new ArrayList<>();
@@ -760,6 +763,21 @@ public class FirebaseDB {
                                             moodList.add(mood);
                                         }
                                     }
+
+                                    // Sort and limit to top 3
+                                    Collections.sort(moodList, (m1, m2) -> {
+                                        Date d1 = m1.getPostDate();
+                                        Date d2 = m2.getPostDate();
+                                        if (d1 == null && d2 == null) return 0;
+                                        if (d1 == null) return 1;
+                                        if (d2 == null) return -1;
+                                        return d2.compareTo(d1);
+                                    });
+
+                                    if (moodList.size() > 3) {
+                                        moodList = moodList.subList(0, 3);
+                                    }
+
                                     String uid = followingIds.get(i);
                                     Log.d("MoodDebug", "Fetched " + moodList.size() + " moods for user: " + uid);
                                     moodMap.put(uid, moodList);
@@ -769,24 +787,24 @@ public class FirebaseDB {
 
                             Log.d("MoodDebug", "Total users with moods: " + moodMap.size());
                             listener.onUserMoodsGrouped(moodMap, userMap);
-                        }).addOnFailureListener(e -> {
-                            Log.e("MoodDebug", "Error loading moods: " + e.getMessage(), e);
-                            listener.onUserMoodsGroupedFailed(e);
-                        });
+                        })
 
-                    }).addOnFailureListener(e -> {
-                        Log.e("MoodDebug", "Error loading user profiles: " + e.getMessage(), e);
+                    .addOnFailureListener(e -> {
+                        Log.e("MoodDebug", "Error loading moods: " + e.getMessage(), e);
                         listener.onUserMoodsGroupedFailed(e);
                     });
 
-                })
-                .addOnFailureListener(e -> {
+                }).addOnFailureListener(e -> {
+                    Log.e("MoodDebug", "Error loading user profiles: " + e.getMessage(), e);
+                    listener.onUserMoodsGroupedFailed(e);
+                });
+
+            })
+            .addOnFailureListener(e -> {
                     Log.e("MoodDebug", "Failed to get followed users: " + e.getMessage(), e);
                     listener.onUserMoodsGroupedFailed(e);
                 });
     }
-
-
 
 
 }
