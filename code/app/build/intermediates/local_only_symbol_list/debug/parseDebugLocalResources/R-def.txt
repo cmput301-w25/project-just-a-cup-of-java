@@ -39,6 +39,7 @@ drawable socialsituation1
 drawable socialsituation2
 drawable socialsituation3
 id accept_follow_button
+id action_feedFragment_to_allFriendsFollowFragment
 id action_navigation_change_password_to_navigation_user_info
 id action_navigation_follower_requests_to_notifications
 id action_navigation_home_to_addMoodEventFragment
@@ -54,6 +55,7 @@ id addEmoStateButton
 id addPhoto
 id addingMood
 id allMoodsRecyclerView
+id all_moods_button
 id appTitle
 id applyFilterButton
 id backButton
@@ -100,7 +102,6 @@ id feedSelector
 id feedTime
 id feed_Nearby
 id feed_followingButton
-id feed_recentButton
 id filterButton
 id filter_search_reason
 id filterbutton
@@ -130,6 +131,7 @@ id moodText
 id nav_host_fragment_activity_main
 id nav_view
 id navigation_add_mood
+id navigation_all_moods
 id navigation_change_password
 id navigation_feed
 id navigation_follower_requests

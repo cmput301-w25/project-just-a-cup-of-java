@@ -38,7 +38,16 @@ public class FollowedUserAdapter extends RecyclerView.Adapter<FollowedUserAdapte
 
     @Override
     public void onBindViewHolder(@NonNull FollowedUserAdapter.ViewHolder holder, int position) {
-        holder.bind(followedUsers.get(position), listener);
+        //holder.bind(followedUsers.get(position), listener);
+        User user = followedUsers.get(position);
+        holder.userName.setText(user.getName());
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), UserMoodActivity.class);
+            intent.putExtra("userUid", user.getUid());
+            intent.putExtra("userName", user.getName());
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
