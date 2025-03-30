@@ -71,6 +71,8 @@ public class AllMoodsFragment extends Fragment {
 
             String currentUserId = FirebaseDB.getCurrentUserId(); // <-- Make sure you have this method
             Log.d(TAG, "Current user ID: " + currentUserId);
+            Log.d(TAG, "Current UID: " + FirebaseDB.getCurrentUserId());
+
 
             Log.d("AllMoodsFragment", "Current user ID: " + currentUserId);
             if (currentUserId == null) {
@@ -82,7 +84,9 @@ public class AllMoodsFragment extends Fragment {
                     @Override
                     public void onUserMoodsGrouped(Map<String, List<Mood>> userMoodMap, Map<String, User> userMap) {
                         Log.d(TAG, "onUserMoodsGrouped called");
-
+                        // ✅ ADD THESE TWO LINES BELOW
+                        Log.d(TAG, "UserMap keys: " + userMap.keySet());
+                        Log.d(TAG, "MoodMap keys: " + userMoodMap.keySet());
                         Log.d("AllMoodsFragment", "userMoodMap size: " + userMoodMap.size());
                         for (String uid : userMoodMap.keySet()) {
                             List<Mood> moods = userMoodMap.get(uid);

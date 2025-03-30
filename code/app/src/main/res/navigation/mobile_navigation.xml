@@ -42,6 +42,11 @@
             app:destination="@id/navigation_moodhistory" />
 
     </fragment>
+    <fragment
+        android:id="@+id/navigation_all_moods"
+        android:name="com.example.justacupofjavapersonal.ui.feed.AllMoodsFragment"
+        android:label="All Moods"
+        tools:layout="@layout/fragment_all_moods" />
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -118,6 +123,9 @@
         android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
         android:label="Post Mood"
         tools:layout="@layout/fragment_post_mood"/>
+    <action
+        android:id="@+id/action_feedFragment_to_allFriendsFollowFragment"
+        app:destination="@id/navigation_notifications" />
 
 
 </navigation>
