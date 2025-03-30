@@ -54,6 +54,7 @@ id action_user_info
 id addEmoStateButton
 id addPhoto
 id addingMood
+id allMoodsRecyclerView
 id appTitle
 id applyFilterButton
 id backButton
@@ -164,8 +165,10 @@ id toggleRecentButton
 id topAppBar
 id triggerText
 id triggerTextView
+id userMoodList
 id userMoodRecyclerView
 id userName
+id userNameText
 id user_follow_layout
 id user_search
 id usernameTitle
@@ -180,6 +183,7 @@ layout dialog_login
 layout dialog_mood_selector
 layout emotion_spinner_dialog
 layout fragment_add_mood
+layout fragment_all_moods
 layout fragment_dashboard
 layout fragment_each_day
 layout fragment_edit_mood
@@ -196,6 +200,7 @@ layout item_date_feed
 layout item_follow_requests
 layout item_mood
 layout item_mood_feed
+layout item_user_all_moods
 layout item_user_follow
 layout itemmoodcard
 layout mood_history

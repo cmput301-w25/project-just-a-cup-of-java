@@ -9,16 +9,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firestore.v1.Write;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,6 +92,9 @@ public class FirebaseDB {
         });
         return userData[0];
     }
+    public static String getCurrentUserId() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return (user != null) ? user.getUid() : null;    }
 
     private void fetchUsersFromUid(List<String> userIDs, OnUsersRetrievedListener listener) {
         List<User> userList = new ArrayList<>();
@@ -375,6 +382,10 @@ public class FirebaseDB {
     public interface OnUserIdsRetrievedListener {
         void onUserIdsRetrieved(List<String> idList);
     }
+    public interface OnFollowedMoodsGroupedListener {
+        void onDataLoaded(Map<String, List<Mood>> moodsByUser, Map<String, User> userInfoMap);
+        void onDataLoadFailed(Exception e);
+    }
 
 
     /**
@@ -402,13 +413,38 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
     }
 
+    /**
+     * Retrieves a list of the ids of all users that a user is following
+     *
+     * @param userID
+     * @param listener
+     */
+    public void getAllFollowingIds(String userID, OnUserIdsRetrievedListener listener) {
+        db.collection("follows")
+                .document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> followingIds = (List<String>) documentSnapshot.get("following");
+
+                        if (followingIds == null || followingIds.isEmpty()) {
+                            Log.d("Requested Ids", "requesterIds == null");
+                            listener.onUserIdsRetrieved(new ArrayList<>());
+                            return;
+                        }
+                        listener.onUserIdsRetrieved(followingIds);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
+    }
+
     public void acceptRequest(String currUserID, String requesterID) {
         WriteBatch batch = db.batch();
 
         DocumentReference docRef = db.collection("requests").document(currUserID);
 
-        addFollower(batch, currUserID,  requesterID);
-
+//        addFollower(batch, currUserID,  requesterID);
+        addFollower(batch, requesterID,  currUserID);
         batch.update(docRef, "requesters", FieldValue.arrayRemove(requesterID));
 
         batch.commit()
@@ -425,11 +461,31 @@ public class FirebaseDB {
     }
 
     /**
-     * To be implemented
-     * @param follower
-     * @param followee
+     * Removes a user form the current user's following list
+     * @param followerId
+     * @param followeeId
      */
-    public void removeFollower(User follower, User followee) {}
+    public void removeFollowing(String followerId, String followeeId) {
+        WriteBatch batch = db.batch();
+
+        DocumentReference followedByRef = db.collection("followedBy").document(followeeId);
+        batch.set(followedByRef,
+                Collections.singletonMap("followers", FieldValue.arrayRemove(followerId)),
+                SetOptions.merge()
+        );
+
+        // Add to the follows collection. The follows collection holds the users the
+        // that a specified user is following
+        DocumentReference followsRef =  db.collection("follows").document(followerId);
+        batch.set(followsRef,
+                Collections.singletonMap("following", FieldValue.arrayRemove(followeeId)),
+                SetOptions.merge()
+        );
+
+        batch.commit()
+                .addOnSuccessListener(a -> Log.d("Following", "Following removed successfully"))
+                .addOnFailureListener(e -> Log.e("Following", "Following remove failure",e));
+    }
 
     /**
      * To be implemented
@@ -453,8 +509,10 @@ public class FirebaseDB {
                 })
                 .addOnFailureListener(e -> Log.e("Get Followering", "Error fetching following", e));
     }
+
     public interface OnUsersRetrievedListener {
         void onUsersRetrieved(List<User> userList);
+
         void onUsersRetrievedFailed(Exception e); // Add this if missing
     }
     /**
@@ -515,5 +573,107 @@ public class FirebaseDB {
 //        void onMoodsLoaded(List<Mood> moods);
 //        void onMoodsLoadedFailed(Exception e);
 //    }
+    public interface OnUserMoodsGroupedListener {
+        void onUserMoodsGrouped(Map<String, List<Mood>> userMoodMap, Map<String, User> userMap);
+        void onUserMoodsGroupedFailed(Exception e);
+    }
+
+    public void getFollowedUserMoodsGrouped(String currentUserId, OnUserMoodsGroupedListener listener) {
+        Log.d("MoodDebug", "Fetching followed user moods...");
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.e("MoodDebug", "No logged in user found");
+            return;
+        }
+
+        db.collection("follows")
+                .document(currentUserId)
+                .get()
+                .addOnSuccessListener(followDoc -> {
+
+                    List<String> followingIds = (List<String>) followDoc.get("following");
+                    Log.d("MoodDebug", "Following IDs: " + followingIds);
+
+                    if (followingIds == null || followingIds.isEmpty()) {
+                        Log.d("MoodDebug", "No followed users found");
+                        listener.onUserMoodsGrouped(new HashMap<>(), new HashMap<>());
+                        return;
+                    }
+
+                    Map<String, List<Mood>> moodMap = new HashMap<>();
+                    Map<String, User> userMap = new HashMap<>();
+                    List<Task<DocumentSnapshot>> userTasks = new ArrayList<>();
+                    List<Task<QuerySnapshot>> moodTasks = new ArrayList<>();
+
+                    for (String uid : followingIds) {
+                        Log.d("MoodDebug", "Fetching user and moods for: " + uid);
+
+                        // Fetch user
+                        Task<DocumentSnapshot> userTask = db.collection("users").document(uid).get();
+                        userTasks.add(userTask);
+
+                        // Fetch public moods
+                        Task<QuerySnapshot> moodTask = db.collection("moods")
+                                .whereEqualTo("uid", uid)
+                                .whereEqualTo("privacy", "Public")
+                                .get();
+                        moodTasks.add(moodTask);
+                    }
+
+                    Tasks.whenAllComplete(userTasks).addOnSuccessListener(userResults -> {
+                        for (Task<?> task : userResults) {
+                            if (task.isSuccessful() && task.getResult() instanceof DocumentSnapshot) {
+                                DocumentSnapshot doc = (DocumentSnapshot) task.getResult();
+                                if (doc.exists()) {
+                                    User user = doc.toObject(User.class);
+                                    if (user != null) {
+                                        Log.d("MoodDebug", "Fetched user: " + user.getName());
+                                        userMap.put(user.getUid(), user);
+                                    }
+                                }
+                            }
+                        }
+
+                        Tasks.whenAllComplete(moodTasks).addOnSuccessListener(moodResults -> {
+                            int i = 0;
+                            for (Task<?> task : moodResults) {
+                                if (task.isSuccessful() && task.getResult() instanceof QuerySnapshot) {
+                                    QuerySnapshot querySnapshot = (QuerySnapshot) task.getResult();
+                                    List<Mood> moodList = new ArrayList<>();
+                                    for (DocumentSnapshot doc : querySnapshot) {
+                                        Mood mood = doc.toObject(Mood.class);
+                                        if (mood != null) {
+                                            moodList.add(mood);
+                                        }
+                                    }
+                                    String uid = followingIds.get(i);
+                                    Log.d("MoodDebug", "Fetched " + moodList.size() + " moods for user: " + uid);
+                                    moodMap.put(uid, moodList);
+                                }
+                                i++;
+                            }
+
+                            Log.d("MoodDebug", "Total users with moods: " + moodMap.size());
+                            listener.onUserMoodsGrouped(moodMap, userMap);
+                        }).addOnFailureListener(e -> {
+                            Log.e("MoodDebug", "Error loading moods: " + e.getMessage(), e);
+                            listener.onUserMoodsGroupedFailed(e);
+                        });
+
+                    }).addOnFailureListener(e -> {
+                        Log.e("MoodDebug", "Error loading user profiles: " + e.getMessage(), e);
+                        listener.onUserMoodsGroupedFailed(e);
+                    });
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("MoodDebug", "Failed to get followed users: " + e.getMessage(), e);
+                    listener.onUserMoodsGroupedFailed(e);
+                });
+    }
+
+
+
 
 }

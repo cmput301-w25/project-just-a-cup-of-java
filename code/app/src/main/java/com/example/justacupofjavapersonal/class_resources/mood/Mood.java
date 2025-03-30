@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
 
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -25,6 +26,8 @@ import java.util.Locale;
  * Represents a Mood event with details such as emotional state, triggers,
  * social situations, location, and optional photo.
  */
+@IgnoreExtraProperties
+
 public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
