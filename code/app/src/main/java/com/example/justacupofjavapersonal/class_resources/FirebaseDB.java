@@ -96,6 +96,18 @@ public class FirebaseDB {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return (user != null) ? user.getUid() : null;    }
 
+    /**
+     * Fetches user details from Firestore based on a list of user IDs.
+     *
+     * This method retrieves user documents from the "users" collection in Firestore.
+     * Each document corresponding to a user ID in the provided list is fetched and converted
+     * into a User object. Once all users are retrieved, the result is passed
+     * to the provided OnUsersRetrievedListener.
+     *
+     * @param userIDs   A list of user IDs whose details need to be fetched.
+     * @param listener  A callback interface OnUsersRetrievedListener that is triggered
+     *                  once all users are retrieved successfully.
+     */
     private void fetchUsersFromUid(List<String> userIDs, OnUsersRetrievedListener listener) {
         List<User> userList = new ArrayList<>();
 
@@ -115,12 +127,18 @@ public class FirebaseDB {
         }
     }
 
-//    public interface OnUsersRetrievedListener {
-//        void onUsersRetrieved(List<User> userList);
-//
-//        void onUsersRetrievedFailed(Exception e);
-//    }
 
+    /**
+     * Retrieves all users from the "users" collection in Firestore.
+     *
+     * This method fetches all documents from the "users" collection in Firestore,
+     * converts each document into a User object, and adds it to a list.
+     * Once the retrieval is complete, the list of users is passed to the provided
+     * OnUsersRetrievedListener callback.
+     *
+     * @param listener A callback interface OnUsersRetrievedListener that is triggered
+     *                 once all users are retrieved, whether the task is successful or not.
+     */
     public void getAllUsers(OnUsersRetrievedListener listener) {
         db.collection("users").get().addOnCompleteListener(task -> {
             List<User> userList = new ArrayList<>();
@@ -134,6 +152,16 @@ public class FirebaseDB {
         });
     }
 
+    /**
+     * Searches for users in the "users" collection based on a given query.
+     *
+     * <p>If the search query is empty, this method retrieves all users by calling getAllUsers(OnUsersRetrievedListener).
+     * Otherwise, it performs a Firestore query to find users whose names start with the given search string.
+     *
+     * @param search   The search query string used to filter users by name.
+     * @param listener A callback interface OnUsersRetrievedListener that is triggered
+     *                 once the search results are retrieved.
+     */
     public void searchUsers(String search, OnUsersRetrievedListener listener) {
         if (search.isEmpty()) {
             getAllUsers(listener);
@@ -160,7 +188,6 @@ public class FirebaseDB {
     /**
      *
      */
-
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded(User user);
         void onUserDataLoadFailed(Exception e);
@@ -279,7 +306,10 @@ public class FirebaseDB {
     }
 
     /**
-     * To be implemented
+     * Listener interface for retrieving mood data from Firestore.
+     *
+     * <p>This interface provides callback methods to handle both successful and failed
+     * retrievals of mood data.
      */
     public interface OnMoodLoadedListener {
         void onMoodsLoaded(List<Mood> moods);
@@ -313,6 +343,22 @@ public class FirebaseDB {
         );
     }
 
+    /**
+     * Sends a follow request from the current user to another user.
+     *
+     * <p>This method updates two Firestore collections:
+     * <ul>
+     *     <li>requests: Stores follow requests for each user. The document ID is the requested user's ID,
+     *     and it contains an array of user IDs representing users who have sent a follow request.</li>
+     *     <li>requestedBy: Stores the follow requests made by the current user. The document ID is the
+     *     current user's ID, and it contains an array of user IDs representing users they have requested to follow.</li>
+     * </ul>
+     *
+     * <p>Data is written using a Firestore batch operation to ensure atomicity.
+     *
+     * @param currUserID   The ID of the current user sending the follow request.
+     * @param requestedID  The ID of the user receiving the follow request.
+     */
     public void sendRequest(String currUserID, String requestedID) {
         //Store the follow requests in a collection "requests"
         // Each document will have a requesteeID
@@ -338,6 +384,17 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("FollowRequest", "Request add failure", e));
     }
 
+    /**
+     * Retrieves all follow requests for a given user.
+     *
+     * <p>This method fetches the list of user IDs who have sent a follow request to the specified user
+     * from the "requests" collection in Firestore. If there are requesters, their user details are
+     * retrieved using fetchUsersFromUid(List, OnUsersRetrievedListener).
+     *
+     * @param userID   The ID of the user whose follow requests are being retrieved.
+     * @param listener A callback interface OnUsersRetrievedListener that receives the list of users
+     *                 who have sent follow requests.
+     */
     public void getAllRequests(String userID, OnUsersRetrievedListener listener) {
 
         db.collection("requests")
@@ -357,6 +414,18 @@ public class FirebaseDB {
                 })
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
     }
+
+    /**
+     * Retrieves all follow request IDs for a given user.
+     *
+     * <p>This method fetches the list of user IDs who have sent a follow request to the specified user
+     * from the "requests" collection in Firestore. The retrieved user IDs are then passed to the provided
+     * OnUserIdsRetrievedListener callback.
+     *
+     * @param userID   The ID of the user whose follow request IDs are being retrieved.
+     * @param listener A callback interface OnUserIdsRetrievedListener that receives the list of user IDs
+     *                 who have sent follow requests.
+     */
     public void getAllRequestIds(String userID, OnUserIdsRetrievedListener listener) {
         db.collection("requests")
                 .document(userID)
@@ -377,7 +446,10 @@ public class FirebaseDB {
 
 
     /**
-     *  Interface only for retrieving IDs
+     * Listener interface for retrieving a list of user IDs from Firestore.
+     *
+     * <p>This interface provides a callback method to handle the retrieval of user IDs,
+     * typically used for fetching follow request IDs or other user-related data.
      */
     public interface OnUserIdsRetrievedListener {
         void onUserIdsRetrieved(List<String> idList);
@@ -438,6 +510,18 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("Follower Requests", "Error fetching requests", e));
     }
 
+    /**
+     * Accepts a follow request from a requester and updates Firestore accordingly.
+     *
+     * <p>This method performs the following operations using a Firestore batch write:
+     * <ul>
+     *     <li>Adds the requester as a follower of the current user by calling addFollower(WriteBatch, String, String).</li>
+     *     <li>Removes the requester ID from the "requesters" array in the "requests" collection.</li>
+     * </ul>
+     *
+     * @param currUserID   The ID of the current user accepting the follow request.
+     * @param requesterID  The ID of the user whose follow request is being accepted.
+     */
     public void acceptRequest(String currUserID, String requesterID) {
         WriteBatch batch = db.batch();
 
@@ -452,10 +536,32 @@ public class FirebaseDB {
                 .addOnFailureListener(e -> Log.e("FollowRequest", "Request accept failure",e));
     }
 
+    /**
+     * Removes a follow request from the current user's request list.
+     *
+     * <p>This method updates the "requests" collection in Firestore by removing the requester ID
+     * from the "requesters" array of the specified user.
+     *
+     * @param currUserID   The ID of the current user rejecting the follow request.
+     * @param requesterID  The ID of the user whose follow request is being removed.
+     */
     public void removeRequest(String currUserID, String requesterID) {
-        DocumentReference docRef = db.collection("requests").document(currUserID);
+        WriteBatch batch = db.batch();
 
-        docRef.update("requesters", FieldValue.arrayRemove(requesterID))
+        DocumentReference requestsRef = db.collection("requests").document(currUserID);
+        DocumentReference requestedByRef = db.collection("requestedBy").document(requesterID);
+
+        batch.set(requestsRef,
+                Collections.singletonMap("requesters", FieldValue.arrayRemove(requesterID)),
+                SetOptions.merge()
+        );
+
+        batch.set(requestedByRef,
+                Collections.singletonMap("requests", FieldValue.arrayRemove(currUserID)),
+                SetOptions.merge()
+        );
+
+        batch.commit()
                 .addOnSuccessListener(a -> Log.d("FollowRequest", "Request rejected success"))
                 .addOnFailureListener(e -> Log.e("FollowRequest", "Request rejected failure"));
     }
@@ -488,8 +594,15 @@ public class FirebaseDB {
     }
 
     /**
-     * To be implemented
-     * @param currUserID
+     * Retrieves a list of users that the current user is following.
+     *
+     * <p>This method fetches the list of user IDs that the specified user is following
+     * from the "follows" collection in Firestore. If the current user is following any users,
+     * their details are retrieved using fetchUsersFromUid(List, OnUsersRetrievedListener).
+     *
+     * @param currUserID   The ID of the user whose following list is being retrieved.
+     * @param listener     A callback interface OnUsersRetrievedListener that receives the list of users
+     *                     the current user is following.
      */
     public void getFollowing(String currUserID, OnUsersRetrievedListener listener) {
         db.collection("follows")
