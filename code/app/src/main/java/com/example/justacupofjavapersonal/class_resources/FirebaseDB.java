@@ -443,8 +443,8 @@ public class FirebaseDB {
 
         DocumentReference docRef = db.collection("requests").document(currUserID);
 
-        addFollower(batch, currUserID,  requesterID);
-
+//        addFollower(batch, currUserID,  requesterID);
+        addFollower(batch, requesterID,  currUserID);
         batch.update(docRef, "requesters", FieldValue.arrayRemove(requesterID));
 
         batch.commit()
