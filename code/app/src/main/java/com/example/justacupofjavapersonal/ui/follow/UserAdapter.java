@@ -107,7 +107,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
      * @param followButton The button that indicates follow status.
      */
     private void loadFollowingIds(String currUserID, String user, Button followButton) {
-        db.getAllRequestedIds(currUserID, users -> {
+        db.getAllFollowingIds(currUserID, users -> {
             followingIds.clear();
             followingIds.addAll(users);
             followButton.setText(followingIds.contains(user) ? "Following" : "Follow");
