@@ -19,8 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
 
+/**
+ * RecyclerView adapter for displaying a list of users with a follow/unfollow button.
+ *
+ * <p>This adapter binds user data to a RecyclerView, allowing the user to follow or unfollow others.
+ * It also handles the display of follow request statuses (e.g., "Requested", "Following").
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> userList;
     private List<String> requests;
@@ -28,16 +33,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private FirebaseDB db;
     private List<String> followingIds;
 
+    /**
+     * Constructor for UserAdapter.
+     *
+     * @param userList The list of users to display in the RecyclerView.
+     * @param listener A listener for handling click events on follow buttons.
+     * @param db       The Firebase database instance for making database requests.
+     */
     public UserAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
         this.userList = userList;
         this.listener = listener;
         this.db = db;
     }
 
+    /**
+     * Interface for handling follow button click events.
+     */
     public interface OnItemClickListener {
+        /**
+         * Called when the follow button is clicked.
+         *
+         * @param position The position of the item in the RecyclerView.
+         */
         void onFollowClick(int position);
     }
 
+    /**
+     * Creates a new ViewHolder for a user item.
+     *
+     * @param parent   The parent ViewGroup where the item view will be added.
+     * @param viewType The type of the view.
+     * @return A new instance of UserViewHolder.
+     */
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,11 +73,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return new UserViewHolder(view);
     }
 
+    /**
+     * Binds data to the ViewHolder for a given position.
+     *
+     * @param holder   The ViewHolder to bind the data to.
+     * @param position The position of the item in the list.
+     */
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
         holder.bind(userList.get(position), listener, position);
     }
 
+    /**
+     * Loads the list of follow requests for the current user and updates the follow button text.
+     *
+     * @param currUserID The ID of the current user.
+     * @param user       The ID of the user to check the request status for.
+     * @param followButton The button that indicates follow/request status.
+     */
     private void loadRequests(String currUserID, String user, Button followButton) {
         db.getAllRequestedIds(currUserID, users -> {
             requests.clear();
@@ -59,6 +99,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         });
     }
 
+    /**
+     * Loads the list of users the current user is following and updates the follow button text.
+     *
+     * @param currUserID The ID of the current user.
+     * @param user       The ID of the user to check the following status for.
+     * @param followButton The button that indicates follow status.
+     */
     private void loadFollowingIds(String currUserID, String user, Button followButton) {
         db.getAllRequestedIds(currUserID, users -> {
             followingIds.clear();
@@ -67,17 +114,29 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         });
     }
 
+    /**
+     * Returns the total number of items in the user list.
+     *
+     * @return The number of items in the user list.
+     */
     @Override
     public int getItemCount() {
         return userList.size();
     }
 
-
+    /**
+     * ViewHolder class that holds references to the views for displaying user data.
+     */
     public class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         TextView userName;
         Button followButton;
 
+        /**
+         * Constructor for UserViewHolder.
+         *
+         * @param itemView The view for a single user item.
+         */
         public UserViewHolder(View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
@@ -85,6 +144,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             followButton = itemView.findViewById(R.id.follow_button);
         }
 
+        /**
+         * Binds the user data to the views and sets the follow button behavior.
+         *
+         * @param user     The user data to bind.
+         * @param listener The listener for follow button clicks.
+         * @param position The position of the item in the list.
+         */
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
             requests = new ArrayList<>();
@@ -107,6 +173,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                         followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
                     } else if (followButton.getText().toString().equals("Following")){
                         followButton.setText("Follow");
+                        db.removeFollowing(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
                     }
 
                     if (!requests.contains(user.getUid())) {
