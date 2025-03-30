@@ -84,14 +84,14 @@ public class FirebaseDB {
      * @return the user with the specified uid
      */
     public User getUser(String uid) {
-        DocumentReference docRef = db.collection("users").document(uid);
-        final User[] userData = new User[1];
-        docRef.get().addOnSuccessListener(documentSnapshot -> {
-            userData[0] = documentSnapshot.toObject(User.class);
-        }).addOnFailureListener(e -> {
-            Log.e("Get User Data", "Error loading user data", e);
-        });
-        return userData[0];
+            DocumentReference docRef = db.collection("users").document(uid);
+            final User[] userData = new User[1];
+            docRef.get().addOnSuccessListener(documentSnapshot -> {
+                userData[0] = documentSnapshot.toObject(User.class);
+            }).addOnFailureListener(e -> {
+                Log.e("Get User Data", "Error loading user data", e);
+            });
+            return userData[0];
     }
     public static String getCurrentUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -146,7 +146,13 @@ public class FirebaseDB {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     User user = document.toObject(User.class);
-                    userList.add(user);
+                    if (auth.getCurrentUser() != null) {
+                        if (!user.getUid().equals(auth.getCurrentUser().getUid())) {
+                            userList.add(user);
+                        }
+                    } else {
+                        userList.add(user);
+                    }
                 }
             }
             listener.onUsersRetrieved(userList);
@@ -179,7 +185,13 @@ public class FirebaseDB {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             User user = documentSnapshot.toObject(User.class);
-                            searchedList.add(user);
+                            if (auth.getCurrentUser() != null) {
+                                if (!user.getUid().equals(auth.getCurrentUser().getUid())) {
+                                    searchedList.add(user);
+                                }
+                            } else {
+                                searchedList.add(user);
+                            }
                         }
                     }
                     listener.onUsersRetrieved(searchedList);

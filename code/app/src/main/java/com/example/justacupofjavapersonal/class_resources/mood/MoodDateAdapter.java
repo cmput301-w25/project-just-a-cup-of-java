@@ -10,9 +10,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.fragment.app.FragmentActivity;
+import com.example.justacupofjavapersonal.ui.comments.CommentBottomSheet;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
@@ -227,30 +230,34 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             moodHolder.containsLocation.setVisibility(mood.hasLocation() ? View.VISIBLE : View.GONE);
 
             // Handle comment button popup
+//            moodHolder.commentButton.setOnClickListener(view -> {
+//                LayoutInflater inflater = LayoutInflater.from(view.getContext());
+//                View popupView = inflater.inflate(R.layout.popup_comment, null);
+//
+//                EditText commentInput = popupView.findViewById(R.id.commentInput);
+//                Button postButton = popupView.findViewById(R.id.postCommentButton);
+//
+//                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
+//                        .setView(popupView)
+//                        .create();
+//
+//                postButton.setOnClickListener(p -> {
+//                    String commentText = commentInput.getText().toString().trim();
+//                    if (!commentText.isEmpty()) {
+//                        FirebaseDB db = new FirebaseDB();
+//                        db.addCommentToMood(mood.getMoodID(), commentText);
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//                dialog.show();
+//            });
+
             moodHolder.commentButton.setOnClickListener(view -> {
-                LayoutInflater inflater = LayoutInflater.from(view.getContext());
-                View popupView = inflater.inflate(R.layout.popup_comment, null);
-
-                EditText commentInput = popupView.findViewById(R.id.commentInput);
-                Button postButton = popupView.findViewById(R.id.postCommentButton);
-
-                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
-                        .setView(popupView)
-                        .create();
-
-                postButton.setOnClickListener(p -> {
-                    String commentText = commentInput.getText().toString().trim();
-                    if (!commentText.isEmpty()) {
-                        FirebaseDB db = new FirebaseDB();
-                        db.addCommentToMood(mood.getMoodID(), commentText);
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
+                CommentBottomSheet bottomSheet = new CommentBottomSheet(mood.getMoodID());
+                FragmentActivity activity = (FragmentActivity) view.getContext();
+                bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
             });
-
-
 
 
         } else if (holder instanceof DateViewHolder) {
