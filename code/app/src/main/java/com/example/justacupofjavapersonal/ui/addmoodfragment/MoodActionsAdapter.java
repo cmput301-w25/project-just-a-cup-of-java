@@ -117,18 +117,22 @@
 
 package com.example.justacupofjavapersonal.ui.addmoodfragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
-import com.example.justacupofjavapersonal.ui.comments.CommentBottomSheet;
 
 import java.util.ArrayList;
 
@@ -163,7 +167,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     @NonNull
     @Override
     public MoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.mood_card_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.mood_list_item, parent, false);
         return new MoodViewHolder(view);
     }
 
@@ -175,6 +179,33 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
         holder.emotionTextView.setText(mood.getEmotion());
         holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
         holder.triggerTextView.setText("Reason: " + mood.getTrigger());
+
+        // Show/hide image view button based on whether a photo exists
+        if (mood.getPhoto() != null && !mood.getPhoto().isEmpty()) {
+            holder.viewImageButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.viewImageButton.setVisibility(View.GONE);
+        }
+
+        // View Image click handler
+        holder.viewImageButton.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog_image_view);
+
+            ImageView imageView = dialog.findViewById(R.id.dialogImageView);
+            ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+
+            try {
+                byte[] decodedBytes = Base64.decode(mood.getPhoto(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                imageView.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+
+            closeButton.setOnClickListener(v2 -> dialog.dismiss());
+            dialog.show();
+        });
 
         // Delete button
         holder.deleteButton.setOnClickListener(v -> {
@@ -191,17 +222,6 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
                 editListener.onMoodEdit(currentPosition);
             }
         });
-
-        // Comment button
-        holder.commentButton.setOnClickListener(v -> {
-            CommentBottomSheet bottomSheet = new CommentBottomSheet(mood.getMoodID());
-            if (context instanceof FragmentActivity) {
-                FragmentActivity activity = (FragmentActivity) context;
-                bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
-            }
-        });
-
-
     }
 
     @Override
@@ -211,21 +231,21 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
-        ImageButton deleteButton, editButton, commentButton;
+        ImageButton deleteButton, editButton;
+
+        Button viewImageButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
             emotionTextView = itemView.findViewById(R.id.emotionTextView);
-            detailsTextView = itemView.findViewById(R.id.detailsTextView);
             socialSituation = itemView.findViewById(R.id.socialSituation);
+            detailsTextView = itemView.findViewById(R.id.detailsTextView);
             triggerTextView = itemView.findViewById(R.id.triggerTextView);
-            editButton = itemView.findViewById(R.id.editMoodButton);
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
-            commentButton = itemView.findViewById(R.id.commentButton); // optional if using comment popup
-            // 🔹 Make sure this exists in mood_list_item.xml
+            editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
+            viewImageButton = itemView.findViewById(R.id.viewImageButton);
+
         }
-
-
     }
 
     public interface OnMoodDeleteListener {

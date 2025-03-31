@@ -78,6 +78,7 @@ id cardView2
 id changePasswordButton
 id change_picture
 id circularLayout
+id closeButton
 id commentButton
 id commentInput
 id commentSheetRoot
@@ -97,6 +98,7 @@ id dayTextView
 id deleteMoodButton
 id deny_follow_button
 id detailsTextView
+id dialogImageView
 id editMoodButton
 id edit_bio
 id edit_email
@@ -128,6 +130,10 @@ id imageView3
 id loginButton
 id loginIllustration
 id loginText
+id mapView
+id map_Nearby
+id map_followingButton
+id map_recentButton
 id mobile_navigation
 id moodGridView
 id moodHistoryRecyclerView
@@ -144,6 +150,7 @@ id navigation_feed
 id navigation_follower_requests
 id navigation_home
 id navigation_login
+id navigation_map
 id navigation_moodhistory
 id navigation_notifications
 id navigation_post_mood
@@ -181,6 +188,7 @@ id userNameText
 id user_follow_layout
 id user_search
 id usernameTitle
+id viewImageButton
 id weekDayText
 id weekRecyclerView
 id welcomeText
@@ -188,6 +196,7 @@ id whyFeel
 layout activity_main
 layout activity_user
 layout change_password
+layout dialog_image_view
 layout dialog_login
 layout dialog_mood_selector
 layout emotion_spinner_dialog
@@ -203,6 +212,7 @@ layout fragment_followed_mood
 layout fragment_follower_all_friends
 layout fragment_home
 layout fragment_login
+layout fragment_map
 layout fragment_notifications
 layout fragment_post_mood
 layout fragment_userinfo
