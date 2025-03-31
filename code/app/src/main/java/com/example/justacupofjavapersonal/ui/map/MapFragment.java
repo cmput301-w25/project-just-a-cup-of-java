@@ -113,8 +113,8 @@ public class MapFragment extends Fragment {
     private void setupMap() {
 
         moods = new ArrayList<>();
-        
-        loadMoods();
+
+        loadLocationMoods();
         
 
         if (googleMap != null) {
