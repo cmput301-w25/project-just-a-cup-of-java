@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -119,6 +120,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
         // Optional: set edit button functionality later
         holder.editButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
+            mood.setTimestamp(null); // ✅ prevent crash
             bundle.putSerializable("moodToEdit", mood); // Mood must implement Serializable
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.navigation_post_mood, bundle);
@@ -130,6 +132,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
             FragmentActivity activity = (FragmentActivity) context;
             bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
         });
+        holder.commentButton.setColorFilter(Color.parseColor("#E0E0E0"));
 
 
 

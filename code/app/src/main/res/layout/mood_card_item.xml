@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="6dp"
@@ -20,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:text="Posted on: 24-03-2025"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
@@ -33,116 +32,116 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@id/dateTextView"
-            android:layout_marginTop="0dp"
-            android:text="AWKWARD 😅"
+            android:text="ANGRY 😡"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF" />
 
-        <!-- Social + Time + Privacy -->
+        <!-- Details (time • privacy) -->
         <TextView
             android:id="@+id/detailsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/emotionTextView"
-            android:layout_marginTop="4dp"
-            android:text="10:22 PM • Public"
+            android:text="03:33 AM • Public"
             android:textColor="#EEEEEE"
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <!-- Trigger -->
+        <!-- Social Situation -->
         <TextView
             android:id="@+id/socialSituation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/detailsTextView"
-            android:layout_marginTop="6dp"
-            android:text="@string/social_situation_two_or_several_people"
+            android:text="Select a social situation"
             android:textSize="15sp"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
-        <!-- Why -->
-
-        <!-- Delete -->
-
-        <!-- Edit -->
-
+        <!-- Trigger -->
         <TextView
             android:id="@+id/triggerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/socialSituation"
-            android:layout_marginTop="4dp"
-            android:text="Why: "
-
-
+            android:text="Reason:"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <!-- NEW: View Image Button -->
-
-
-        <ImageButton
-            android:id="@+id/viewImageButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_above="@+id/triggerTextView"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_toStartOf="@+id/commentButton"
-            android:background="@android:color/transparent"
-            android:contentDescription="View Image"
-            android:scaleType="center"
-            android:src="@drawable/ic_camera"
-            android:visibility="visible"
-            app:tint="#E0E0E0" />
-
+        <!-- EDIT & DELETE (top right) -->
         <ImageButton
             android:id="@+id/deleteMoodButton"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_alignBottom="@id/socialSituation"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp"
-            android:layout_marginEnd="-10dp"
+            android:layout_below="@id/dateTextView"
             android:background="@android:color/transparent"
             android:contentDescription="Delete"
             android:scaleType="center"
             android:src="@android:drawable/ic_delete"
-            app:tint="#FFCDD2" />
+            app:tint="#F0C0C5" />
 
         <ImageButton
             android:id="@+id/editMoodButton"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_alignBottom="@+id/socialSituation"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="2dp"
             android:layout_toStartOf="@id/deleteMoodButton"
+            android:layout_alignBottom="@id/deleteMoodButton"
             android:background="@android:color/transparent"
             android:contentDescription="Edit"
             android:scaleType="center"
             android:src="@android:drawable/ic_menu_edit"
             app:tint="#E0E0E0" />
 
-        <ImageButton
-            android:id="@+id/commentButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignBottom="@+id/socialSituation"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_toStartOf="@id/editMoodButton"
-            android:background="@android:color/transparent"
-            android:contentDescription="Comment"
-            android:scaleType="center"
-            android:src="@drawable/ic_comment"
-            app:tint="#E0E0E0" />
+        <!-- NEW BOTTOM ICONS -->
+
+        <LinearLayout
+            android:id="@+id/bottomIconsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/triggerTextView"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/commentButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_comment"
+                android:contentDescription="Comment"
+                android:scaleType="center"
+                app:tint="@color/gray" />
+
+            <!-- Location Icon -->
+            <ImageButton
+                android:id="@+id/locationIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/mood_haslocation"
+                android:contentDescription="Location"
+                android:scaleType="center"
+                app:tint="#E0E0E0" />
+
+            <!-- Image Icon -->
+            <ImageButton
+                android:id="@+id/viewImageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/mood_hasphoto"
+                android:contentDescription="View Image"
+                android:scaleType="center"
+                app:tint="#E0E0E0" />
+
+            <!-- Comment Icon -->
 
 
+        </LinearLayout>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

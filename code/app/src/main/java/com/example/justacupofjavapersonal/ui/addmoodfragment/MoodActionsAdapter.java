@@ -121,6 +121,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -175,7 +176,8 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     @Override
     public void onBindViewHolder(@NonNull MoodViewHolder holder, int position) {
         Mood mood = moodList.get(position);
-
+        //holder.dateTextView.setText("Posted on: " + mood.getDate());
+        holder.dateTextView.setVisibility(View.GONE);
         holder.socialSituation.setText(mood.getSocialSituation());
         holder.emotionTextView.setText(mood.getEmotion());
         holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
@@ -235,6 +237,9 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
             }
         });
 
+        holder.commentButton.setColorFilter(Color.parseColor("#E0E0E0"));
+
+
     }
 
     @Override
@@ -243,7 +248,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     }
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
-        TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
+        TextView emotionTextView, socialSituation, detailsTextView, triggerTextView, dateTextView;
         ImageButton deleteButton, editButton, commentButton , viewImageButton;
 
         public MoodViewHolder(@NonNull View itemView) {
@@ -256,6 +261,9 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
             editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
             viewImageButton = itemView.findViewById(R.id.viewImageButton);
             commentButton = itemView.findViewById(R.id.commentButton);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+
+
 
 
         }
