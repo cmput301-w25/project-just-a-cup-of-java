@@ -117,11 +117,17 @@
 
 package com.example.justacupofjavapersonal.ui.addmoodfragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -139,6 +145,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     private final Context context;
     private final OnMoodDeleteListener deleteListener;
     private final OnMoodEditListener editListener;
+
 
     /**
      * Constructor for the MoodActionsAdapter.
@@ -173,6 +180,33 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
         holder.detailsTextView.setText(mood.getTime() + " • " + mood.getPrivacy());
         holder.triggerTextView.setText("Reason: " + mood.getTrigger());
 
+        // Show/hide image view button based on whether a photo exists
+        if (mood.getPhoto() != null && !mood.getPhoto().isEmpty()) {
+            holder.viewImageButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.viewImageButton.setVisibility(View.GONE);
+        }
+
+        // View Image click handler
+        holder.viewImageButton.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog_image_view);
+
+            ImageView imageView = dialog.findViewById(R.id.dialogImageView);
+            ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+
+            try {
+                byte[] decodedBytes = Base64.decode(mood.getPhoto(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                imageView.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+
+            closeButton.setOnClickListener(v2 -> dialog.dismiss());
+            dialog.show();
+        });
+
         // Delete button
         holder.deleteButton.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
@@ -199,6 +233,8 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
         ImageButton deleteButton, editButton;
 
+        Button viewImageButton;
+
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
             emotionTextView = itemView.findViewById(R.id.emotionTextView);
@@ -207,6 +243,8 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
             triggerTextView = itemView.findViewById(R.id.triggerTextView);
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
             editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
+            viewImageButton = itemView.findViewById(R.id.viewImageButton);
+
         }
     }
 
