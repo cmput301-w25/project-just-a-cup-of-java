@@ -1,4 +1,3 @@
-//IQRAS WORKING CODE
 package com.example.justacupofjavapersonal.ui.follow;
 
 import android.os.Bundle;
