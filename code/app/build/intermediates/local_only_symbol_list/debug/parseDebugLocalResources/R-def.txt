@@ -22,6 +22,7 @@ drawable default_profile
 drawable edit_text_border
 drawable filter
 drawable ic_add_photo
+drawable ic_camera
 drawable ic_comment
 drawable ic_dashboard_black_24dp
 drawable ic_home_black_24dp
