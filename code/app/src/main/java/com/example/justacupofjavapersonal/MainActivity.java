@@ -90,16 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace(); // just in case there's no matching action
                 return false;
             }
-//            int itemId = item.getItemId();
-//
-//            if (itemId == R.id.navigation_home) {
-//                // If already on home, clear the back stack and go to home
-//                navController.popBackStack(R.id.navigation_home, false);
-//                navController.navigate(R.id.navigation_home);
-//                return true;
-//            }
-//
-//            return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
 

@@ -25,7 +25,7 @@ public class AllMoodsAdapter extends RecyclerView.Adapter<AllMoodsAdapter.UserMo
 
     private List<String> userIds;
     private Map<String, List<Mood>> moodsByUser;
-    private Map<String, User> usersById;
+    Map<String, User> usersById;
 
     public AllMoodsAdapter(Map<String, List<Mood>> moodsByUser, Map<String, User> usersById) {
         this.moodsByUser = moodsByUser;
