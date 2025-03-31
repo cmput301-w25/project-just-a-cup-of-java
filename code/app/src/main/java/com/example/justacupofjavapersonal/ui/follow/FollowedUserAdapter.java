@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +42,8 @@ public class FollowedUserAdapter extends RecyclerView.Adapter<FollowedUserAdapte
         //holder.bind(followedUsers.get(position), listener);
         User user = followedUsers.get(position);
         holder.userName.setText(user.getName());
+        // ✅ Hide follow button (because it's the 'Following' tab)
+        holder.followButton.setVisibility(View.GONE);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), UserMoodActivity.class);
@@ -58,11 +61,15 @@ public class FollowedUserAdapter extends RecyclerView.Adapter<FollowedUserAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePicture;
         TextView userName;
+        Button followButton; // 👈 Add this line
+
 
         ViewHolder(View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
             userName = itemView.findViewById(R.id.userName);
+            followButton = itemView.findViewById(R.id.follow_button); // 👈 And this line
+
         }
 
         void bind(User user, OnUserClickListener listener) {

@@ -114,7 +114,6 @@ id feedSelector
 id feedTime
 id feed_Nearby
 id feed_followingButton
-id filterButton
 id filter_search_reason
 id filterbutton
 id follow_button

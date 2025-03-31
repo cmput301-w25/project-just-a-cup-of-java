@@ -334,7 +334,7 @@ public class FeedFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.navigation_map);
         });
 
-        binding.filterButton.setOnClickListener(v -> showFilterDialog());
+        //binding.filterButton.setOnClickListener(v -> showFilterDialog());
 
         return root;
     }
