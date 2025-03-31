@@ -70,6 +70,36 @@
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addLocationButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="#85BEC8"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/addEmoStateButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/locationCardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add Location (optional)"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </androidx.cardview.widget.CardView>
+
+<!--            android:drawableLeft="@drawable/ic_location_pin"-->
+
+
+
     <!-- CardView for Post -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -84,7 +114,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addEmoStateButton">
+        app:layout_constraintTop_toBottomOf="@id/addLocationButton">
 
         <EditText
             android:id="@+id/triggerText"
@@ -112,7 +142,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addEmoStateButton">
+        app:layout_constraintTop_toBottomOf="@id/addLocationButton">
 
         <Spinner
             android:id="@+id/socialSituationSpinner"

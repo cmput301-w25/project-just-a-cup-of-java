@@ -87,11 +87,11 @@
 
         <Button
             android:id="@+id/viewImageButton"
-            android:layout_width="38dp"
+            android:layout_width="26dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/triggerTextView"
-            android:layout_marginEnd="97dp"
-            android:layout_marginBottom="52dp"
+            android:layout_marginEnd="109dp"
+            android:layout_marginBottom="53dp"
             android:layout_toStartOf="@id/editMoodButton"
             android:background="@android:color/white"
             android:contentDescription="View Image"
@@ -140,10 +140,7 @@
             android:src="@drawable/ic_comment"
             app:tint="#E0E0E0" />
 
-
-
-
-
     </RelativeLayout>
+
 
 </androidx.cardview.widget.CardView>
