@@ -1,6 +1,7 @@
 package com.example.justacupofjavapersonal.ui.moodhistory;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
+import com.example.justacupofjavapersonal.ui.comments.CommentBottomSheet;
 
 import java.util.ArrayList;
 
@@ -80,8 +85,20 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
 
         // Optional: set edit button functionality later
         holder.editButton.setOnClickListener(v -> {
-            // TODO: Implement edit logic
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("moodToEdit", mood); // Mood must implement Serializable
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.navigation_post_mood, bundle);
         });
+
+
+        holder.commentButton.setOnClickListener(v -> {
+            CommentBottomSheet bottomSheet = new CommentBottomSheet(mood.getMoodID());
+            FragmentActivity activity = (FragmentActivity) context;
+            bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
+        });
+
+
     }
 
     /**
@@ -106,6 +123,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
         TextView socialSituation;
         ImageButton deleteButton;
         ImageButton editButton; // You can wire this later if needed
+        ImageButton commentButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,6 +134,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
             socialSituation = itemView.findViewById(R.id.socialSituation);
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
             editButton = itemView.findViewById(R.id.editMoodButton);
+            commentButton = itemView.findViewById(R.id.commentButton);
         }
     }
 

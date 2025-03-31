@@ -110,6 +110,7 @@
             android:id="@+id/action_navigation_moodHistory_to_home"
             app:destination="@id/navigation_home" />
 
+
     </fragment>
 
     <fragment

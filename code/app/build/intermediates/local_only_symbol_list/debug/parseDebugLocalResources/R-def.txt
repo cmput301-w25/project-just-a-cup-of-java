@@ -78,6 +78,7 @@ id cardView2
 id changePasswordButton
 id change_picture
 id circularLayout
+id commentButton
 id commentInput
 id commentSheetRoot
 id commentText

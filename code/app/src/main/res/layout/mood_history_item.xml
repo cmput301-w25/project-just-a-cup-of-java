@@ -64,23 +64,23 @@
             android:textStyle="bold"/>
 
         <!-- Why -->
+
+        <!-- Delete -->
+
+        <!-- Edit -->
+
         <TextView
             android:id="@+id/triggerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/socialSituation"
             android:layout_marginTop="4dp"
-            android:text="Why: she's soooooooo bad
-QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+            android:text="Why: "
 
 
-            android:textSize="15sp"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"/>
-
-        <!-- Delete -->
-
-        <!-- Edit -->
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/deleteMoodButton"
@@ -88,7 +88,7 @@ QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
             android:layout_height="48dp"
             android:layout_alignBottom="@id/socialSituation"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="27dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="2dp"
             android:background="@android:color/transparent"
             android:contentDescription="Delete"
@@ -101,7 +101,7 @@ QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignBottom="@+id/socialSituation"
-            android:layout_marginEnd="14dp"
+            android:layout_marginEnd="-5dp"
             android:layout_marginBottom="2dp"
             android:layout_toStartOf="@id/deleteMoodButton"
             android:background="@android:color/transparent"
@@ -109,6 +109,21 @@ QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
             android:scaleType="center"
             android:src="@android:drawable/ic_menu_edit"
             app:tint="#E0E0E0" />
+
+        <ImageButton
+            android:id="@+id/commentButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignBottom="@+id/socialSituation"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="3dp"
+            android:layout_toStartOf="@id/editMoodButton"
+            android:background="@android:color/transparent"
+            android:contentDescription="Comment"
+            android:scaleType="center"
+            android:src="@drawable/ic_comment"
+            app:tint="#E0E0E0" />
+
 
     </RelativeLayout>
 
