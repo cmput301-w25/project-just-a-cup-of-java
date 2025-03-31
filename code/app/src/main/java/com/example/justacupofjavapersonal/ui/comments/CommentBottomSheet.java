@@ -1,6 +1,7 @@
 package com.example.justacupofjavapersonal.ui.comments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,12 +57,15 @@ public class CommentBottomSheet extends BottomSheetDialogFragment {
 
         postButton.setOnClickListener(v -> {
             String commentText = commentInput.getText().toString().trim();
+            Log.d("COMMENTS", "Posting comment: " + commentText);
+
             if (!commentText.isEmpty()) {
                 db.addCommentToMood(moodId, commentText);
                 commentInput.setText("");
                 loadComments(); // Refresh
             }
         });
+
 
         return view;
     }

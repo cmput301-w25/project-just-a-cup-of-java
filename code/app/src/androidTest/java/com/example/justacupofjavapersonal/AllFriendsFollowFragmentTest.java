@@ -67,7 +67,7 @@ public class AllFriendsFollowFragmentTest {
 
     @Test
     public void testFollowRequestToast() {
-        onView(withId(R.id.all_users_recyclerView))
+        onView(withId(R.id.all_users_recyclerView));
 
     }
 }
