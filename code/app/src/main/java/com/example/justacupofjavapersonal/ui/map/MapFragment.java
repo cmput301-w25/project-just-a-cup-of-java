@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.justacupofjavapersonal.R;
+import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
 import com.example.justacupofjavapersonal.class_resources.mood.FeedItem;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
@@ -41,6 +42,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MapFragment extends Fragment {
@@ -48,6 +53,9 @@ public class MapFragment extends Fragment {
     private ArrayList<Mood> moods;
     private MapView mapView;
     private GoogleMap googleMap;
+    private ArrayList<User> followedUsers = new ArrayList<>();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,35 +75,47 @@ public class MapFragment extends Fragment {
         return root;
     }
 
+    private void loadLocationMoods() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        FirebaseDB dbHelper = new FirebaseDB();
+        dbHelper.getFollowing(currentUser.getUid(), new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> userList) {
+                List<String> followedUids = new ArrayList<>();
+                for (User user : userList) {
+                    followedUids.add(user.getUid());
+                }
+
+                db.collection("moods")
+                        .whereIn("uid", followedUids)
+                        .get()
+                        .addOnSuccessListener(snapshot -> {
+                            moods.clear();
+
+                            for (DocumentSnapshot doc : snapshot) {
+                                Mood mood = doc.toObject(Mood.class);
+                                if (mood != null && mood.getLocation() != null) {
+                                    moods.add(mood);
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e("FeedFragment", "Error fetching moods", e));
+            }
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Log.e("FeedFragment", "Failed to fetch followed users", e);
+            }
+        });
+    }
+
     private void setupMap() {
 
         moods = new ArrayList<>();
-        // will automatically populate when database works
-        Mood m1 = new Mood(EmotionalState.SADNESS, new Date(System.currentTimeMillis() - 47363234L));
-        Mood m2 = new Mood(EmotionalState.FEAR, new Date(System.currentTimeMillis() - 56152438L));
-        Mood m3 = new Mood(EmotionalState.SHAME, new Date(System.currentTimeMillis() - 20252171L));
-        Mood m4 = new Mood(EmotionalState.HAPPINESS, new Date(System.currentTimeMillis() - 300525030L));
-        m1.setLocation(new Location("") {{
-            setLatitude(53.543598);
-            setLongitude(-113.525827);
-        }});
-        m2.setLocation(new Location("") {{
-            setLatitude(53.530982);
-            setLongitude(-113.451663);
-        }});
-        m3.setLocation(new Location("") {{
-            setLatitude(53.499826);
-            setLongitude(-113.531201);
-        }});
-        m4.setLocation(new Location("") {{
-            setLatitude(53.492633);
-            setLongitude(-113.482834);
-        }});
-
-        moods.add(m1);
-        moods.add(m2);
-        moods.add(m3);
-        moods.add(m4);
+        
+        loadMoods();
+        
 
         if (googleMap != null) {
             googleMap.setMapStyle(
