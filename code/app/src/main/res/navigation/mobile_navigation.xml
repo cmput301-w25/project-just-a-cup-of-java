@@ -110,6 +110,7 @@
             android:id="@+id/action_navigation_moodHistory_to_home"
             app:destination="@id/navigation_home" />
 
+
     </fragment>
 
     <fragment
@@ -117,12 +118,6 @@
         android:name="com.example.justacupofjavapersonal.ui.feed.FeedFragment"
         android:label="Feed"
         tools:layout="@layout/fragment_feed" />
-    
-    <fragment
-        android:id="@+id/navigation_map"
-        android:name="com.example.justacupofjavapersonal.ui.map.MapFragment"
-        android:label="Map"
-        tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_post_mood"
