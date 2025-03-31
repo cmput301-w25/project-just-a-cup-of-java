@@ -39,6 +39,13 @@ public class LoginDialogFragment extends DialogFragment {
     private String email ="";
     private String password ="";
 
+    // 👇 ADD THIS METHOD HERE
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setCancelable(false); // 🔒 Prevent dismissing on outside click
+    }
+
 
     /**
      * Called to do initial creation of a fragment.
