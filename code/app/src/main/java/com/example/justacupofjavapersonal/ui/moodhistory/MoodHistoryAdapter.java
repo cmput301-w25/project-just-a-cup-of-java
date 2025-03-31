@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -130,6 +131,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
             FragmentActivity activity = (FragmentActivity) context;
             bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
         });
+        holder.commentButton.setColorFilter(Color.parseColor("#E0E0E0"));
 
 
 

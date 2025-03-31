@@ -28,6 +28,7 @@ drawable ic_dashboard_black_24dp
 drawable ic_home_black_24dp
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_location_pin
 drawable ic_notifications_black_24dp
 drawable image
 drawable loginillustration
@@ -66,6 +67,7 @@ id appTitle
 id applyFilterButton
 id backButton
 id back_arrow
+id bottomIconsLayout
 id btn_calendar
 id btn_change_password
 id btn_logout
@@ -132,6 +134,7 @@ id imageView
 id imageView2
 id imageView3
 id locationCardText
+id locationIcon
 id loginButton
 id loginIllustration
 id loginText
