@@ -227,9 +227,9 @@ layout item_mood_feed
 layout item_user_all_moods
 layout item_user_follow
 layout itemmoodcard
+layout mood_card_item
 layout mood_history
 layout mood_history_filter
-layout mood_history_item
 layout mood_list_item
 layout popup_comment
 layout user_profile_feed
