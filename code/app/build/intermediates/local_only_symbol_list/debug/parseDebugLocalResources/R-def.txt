@@ -21,6 +21,7 @@ drawable default_profile
 drawable edit_text_border
 drawable filter
 drawable ic_add_photo
+drawable ic_camera
 drawable ic_comment
 drawable ic_dashboard_black_24dp
 drawable ic_home_black_24dp
@@ -58,6 +59,7 @@ id addPhoto
 id addingMood
 id allMoodsRecyclerView
 id all_moods_button
+id all_users_recyclerView
 id appTitle
 id applyFilterButton
 id backButton
@@ -165,6 +167,7 @@ id reasonKeywordEditText
 id reasonText
 id recentWeekCheckBox
 id recyclerView
+id requests_recyclerView
 id searchView
 id search_button
 id search_holder

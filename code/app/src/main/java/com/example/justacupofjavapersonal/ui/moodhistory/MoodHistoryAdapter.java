@@ -160,7 +160,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
         ImageButton editButton; // You can wire this later if needed
         ImageButton commentButton;
 
-        Button viewImageButton;
+        ImageButton viewImageButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);

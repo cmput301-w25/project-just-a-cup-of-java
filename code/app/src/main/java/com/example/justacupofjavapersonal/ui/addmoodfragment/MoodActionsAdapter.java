@@ -231,9 +231,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
-        ImageButton deleteButton, editButton;
-
-        Button viewImageButton;
+        ImageButton deleteButton , editButton , viewImageButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);

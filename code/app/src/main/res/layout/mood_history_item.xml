@@ -83,28 +83,31 @@
             android:textStyle="bold" />
 
         <!-- NEW: View Image Button -->
-        <Button
-            android:id="@+id/viewImageButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_above="@+id/triggerTextView"
-            android:layout_marginEnd="43dp"
-            android:layout_marginBottom="59dp"
-            android:layout_toStartOf="@id/editMoodButton"
-            android:background="@android:color/white"
-            android:contentDescription="View Image"
-            android:drawableStart="@android:drawable/ic_menu_view"
-            android:visibility="visible" />
 
 
         <ImageButton
+            android:id="@+id/viewImageButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_above="@+id/triggerTextView"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@+id/commentButton"
+            android:background="@android:color/transparent"
+            android:contentDescription="View Image"
+            android:scaleType="center"
+            android:src="@drawable/ic_camera"
+            android:visibility="visible"
+            app:tint="#E0E0E0" />
+
+        <ImageButton
             android:id="@+id/deleteMoodButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignBottom="@id/socialSituation"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="4dp"
             android:layout_marginBottom="2dp"
+            android:layout_marginEnd="-10dp"
             android:background="@android:color/transparent"
             android:contentDescription="Delete"
             android:scaleType="center"
@@ -113,10 +116,10 @@
 
         <ImageButton
             android:id="@+id/editMoodButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignBottom="@+id/socialSituation"
-            android:layout_marginEnd="-5dp"
+            android:layout_marginEnd="0dp"
             android:layout_marginBottom="2dp"
             android:layout_toStartOf="@id/deleteMoodButton"
             android:background="@android:color/transparent"
@@ -127,11 +130,11 @@
 
         <ImageButton
             android:id="@+id/commentButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignBottom="@+id/socialSituation"
             android:layout_marginEnd="0dp"
-            android:layout_marginBottom="3dp"
+            android:layout_marginBottom="2dp"
             android:layout_toStartOf="@id/editMoodButton"
             android:background="@android:color/transparent"
             android:contentDescription="Comment"
