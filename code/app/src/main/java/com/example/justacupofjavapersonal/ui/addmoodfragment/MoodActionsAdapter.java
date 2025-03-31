@@ -124,9 +124,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
+import com.example.justacupofjavapersonal.ui.comments.CommentBottomSheet;
 
 import java.util.ArrayList;
 
@@ -139,6 +141,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     private final Context context;
     private final OnMoodDeleteListener deleteListener;
     private final OnMoodEditListener editListener;
+
 
     /**
      * Constructor for the MoodActionsAdapter.
@@ -160,7 +163,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     @NonNull
     @Override
     public MoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.mood_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.mood_card_item, parent, false);
         return new MoodViewHolder(view);
     }
 
@@ -188,6 +191,17 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
                 editListener.onMoodEdit(currentPosition);
             }
         });
+
+        // Comment button
+        holder.commentButton.setOnClickListener(v -> {
+            CommentBottomSheet bottomSheet = new CommentBottomSheet(mood.getMoodID());
+            if (context instanceof FragmentActivity) {
+                FragmentActivity activity = (FragmentActivity) context;
+                bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
+            }
+        });
+
+
     }
 
     @Override
@@ -197,17 +211,21 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
-        ImageButton deleteButton, editButton;
+        ImageButton deleteButton, editButton, commentButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
             emotionTextView = itemView.findViewById(R.id.emotionTextView);
-            socialSituation = itemView.findViewById(R.id.socialSituation);
             detailsTextView = itemView.findViewById(R.id.detailsTextView);
+            socialSituation = itemView.findViewById(R.id.socialSituation);
             triggerTextView = itemView.findViewById(R.id.triggerTextView);
+            editButton = itemView.findViewById(R.id.editMoodButton);
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
-            editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
+            commentButton = itemView.findViewById(R.id.commentButton); // optional if using comment popup
+            // 🔹 Make sure this exists in mood_list_item.xml
         }
+
+
     }
 
     public interface OnMoodDeleteListener {

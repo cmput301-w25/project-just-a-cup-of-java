@@ -52,7 +52,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
     @NonNull
     @Override
     public MoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.mood_history_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.mood_card_item, parent, false);
         return new MoodViewHolder(view);
     }
 
