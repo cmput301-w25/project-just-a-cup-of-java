@@ -20,8 +20,8 @@
     <Spinner
         android:id="@+id/emotionSpinner"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:prompt="@string/select_emotion_prompt" />/>
+        android:layout_height="wrap_content"
+        android:prompt="@string/select_emotion_prompt"/>/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/reasonKeywordEditText"
-        android:layout_width="381dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter keyword" />
 
@@ -39,7 +39,7 @@
         android:id="@+id/applyFilterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:text="Apply Filter"
         android:backgroundTint="#5A9999"
-        android:text="Apply Filter" />
+        android:layout_gravity="center" />
 </LinearLayout>

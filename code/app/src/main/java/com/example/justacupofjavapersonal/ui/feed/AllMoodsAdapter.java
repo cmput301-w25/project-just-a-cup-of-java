@@ -66,7 +66,7 @@ public class AllMoodsAdapter extends RecyclerView.Adapter<AllMoodsAdapter.UserMo
         public UserMoodsViewHolder(@NonNull View itemView) {
             super(itemView);
             userNameText = itemView.findViewById(R.id.userNameText);
-            moodRecyclerView = itemView.findViewById(R.id.userMoodList);
+            moodRecyclerView = itemView.findViewById(R.id.moodRecycler);
         }
     }
     public void updateData(Map<String, List<Mood>> newMoodsByUser, Map<String, User> newUsersById) {
