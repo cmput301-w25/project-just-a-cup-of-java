@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String name;
+    private String password;
     private String email;
     private String bio;
     private String profilePic;
@@ -47,6 +48,14 @@ public class User implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // You can also add a getter if needed
+    public String getPassword() {
+        return password;
     }
 
     /**

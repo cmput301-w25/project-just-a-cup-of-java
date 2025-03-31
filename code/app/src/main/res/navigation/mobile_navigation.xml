@@ -42,6 +42,11 @@
             app:destination="@id/navigation_moodhistory" />
 
     </fragment>
+    <fragment
+        android:id="@+id/navigation_all_moods"
+        android:name="com.example.justacupofjavapersonal.ui.feed.AllMoodsFragment"
+        android:label="All Moods"
+        tools:layout="@layout/fragment_all_moods" />
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -105,6 +110,7 @@
             android:id="@+id/action_navigation_moodHistory_to_home"
             app:destination="@id/navigation_home" />
 
+
     </fragment>
 
     <fragment
@@ -114,10 +120,19 @@
         tools:layout="@layout/fragment_feed" />
 
     <fragment
+        android:id="@+id/navigation_map"
+        android:name="com.example.justacupofjavapersonal.ui.map.MapFragment"
+        android:label="Map"
+        tools:layout="@layout/fragment_map" />
+
+    <fragment
         android:id="@+id/navigation_post_mood"
         android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
         android:label="Post Mood"
         tools:layout="@layout/fragment_post_mood"/>
+    <action
+        android:id="@+id/action_feedFragment_to_allFriendsFollowFragment"
+        app:destination="@id/navigation_notifications" />
 
 
 </navigation>

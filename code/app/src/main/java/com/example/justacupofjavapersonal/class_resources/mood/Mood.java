@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
 
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -25,6 +26,8 @@ import java.util.Locale;
  * Represents a Mood event with details such as emotional state, triggers,
  * social situations, location, and optional photo.
  */
+@IgnoreExtraProperties
+
 public class Mood implements Serializable {
 
     private String moodID; // Immutable: Unique ID for the mood event
@@ -39,7 +42,7 @@ public class Mood implements Serializable {
     private String trigger; // Max 20 characters, optional
     //private Timestamp postDate;
 
-    private byte[] photo; // Optional
+    private String photo; // Optional
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
@@ -92,7 +95,7 @@ public class Mood implements Serializable {
      * @param location        the location of the mood event (optional)
      */
     public Mood(EmotionalState state, Date postDate,
-                String trigger, byte[] photo, String socialSituation, Location location) {
+                String trigger, String photo, String socialSituation, Location location) {
         this(state, postDate);
         this.setTrigger(trigger);
         this.setPhoto(photo);
@@ -209,7 +212,7 @@ public class Mood implements Serializable {
      *
      * @return the photo as a byte array or null if not set
      */
-    public byte[] getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
@@ -219,12 +222,10 @@ public class Mood implements Serializable {
      * @param photo the photo to set (max 65536 bytes)
      * @throws IllegalArgumentException if the photo exceeds 65536 bytes
      */
-    public void setPhoto(byte[] photo) {
-        if (photo != null && photo.length > 65536) {
-            throw new IllegalArgumentException("Photo must be under 65536 bytes.");
-        }
+    public void setPhoto(String photo) {
+
         this.photo = photo;
-        this.hasPhoto = photo != null;
+        this.hasPhoto = photo != null && !photo.isEmpty();
     }
 
     /**

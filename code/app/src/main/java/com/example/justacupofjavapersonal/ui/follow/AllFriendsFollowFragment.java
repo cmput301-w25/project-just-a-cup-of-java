@@ -32,7 +32,9 @@ import java.util.List;
  */
 public class AllFriendsFollowFragment extends Fragment {
     private FragmentFollowerAllFriendsBinding binding;
-    private UserAdapter adapter;
+    //private UserAdapter adapter;
+    private FollowedUserAdapter adapter;
+
     private List<User> userList;
     private FirebaseDB db;
 
@@ -65,9 +67,13 @@ public class AllFriendsFollowFragment extends Fragment {
         userList = new ArrayList<>();
 
         // Initialize adapter
-        adapter = new UserAdapter(userList, position -> {
-            Toast.makeText(requireContext(), "Follow Request Sent: " + userList.get(position).getName(), Toast.LENGTH_LONG).show();
-        },db);
+//        adapter = new UserAdapter(userList, position -> {
+//            Toast.makeText(requireContext(), "Follow Request Sent: " + userList.get(position).getName(), Toast.LENGTH_LONG).show();
+//        },db);
+        adapter = new FollowedUserAdapter(userList, user -> {
+            // optional: show toast or do nothing
+        });
+
 
         binding.allUsersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.allUsersRecyclerView.setAdapter(adapter);
@@ -122,6 +128,12 @@ public class AllFriendsFollowFragment extends Fragment {
                 Toast.makeText(requireContext(), "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUsers(); // 🔁 This ensures the full list is shown again
     }
 
     /**
