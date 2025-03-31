@@ -146,12 +146,11 @@ public class FirebaseDB {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     User user = document.toObject(User.class);
-                    if (auth.getCurrentUser() != null) {
-                        if (!user.getUid().equals(auth.getCurrentUser().getUid())) {
+                    if (auth.getCurrentUser() != null && user.getUid() != null) {
+                        if (!user.getUid().trim().equals(auth.getCurrentUser().getUid().trim())) {
+                            Log.d("Get all Users","Current uid: " + auth.getCurrentUser().getUid() + " Queryed uid: " + user.getUid());
                             userList.add(user);
                         }
-                    } else {
-                        userList.add(user);
                     }
                 }
             }
@@ -185,12 +184,10 @@ public class FirebaseDB {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             User user = documentSnapshot.toObject(User.class);
-                            if (auth.getCurrentUser() != null) {
-                                if (!user.getUid().equals(auth.getCurrentUser().getUid())) {
+                            if (auth.getCurrentUser() != null && user.getUid() != null) {
+                                if (!user.getUid().trim().equals(auth.getCurrentUser().getUid().trim())) {
                                     searchedList.add(user);
                                 }
-                            } else {
-                                searchedList.add(user);
                             }
                         }
                     }
@@ -540,8 +537,8 @@ public class FirebaseDB {
 
         DocumentReference docRef = db.collection("requests").document(currUserID);
 
-//        addFollower(batch, currUserID,  requesterID);
-        addFollower(batch, requesterID,  currUserID);
+        addFollower(batch, requesterID, currUserID);
+
         batch.update(docRef, "requesters", FieldValue.arrayRemove(requesterID));
 
         batch.commit()
