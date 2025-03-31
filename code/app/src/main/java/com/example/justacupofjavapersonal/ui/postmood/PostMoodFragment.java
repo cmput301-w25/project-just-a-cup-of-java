@@ -1,7 +1,10 @@
 package com.example.justacupofjavapersonal.ui.postmood;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.app.AlertDialog;
+import android.provider.MediaStore;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.os.Bundle;
@@ -34,6 +37,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText optionalTriggerEditText;
@@ -41,6 +47,8 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private EditText whyFeelEditText;
     private CardView postButton;
     private ImageView addPhotoImageView;
+
+    private String photoBase64 = null;
 
     private String selectedMood = "Add Emotional State";
     private Uri selectedImageUri;
@@ -132,6 +140,11 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             moodDialog.show(getParentFragmentManager(), "MoodSelector");
         });
 
+        addPhotoImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        });
+
         // --- Handle Edit Mode ---
         if (args != null && args.containsKey("moodToEdit")) {
             isEditMode = true;
@@ -217,6 +230,13 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                         moodPost.setTrigger(optionalTriggerEditText.getText().toString());
                         moodPost.setPrivacy(privacySetting);
+                        //add for photo
+                        if (photoBase64 != null) {
+                            moodPost.setPhoto(photoBase64);
+                        }
+
+
+
 
                         Bundle result = new Bundle();
                         result.putString("selectedDate", moodPost.getDate());
@@ -470,4 +490,39 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             }
         }
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
+                addPhotoImageView.setImageBitmap(bitmap);  // You can use a separate preview ImageView if needed
+                photoBase64 = encodeImageToBase64(bitmap);  // Save encoded string
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private String encodeImageToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
