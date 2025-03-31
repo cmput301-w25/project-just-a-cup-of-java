@@ -130,10 +130,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
-
+import com.example.justacupofjavapersonal.ui.comments.CommentBottomSheet;
 import java.util.ArrayList;
 
 /**
@@ -167,7 +168,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
     @NonNull
     @Override
     public MoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.mood_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.mood_card_item, parent, false);
         return new MoodViewHolder(view);
     }
 
@@ -222,6 +223,18 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
                 editListener.onMoodEdit(currentPosition);
             }
         });
+
+        holder.commentButton.setOnClickListener(v -> {
+            String moodId = mood.getMoodID();  // Make sure this returns the correct mood ID
+            if (moodId != null && !moodId.isEmpty()) {
+                CommentBottomSheet bottomSheet = new CommentBottomSheet(moodId);
+                if (context instanceof FragmentActivity) {
+                    FragmentActivity activity = (FragmentActivity) context;
+                    bottomSheet.show(activity.getSupportFragmentManager(), "CommentBottomSheet");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -231,7 +244,7 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder {
         TextView emotionTextView, socialSituation, detailsTextView, triggerTextView;
-        ImageButton deleteButton , editButton , viewImageButton;
+        ImageButton deleteButton, editButton, commentButton , viewImageButton;
 
         public MoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -242,6 +255,8 @@ public class MoodActionsAdapter extends RecyclerView.Adapter<MoodActionsAdapter.
             deleteButton = itemView.findViewById(R.id.deleteMoodButton);
             editButton = itemView.findViewById(R.id.editMoodButton); // 🔹 Make sure this exists in mood_list_item.xml
             viewImageButton = itemView.findViewById(R.id.viewImageButton);
+            commentButton = itemView.findViewById(R.id.commentButton);
+
 
         }
     }
