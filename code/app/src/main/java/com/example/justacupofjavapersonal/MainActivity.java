@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 //        // ✅ Enable Firestore offline persistence (add this only once)
 //        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
 //                .setPersistenceEnabled(true)

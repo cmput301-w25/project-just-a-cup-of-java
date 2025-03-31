@@ -24,6 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment for displaying and managing follow requests.
+ *
+ * <p>This fragment retrieves follow requests from Firebase and allows the user to accept or deny them.</p>
+ */
 public class FollowRequestsFragment extends Fragment {
     private FragmentFollowRequestsBinding binding;
     private UserRequestAdapter adapter;
@@ -31,6 +36,14 @@ public class FollowRequestsFragment extends Fragment {
     private FirebaseDB db;
     private FirebaseUser currUser;
 
+    /**
+     * Called to create and return the view hierarchy associated with the fragment.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate views.
+     * @param container          The parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed.
+     * @return The root view for the fragment.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFollowRequestsBinding.inflate(inflater, container, false);
@@ -38,13 +51,19 @@ public class FollowRequestsFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Called immediately after the fragment's view has been created.
+     *
+     * @param view               The fragment's root view.
+     * @param savedInstanceState If non-null, the fragment is being re-created.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         db = new FirebaseDB();
         currUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.requestsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         userList = new ArrayList<>();
         if (currUser != null) {
@@ -68,7 +87,7 @@ public class FollowRequestsFragment extends Fragment {
             }
         }, db);
 
-        binding.recyclerView.setAdapter(adapter);
+        binding.requestsRecyclerView.setAdapter(adapter);
         // Get NavController for navigating between fragments
         NavController navController = Navigation.findNavController(view);
 
@@ -76,6 +95,12 @@ public class FollowRequestsFragment extends Fragment {
             navController.navigate(R.id.action_navigation_follower_requests_to_notifications);
         });
     }
+
+    /**
+     * Loads follow requests from Firebase and updates the RecyclerView.
+     *
+     * @param userID The current user's ID.
+     */
     private void loadRequests(String userID) {
         db.getAllRequests(userID, new FirebaseDB.OnUsersRetrievedListener() {
             @Override
@@ -92,6 +117,9 @@ public class FollowRequestsFragment extends Fragment {
         });
     }
 
+    /**
+     * Called when the view is destroyed to clean up binding references.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

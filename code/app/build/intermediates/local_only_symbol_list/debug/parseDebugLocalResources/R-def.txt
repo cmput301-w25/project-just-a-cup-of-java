@@ -130,6 +130,10 @@ id imageView3
 id loginButton
 id loginIllustration
 id loginText
+id mapView
+id map_Nearby
+id map_followingButton
+id map_recentButton
 id mobile_navigation
 id moodGridView
 id moodHistoryRecyclerView
@@ -147,6 +151,7 @@ id navigation_feed
 id navigation_follower_requests
 id navigation_home
 id navigation_login
+id navigation_map
 id navigation_moodhistory
 id navigation_notifications
 id navigation_post_mood
@@ -208,6 +213,7 @@ layout fragment_followed_mood
 layout fragment_follower_all_friends
 layout fragment_home
 layout fragment_login
+layout fragment_map
 layout fragment_notifications
 layout fragment_post_mood
 layout fragment_userinfo
