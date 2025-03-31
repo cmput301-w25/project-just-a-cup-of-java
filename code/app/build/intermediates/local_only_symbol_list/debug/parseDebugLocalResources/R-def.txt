@@ -3,6 +3,7 @@ local
 array emotion_options
 array social_situation_options
 color black
+color gray
 color light_gray
 color purple_200
 color purple_500
@@ -21,6 +22,7 @@ drawable default_profile
 drawable edit_text_border
 drawable filter
 drawable ic_add_photo
+drawable ic_camera
 drawable ic_comment
 drawable ic_dashboard_black_24dp
 drawable ic_home_black_24dp
@@ -54,6 +56,7 @@ id action_navigation_notification_to_follower_requests
 id action_navigation_user_info_to_navigation_change_password
 id action_user_info
 id addEmoStateButton
+id addLocationButton
 id addPhoto
 id addingMood
 id allMoodsRecyclerView
@@ -127,6 +130,7 @@ id friends_button_requests_fragment
 id imageView
 id imageView2
 id imageView3
+id locationCardText
 id loginButton
 id loginIllustration
 id loginText
