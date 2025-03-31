@@ -330,6 +330,10 @@ public class FeedFragment extends Fragment {
 
         });
 
+        binding.feedNearby.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.navigation_map);
+        });
+
         binding.filterButton.setOnClickListener(v -> showFilterDialog());
 
         return root;
