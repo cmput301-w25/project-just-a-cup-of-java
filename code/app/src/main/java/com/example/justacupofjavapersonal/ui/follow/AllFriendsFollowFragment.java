@@ -1,189 +1,135 @@
 package com.example.justacupofjavapersonal.ui.follow;
 
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import androidx.appcompat.widget.SearchView;
+
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
-import com.google.firebase.auth.FirebaseAuth;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import com.example.justacupofjavapersonal.databinding.FragmentFollowerAllFriendsBinding;
+import com.example.justacupofjavapersonal.ui.follow.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * RecyclerView adapter for displaying a list of users with a follow/unfollow button.
+ * Fragment for displaying all users that can be followed.
  *
- * <p>This adapter binds user data to a RecyclerView, allowing the user to follow or unfollow others.
- * It also handles the display of follow request statuses (e.g., "Requested", "Following").
+ * <p>This fragment retrieves a list of users from Firebase and allows searching for specific users.
+ * Users can send follow requests from this screen.</p>
  */
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class AllFriendsFollowFragment extends Fragment {
+    private FragmentFollowerAllFriendsBinding binding;
+    private UserAdapter adapter;
     private List<User> userList;
-    private List<String> requests;
-    private OnItemClickListener listener;
     private FirebaseDB db;
-    private List<String> followingIds;
 
     /**
-     * Constructor for UserAdapter.
+     * Called to create and return the view hierarchy associated with the fragment.
      *
-     * @param userList The list of users to display in the RecyclerView.
-     * @param listener A listener for handling click events on follow buttons.
-     * @param db       The Firebase database instance for making database requests.
-     */
-    public UserAdapter(List<User> userList, OnItemClickListener listener, FirebaseDB db) {
-        this.userList = userList;
-        this.listener = listener;
-        this.db = db;
-    }
-
-    /**
-     * Interface for handling follow button click events.
-     */
-    public interface OnItemClickListener {
-        /**
-         * Called when the follow button is clicked.
-         *
-         * @param position The position of the item in the RecyclerView.
-         */
-        void onFollowClick(int position);
-    }
-
-    /**
-     * Creates a new ViewHolder for a user item.
-     *
-     * @param parent   The parent ViewGroup where the item view will be added.
-     * @param viewType The type of the view.
-     * @return A new instance of UserViewHolder.
-     */
-    @NonNull
-    @Override
-    public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_user_follow, parent, false);
-        return new UserViewHolder(view);
-    }
-
-    /**
-     * Binds data to the ViewHolder for a given position.
-     *
-     * @param holder   The ViewHolder to bind the data to.
-     * @param position The position of the item in the list.
+     * @param inflater           The LayoutInflater object that can be used to inflate views.
+     * @param container          The parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed.
+     * @return The root view for the fragment.
      */
     @Override
-    public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
-        holder.bind(userList.get(position), listener, position);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentFollowerAllFriendsBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
     }
 
     /**
-     * Loads the list of follow requests for the current user and updates the follow button text.
+     * Called immediately after the fragment's view has been created.
      *
-     * @param currUserID The ID of the current user.
-     * @param user       The ID of the user to check the request status for.
-     * @param followButton The button that indicates follow/request status.
+     * @param view               The fragment's root view.
+     * @param savedInstanceState If non-null, the fragment is being re-created.
      */
-    private void loadRequests(String currUserID, String user, Button followButton) {
-        db.getAllRequestedIds(currUserID, users -> {
-            requests.clear();
-            requests.addAll(users);
-            followButton.setText(requests.contains(user) ? "Requested" : "Follow");
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        db = new FirebaseDB();
+        userList = new ArrayList<>();
+
+        // Initialize adapter
+        adapter = new UserAdapter(userList, position -> {
+            Toast.makeText(requireContext(), "Follow Request Sent: " + userList.get(position).getName(), Toast.LENGTH_LONG).show();
+        },db);
+
+        binding.allUsersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.allUsersRecyclerView.setAdapter(adapter);
+
+        NavController navController = Navigation.findNavController(view);
+        binding.followerRequestsFriends.setOnClickListener(v ->
+                navController.navigate(R.id.action_navigation_notification_to_follower_requests)
+        );
+
+        binding.searchButton.setOnClickListener(v -> {
+            String search = binding.userSearch.getText().toString().trim();
+            searchUsers(search);
         });
+        loadUsers();
     }
 
     /**
-     * Loads the list of users the current user is following and updates the follow button text.
-     *
-     * @param currUserID The ID of the current user.
-     * @param user       The ID of the user to check the following status for.
-     * @param followButton The button that indicates follow status.
+     * Loads all users from Firebase and updates the RecyclerView.
      */
-    private void loadFollowingIds(String currUserID, String user, Button followButton) {
-        db.getAllFollowingIds(currUserID, users -> {
-            followingIds.clear();
-            followingIds.addAll(users);
-            followButton.setText(followingIds.contains(user) ? "Following" : "Follow");
-        });
-    }
-
-    /**
-     * Returns the total number of items in the user list.
-     *
-     * @return The number of items in the user list.
-     */
-    @Override
-    public int getItemCount() {
-        return userList.size();
-    }
-
-    /**
-     * ViewHolder class that holds references to the views for displaying user data.
-     */
-    public class UserViewHolder extends RecyclerView.ViewHolder {
-        ImageView profilePicture;
-        TextView userName;
-        Button followButton;
-
-        /**
-         * Constructor for UserViewHolder.
-         *
-         * @param itemView The view for a single user item.
-         */
-        public UserViewHolder(View itemView) {
-            super(itemView);
-            profilePicture = itemView.findViewById(R.id.profilePicture);
-            userName = itemView.findViewById(R.id.userName);
-            followButton = itemView.findViewById(R.id.follow_button);
-        }
-
-        /**
-         * Binds the user data to the views and sets the follow button behavior.
-         *
-         * @param user     The user data to bind.
-         * @param listener The listener for follow button clicks.
-         * @param position The position of the item in the list.
-         */
-        public void bind(User user, OnItemClickListener listener, int position) {
-            userName.setText(user.getName());
-            requests = new ArrayList<>();
-            followingIds = new ArrayList<>();
-
-            if (FirebaseAuth.getInstance().getCurrentUser() != null){
-                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
-                loadFollowingIds(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
-                Log.d("Requests IDs", "Fetched Request UIDs");
-                Log.d("Requests IDs", "Requests: " + requests);
-
-
-
-                //Set user profile picture
-
-                followButton.setOnClickListener(v -> {
-                    listener.onFollowClick(position);
-
-                    if (followButton.getText().toString().equals("Follow")) {
-                        followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
-                    } else if (followButton.getText().toString().equals("Following")){
-                        followButton.setText("Follow");
-                        db.removeFollowing(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                    }
-
-                    if (!requests.contains(user.getUid())) {
-                        db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                    }
-                    if (followButton.getText().toString().equals("Follow")) {
-                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                    }
-                });
+    private void loadUsers() {
+        db.getAllUsers(new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                userList.clear();
+                userList.addAll(users);
+                adapter.notifyDataSetChanged();
             }
 
-        }
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Toast.makeText(requireContext(), "Failed to load users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Searches for users based on the given query and updates the RecyclerView.
+     *
+     * @param search The search query string.
+     */
+    private void searchUsers(String search) {
+        db.searchUsers(search, new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                userList.clear();
+                userList.addAll(users);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Toast.makeText(requireContext(), "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Called when the view is destroyed to clean up binding references.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
