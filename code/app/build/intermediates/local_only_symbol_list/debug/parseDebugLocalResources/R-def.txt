@@ -227,6 +227,7 @@ layout itemmoodcard
 layout mood_card_item
 layout mood_history
 layout mood_history_filter
+layout mood_list_item
 layout popup_comment
 layout user_profile_feed
 menu bottom_nav_menu
