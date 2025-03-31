@@ -1,4 +1,3 @@
-//IQRAS WORKING CODE
 package com.example.justacupofjavapersonal.ui.follow;
 
 import android.os.Bundle;
@@ -25,12 +24,26 @@ import com.example.justacupofjavapersonal.ui.follow.UserAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment for displaying all users that can be followed.
+ *
+ * <p>This fragment retrieves a list of users from Firebase and allows searching for specific users.
+ * Users can send follow requests from this screen.</p>
+ */
 public class AllFriendsFollowFragment extends Fragment {
     private FragmentFollowerAllFriendsBinding binding;
     private UserAdapter adapter;
     private List<User> userList;
     private FirebaseDB db;
 
+    /**
+     * Called to create and return the view hierarchy associated with the fragment.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate views.
+     * @param container          The parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed.
+     * @return The root view for the fragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +52,12 @@ public class AllFriendsFollowFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Called immediately after the fragment's view has been created.
+     *
+     * @param view               The fragment's root view.
+     * @param savedInstanceState If non-null, the fragment is being re-created.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -50,8 +69,8 @@ public class AllFriendsFollowFragment extends Fragment {
             Toast.makeText(requireContext(), "Follow Request Sent: " + userList.get(position).getName(), Toast.LENGTH_LONG).show();
         },db);
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.recyclerView.setAdapter(adapter);
+        binding.allUsersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.allUsersRecyclerView.setAdapter(adapter);
 
         NavController navController = Navigation.findNavController(view);
         binding.followerRequestsFriends.setOnClickListener(v ->
@@ -64,37 +83,50 @@ public class AllFriendsFollowFragment extends Fragment {
         });
         loadUsers();
     }
-        private void loadUsers() {
-            db.getAllUsers(new FirebaseDB.OnUsersRetrievedListener() {
-                @Override
-                public void onUsersRetrieved(List<User> users) {
-                    userList.clear();
-                    userList.addAll(users);
-                    adapter.notifyDataSetChanged();
-                }
 
-                @Override
-                public void onUsersRetrievedFailed(Exception e) {
-                    Toast.makeText(requireContext(), "Failed to load users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-    }
-         private void searchUsers(String search) {
-             db.searchUsers(search, new FirebaseDB.OnUsersRetrievedListener() {
-                 @Override
-                 public void onUsersRetrieved(List<User> users) {
-                     userList.clear();
-                     userList.addAll(users);
-                     adapter.notifyDataSetChanged();
-                 }
+    /**
+     * Loads all users from Firebase and updates the RecyclerView.
+     */
+    private void loadUsers() {
+        db.getAllUsers(new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                userList.clear();
+                userList.addAll(users);
+                adapter.notifyDataSetChanged();
+            }
 
-                 @Override
-                 public void onUsersRetrievedFailed(Exception e) {
-                     Toast.makeText(requireContext(), "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                 }
-             });
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Toast.makeText(requireContext(), "Failed to load users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    /**
+     * Searches for users based on the given query and updates the RecyclerView.
+     *
+     * @param search The search query string.
+     */
+    private void searchUsers(String search) {
+        db.searchUsers(search, new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                userList.clear();
+                userList.addAll(users);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Toast.makeText(requireContext(), "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Called when the view is destroyed to clean up binding references.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
