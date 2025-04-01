@@ -109,7 +109,8 @@ public class FeedFragment extends Fragment {
 
         // Show user profiles by default
         binding.recyclerView.setAdapter(followedUserAdapter);
-        loadFollowedUsers();  // 👈 This loads users as soon as the screen shows
+        //loadFollowedUsers();
+        loadRecentMoods();// 👈 This loads users as soon as the screen shows
 
 
 
@@ -160,7 +161,27 @@ public class FeedFragment extends Fragment {
         builder.create().show();
     }
 
-    
+    private void loadFollowedUsers() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        FirebaseDB dbHelper = new FirebaseDB();
+        dbHelper.getFollowing(currentUser.getUid(), new FirebaseDB.OnUsersRetrievedListener() {
+            @Override
+            public void onUsersRetrieved(List<User> userList) {
+                followedUsers.clear();
+                followedUsers.addAll(userList);
+                followedUserAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onUsersRetrievedFailed(Exception e) {
+                Log.e("FeedFragment", "Failed to load followed users", e);
+            }
+        });
+    }
+
+
     /**
      * Loads the recent moods of users that the current user is following and updates the UI.
      * 
