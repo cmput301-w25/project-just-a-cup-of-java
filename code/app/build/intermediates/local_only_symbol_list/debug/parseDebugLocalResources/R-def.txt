@@ -45,6 +45,8 @@ drawable socialsituation3
 id CommentButton
 id accept_follow_button
 id action_feedFragment_to_allFriendsFollowFragment
+id action_myMapFragment_to_navigation_home
+id action_myMapFragment_to_navigation_moodhistory
 id action_navigation_change_password_to_navigation_user_info
 id action_navigation_follower_requests_to_notifications
 id action_navigation_home_to_addMoodEventFragment
@@ -74,6 +76,7 @@ id bottomIconsLayout
 id btn_calendar
 id btn_change_password
 id btn_logout
+id btn_mood_history
 id btn_moodhistory
 id btn_mymap
 id btn_save
@@ -144,6 +147,7 @@ id locationPickerFragment
 id loginButton
 id loginIllustration
 id loginText
+id mapTopButtons
 id mapView
 id map_Nearby
 id map_followingButton

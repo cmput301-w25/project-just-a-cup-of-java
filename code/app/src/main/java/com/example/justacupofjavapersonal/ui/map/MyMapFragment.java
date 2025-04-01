@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,22 +35,30 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
-        mapView = view.findViewById(R.id.mapView);
-        return view;
+        binding = FragmentMyMapBinding.inflate(inflater, container, false);
+        return binding.getRoot(); // ✅ Use binding properly
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MaterialToolbar toolbar = view.findViewById(R.id.topAppBar);
-        toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+//        MaterialToolbar toolbar = binding.topAppBar;
+//        toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
 
+        binding.btnCalendar.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_myMapFragment_to_navigation_home)
+        );
 
+        binding.btnMoodHistory.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_myMapFragment_to_navigation_moodhistory)
+        );
+
+        mapView = binding.mapView; // ✅ Assign properly
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
+
 
 
     @Override

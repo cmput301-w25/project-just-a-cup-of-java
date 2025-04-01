@@ -160,7 +160,17 @@
         android:id="@+id/myMapFragment"
         android:name="com.example.justacupofjavapersonal.ui.map.MyMapFragment"
         android:label="My Mood Map"
-        tools:layout="@layout/fragment_my_map" />
+        tools:layout="@layout/fragment_my_map" >
+
+        <action
+            android:id="@+id/action_myMapFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+
+        <action
+            android:id="@+id/action_myMapFragment_to_navigation_moodhistory"
+            app:destination="@id/navigation_moodhistory" />
+    </fragment>
+
 
 
 
