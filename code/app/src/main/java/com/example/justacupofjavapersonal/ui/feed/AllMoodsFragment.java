@@ -135,9 +135,12 @@ public class AllMoodsFragment extends Fragment {
             for (Mood mood : moods) {
                 boolean matches = true;
 
-                if (recentWeek && mood.getTimestamp().getSeconds() * 1000 < oneWeekAgo) {
-                    matches = false;
+                if (recentWeek) {
+                    if (mood.getTimestamp() == null || mood.getTimestamp().getSeconds() * 1000 < oneWeekAgo) {
+                        matches = false;
+                    }
                 }
+
 
                 if (emotion != null && !emotion.isEmpty() && !mood.getEmotion().toLowerCase().contains(emotion.toLowerCase())) {
                     matches = false;
