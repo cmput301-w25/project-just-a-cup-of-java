@@ -53,6 +53,12 @@ public class MoodHistoryFragment extends Fragment {
             navController.navigate(R.id.action_navigation_moodHistory_to_home);
         });
 
+        Button mapButton = view.findViewById(R.id.btn_mymap);
+        mapButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_navigation_moodHistory_to_myMapFragment);
+        });
+
+
         Button filterButton = view.findViewById(R.id.filterbutton);
         filterButton.setOnClickListener(v -> {
             MoodFilterDialog dialog = new MoodFilterDialog((recentWeek, emotion, reasonKeyword) -> {

@@ -54,6 +54,7 @@ id action_navigation_login_to_home
 id action_navigation_login_to_navigation_notifications
 id action_navigation_login_to_navigation_user_info2
 id action_navigation_moodHistory_to_home
+id action_navigation_moodHistory_to_myMapFragment
 id action_navigation_notification_to_follower_requests
 id action_navigation_user_info_to_navigation_change_password
 id action_postMood_to_locationPickerFragment
@@ -136,6 +137,7 @@ id friends_button_requests_fragment
 id imageView
 id imageView2
 id imageView3
+id linearLayout
 id locationCardText
 id locationIcon
 id locationPickerFragment
