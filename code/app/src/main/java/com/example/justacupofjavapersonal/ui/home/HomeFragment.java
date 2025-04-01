@@ -74,6 +74,11 @@ public class HomeFragment extends Fragment {
         binding.btnMoodhistory.setOnClickListener(v ->
                 navController.navigate(R.id.action_navigation_home_to_moodHistory)
         );
+
+        binding.btnMymap.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_navigation_home_to_myMapFragment)
+        );
+
     }
 
     /**

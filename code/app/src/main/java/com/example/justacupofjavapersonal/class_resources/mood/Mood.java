@@ -1,6 +1,6 @@
 package com.example.justacupofjavapersonal.class_resources.mood;
 
-import android.location.Location;
+//import android.location.Location;
 import com.google.firebase.Timestamp;
 
 import android.util.Log;
@@ -46,8 +46,8 @@ public class Mood implements Serializable {
     private EmotionalState state; // Mutable to allow corrections
     private String emotion;
     private String socialSituation; // Optional
-    private Location location; // Optional
-
+    //private Location location; // Optional
+    private LatLngLocation location;
     private String date;
     private String time;
 
@@ -95,7 +95,7 @@ public class Mood implements Serializable {
      * @param location        the location of the mood event (optional)
      */
     public Mood(EmotionalState state, Date postDate,
-                String trigger, String photo, String socialSituation, Location location) {
+                String trigger, String photo, String socialSituation, LatLngLocation location) {
         this(state, postDate);
         this.setTrigger(trigger);
         this.setPhoto(photo);
@@ -233,20 +233,31 @@ public class Mood implements Serializable {
      *
      * @return the location or null if not set
      */
-    public Location getLocation() {
+
+
+    public LatLngLocation getLocation() {
         return location;
     }
+
+
+
+//    public Location getLocation() {
+//        return location;
+//    }
 
     /**
      * Sets the location of the mood event.
      *
      * @param location the location to set
      */
-    public void setLocation(Location location) {
-        this.location = location;
-        this.hasLocation = location != null;
-    }
+//    public void setLocation(Location location) {
+//        this.location = location;
+//        this.hasLocation = location != null;
+//    }
 
+    public void setLocation(LatLngLocation location) {
+        this.location = location;
+    }
     /**
      * Checks if a photo is associated with the mood event.
      *
@@ -309,8 +320,6 @@ public class Mood implements Serializable {
     public String getDate() {
         return date;
     }
-
-
 
     public String getTime() {
         return time;

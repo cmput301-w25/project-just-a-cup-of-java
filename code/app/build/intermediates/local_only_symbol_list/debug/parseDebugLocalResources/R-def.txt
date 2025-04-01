@@ -49,12 +49,14 @@ id action_navigation_change_password_to_navigation_user_info
 id action_navigation_follower_requests_to_notifications
 id action_navigation_home_to_addMoodEventFragment
 id action_navigation_home_to_moodHistory
+id action_navigation_home_to_myMapFragment
 id action_navigation_login_to_home
 id action_navigation_login_to_navigation_notifications
 id action_navigation_login_to_navigation_user_info2
 id action_navigation_moodHistory_to_home
 id action_navigation_notification_to_follower_requests
 id action_navigation_user_info_to_navigation_change_password
+id action_postMood_to_locationPickerFragment
 id action_user_info
 id addEmoStateButton
 id addLocationButton
@@ -72,6 +74,7 @@ id btn_calendar
 id btn_change_password
 id btn_logout
 id btn_moodhistory
+id btn_mymap
 id btn_save
 id button
 id button2
@@ -92,6 +95,7 @@ id commentText
 id commentUserName
 id commentsRecyclerView
 id commentsTitle
+id confirmLocationButton
 id confirmPasswordEditText
 id confirmPasswordLabel
 id container
@@ -134,6 +138,7 @@ id imageView2
 id imageView3
 id locationCardText
 id locationIcon
+id locationPickerFragment
 id loginButton
 id loginIllustration
 id loginText
@@ -149,6 +154,7 @@ id moodListView
 id moodRecycler
 id moodSelectorTitle
 id moodText
+id myMapFragment
 id nav_host_fragment_activity_main
 id nav_view
 id navigation_add_mood
@@ -220,8 +226,10 @@ layout fragment_follow_requests
 layout fragment_followed_mood
 layout fragment_follower_all_friends
 layout fragment_home
+layout fragment_location_picker
 layout fragment_login
 layout fragment_map
+layout fragment_my_map
 layout fragment_notifications
 layout fragment_post_mood
 layout fragment_userinfo

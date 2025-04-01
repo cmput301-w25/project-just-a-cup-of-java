@@ -50,10 +50,19 @@
             android:id="@+id/btn_moodhistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:backgroundTint="#5A9999"
-            android:text="Mood History"
+            android:text="Mood History" />
+
+        <Button
+            android:id="@+id/btn_mymap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#5A9999"
+            android:text="My Map"
             android:layout_marginStart="8dp"
             android:layout_gravity="end" />
+
     </LinearLayout>
     <!--        android:backgroundTint="#85BEC8"-->
     <!--        android:backgroundTint="#D98160"-->
