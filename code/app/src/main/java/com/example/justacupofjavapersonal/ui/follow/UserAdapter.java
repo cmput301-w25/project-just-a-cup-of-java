@@ -147,10 +147,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
                     if (followButton.getText().toString().equals("Follow")) {
                         followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
-                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
                     } else if (followButton.getText().toString().equals("Following")) {
                         followButton.setText("Follow");
                         db.removeFollowing(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                    } else if (followButton.getText().toString().equals("Requested")) {
+                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                        followButton.setText("Follow");
                     }
                     if (!requests.contains(user.getUid())) {
                         db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
