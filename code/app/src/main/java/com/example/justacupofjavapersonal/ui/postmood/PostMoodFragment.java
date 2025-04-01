@@ -247,7 +247,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         moodToEdit.setTrigger(optionalTriggerEditText.getText().toString());
                         moodToEdit.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                         moodToEdit.setPrivacy(privacySetting);
-
+                        moodToEdit.setPhoto(photoBase64);//added
                         firebaseDB.updateMoodInDB(moodToEdit);
                         Toast.makeText(requireContext(), "Mood updated!", Toast.LENGTH_SHORT).show();
 

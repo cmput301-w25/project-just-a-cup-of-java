@@ -140,6 +140,7 @@ public class AddMoodEventFragment extends Fragment {
             Mood moodToEdit = moodList.get(position);
 
             Bundle bundle = new Bundle();
+            moodToEdit.setTimestamp(null); // Firebase Timestamp is not Serializable
             bundle.putSerializable("moodToEdit", moodToEdit); // 🔹 Make sure Mood implements Serializable
             bundle.putInt("editPosition", position); // Optional, in case you want to update UI after edit
 

@@ -120,6 +120,7 @@ public class MoodHistoryAdapter extends RecyclerView.Adapter<MoodHistoryAdapter.
         // Optional: set edit button functionality later
         holder.editButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
+            mood.setTimestamp(null); // ✅ prevent crash
             bundle.putSerializable("moodToEdit", mood); // Mood must implement Serializable
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.navigation_post_mood, bundle);

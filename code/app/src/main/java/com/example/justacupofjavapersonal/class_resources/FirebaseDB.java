@@ -535,11 +535,10 @@ public class FirebaseDB {
     public void acceptRequest(String currUserID, String requesterID) {
         WriteBatch batch = db.batch();
 
-        DocumentReference docRef = db.collection("requests").document(currUserID);
-
         addFollower(batch, requesterID, currUserID);
 
-        batch.update(docRef, "requesters", FieldValue.arrayRemove(requesterID));
+        // Remove the request from the db so it doesn't show again
+        removeRequest(currUserID, requesterID);
 
         batch.commit()
                 .addOnSuccessListener(a -> Log.d("FollowRequest", "Request accepted successfully"))
