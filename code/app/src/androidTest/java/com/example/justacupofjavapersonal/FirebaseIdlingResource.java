@@ -8,8 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * FirebaseIdlingResource is a custom implementation of the IdlingResource interface
- * @param resourceName The name of the resource being managed by the idling resource.
- *                     @return The name of the resource.
+ *
 */
 public class FirebaseIdlingResource implements IdlingResource {
     private final String resourceName;

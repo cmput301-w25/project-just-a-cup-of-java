@@ -27,8 +27,8 @@ import java.util.List;
 //java docs code
 /**
  * Represents a comment in a mood.
- * @param userId The ID of the user who wrote the comment.
- * @return The ID of the user who wrote the comment.
+ * The ID of the user who wrote the comment.
+ * The ID of the user who wrote the comment.
  *
  */
 

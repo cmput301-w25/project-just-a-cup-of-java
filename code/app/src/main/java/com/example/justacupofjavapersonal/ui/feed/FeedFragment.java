@@ -42,8 +42,7 @@ import java.util.Map;
 
 //java docs
 /**
- * @param recentWeek A boolean indicating whether to apply a recent week filter.
- * @returns A fragment that displays a list of user moods.
+ * A fragment that displays a list of user moods.
  */
 public class FeedFragment extends Fragment {
 

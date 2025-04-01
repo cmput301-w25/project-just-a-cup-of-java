@@ -21,9 +21,7 @@ import java.util.List;
 
 /**
  * Adapter for displaying a list of followed users.
- * @param followedUsers A list of followed users.
- *                      Each user is represented by a {@link User} object.
- * @returns A RecyclerView adapter that displays a list of followed users.
+ *
  */
 public class FollowedUserAdapter extends RecyclerView.Adapter<FollowedUserAdapter.ViewHolder> {
     private List<User> followedUsers;

@@ -31,8 +31,7 @@ import java.util.Map;
 //java docs
 
 /**
- * @param recentWeek A boolean indicating whether to apply a recent week filter.
- * @returns A fragment that displays a list of all user moods.
+ * A fragment that displays a list of all user moods.
  *
  */
 public class AllMoodsFragment extends Fragment {

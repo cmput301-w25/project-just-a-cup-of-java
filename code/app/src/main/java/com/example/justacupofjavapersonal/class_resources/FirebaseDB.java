@@ -266,10 +266,12 @@ public class FirebaseDB {
     }
 
     /**
-     * Returns a list of moods created by a user, from userID
-     * @param uid UserId of the user that created the moods
-     * @return List<Mood> an ArrayList of the moods that a user has created
+     * Returns a list of moods created by a specific user.
+     *
+     * @param uid The unique ID of the user whose moods are being retrieved.
+     * @return An ArrayList of Mood objects representing the user's moods.
      */
+
     // Not sure if this works
     public List<Mood> getMoods(String uid) {
         CollectionReference moodRef = db.collection("moods");
