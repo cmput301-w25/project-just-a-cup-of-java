@@ -30,7 +30,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private List<String> requests;
     private OnItemClickListener listener;
     private FirebaseDB db;
-    private List<String> followingIds;
 
     /**
      * Constructor for UserAdapter.
@@ -83,35 +82,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.bind(userList.get(position), listener, position);
     }
 
-    /**
-     * Loads the list of follow requests for the current user and updates the follow button text.
-     *
-     * @param currUserID The ID of the current user.
-     * @param user       The ID of the user to check the request status for.
-     * @param followButton The button that indicates follow/request status.
-     */
-    private void loadRequests(String currUserID, String user, Button followButton) {
-        db.getAllRequestedIds(currUserID, users -> {
-            requests.clear();
-            requests.addAll(users);
-            followButton.setText(requests.contains(user) ? "Requested" : "Follow");
-        });
-    }
-
-    /**
-     * Loads the list of users the current user is following and updates the follow button text.
-     *
-     * @param currUserID The ID of the current user.
-     * @param user       The ID of the user to check the following status for.
-     * @param followButton The button that indicates follow status.
-     */
-    private void loadFollowingIds(String currUserID, String user, Button followButton) {
-        db.getAllFollowingIds(currUserID, users -> {
-            followingIds.clear();
-            followingIds.addAll(users);
-            followButton.setText(followingIds.contains(user) ? "Following" : "Follow");
-        });
-    }
 
     /**
      * Returns the total number of items in the user list.
@@ -153,15 +123,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public void bind(User user, OnItemClickListener listener, int position) {
             userName.setText(user.getName());
             requests = new ArrayList<>();
-            followingIds = new ArrayList<>();
 
             if (FirebaseAuth.getInstance().getCurrentUser() != null){
-                loadRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
-                loadFollowingIds(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid(), followButton);
-                Log.d("Requests IDs", "Fetched Request UIDs");
-                Log.d("Requests IDs", "Requests: " + requests);
 
+                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+                db.getAllRequestedIds(currentUserID, requestedIds -> {
+                    db.getAllFollowingIds(currentUserID, followingIds -> {
+                        if (followingIds.contains(user.getUid())) {
+                            followButton.setText("Following");
+                        } else if (requestedIds.contains(user.getUid())) {
+                            followButton.setText("Requested");
+                        } else {
+                            followButton.setText("Follow");
+                        }
+                    });
+                });
 
                 //Set user profile picture
 
@@ -170,16 +147,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
                     if (followButton.getText().toString().equals("Follow")) {
                         followButton.setText(followButton.getText().toString().equals("Follow") ? "Requested" : "Follow");
-                    } else if (followButton.getText().toString().equals("Following")){
+                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
+                    } else if (followButton.getText().toString().equals("Following")) {
                         followButton.setText("Follow");
                         db.removeFollowing(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
                     }
-
                     if (!requests.contains(user.getUid())) {
                         db.sendRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
-                    }
-                    if (followButton.getText().toString().equals("Follow")) {
-                        db.removeRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUid());
                     }
                 });
             }

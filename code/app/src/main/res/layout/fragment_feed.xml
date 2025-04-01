@@ -14,11 +14,10 @@
         android:id="@+id/feedSelector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="104dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
@@ -69,25 +68,25 @@
         android:layout_margin="8dp"
         android:iconifiedByDefault="false"
         android:queryHint="Search..."
-        app:layout_constraintEnd_toStartOf="@id/filterButton"
+
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feedSelector" />
-
+<!--    app:layout_constraintEnd_toStartOf="@id/filterButton"-->
     <!-- Filter Button -->
 
     <!-- RecyclerView -->
-    <ImageButton
-        android:id="@+id/filterButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Filter"
-        android:src="@drawable/filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/feedSelector"
-        app:tint="#929090" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/filterButton"-->
+<!--        android:layout_width="48dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--        android:contentDescription="Filter"-->
+<!--        android:src="@drawable/filter"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/feedSelector"-->
+<!--        app:tint="#929090" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

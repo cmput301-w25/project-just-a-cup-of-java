@@ -2,6 +2,7 @@ package com.example.justacupofjavapersonal.ui.postmood;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.app.AlertDialog;
 import android.provider.MediaStore;
@@ -30,8 +31,10 @@ import androidx.navigation.Navigation;
 import com.example.justacupofjavapersonal.R;
 import com.example.justacupofjavapersonal.class_resources.FirebaseDB;
 import com.example.justacupofjavapersonal.class_resources.User;
+import com.example.justacupofjavapersonal.class_resources.mood.LatLngLocation;
 import com.example.justacupofjavapersonal.class_resources.mood.Mood;
 import com.example.justacupofjavapersonal.ui.mood.MoodSelectorDialogFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +43,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * The PostMoodFragment class is responsible for handling the UI and logic for posting or editing a mood entry.
+ * It allows users to select an emotional state, add optional details such as a trigger, social situation, 
+ * location, and photo, and choose a privacy setting (Private or Public) before posting or editing the mood entry.
+ * 
+ * This fragment interacts with Firebase for storing and updating mood data and supports both "Post" and "Edit" modes.
+ * 
+ */
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText optionalTriggerEditText;
@@ -47,7 +58,6 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private EditText whyFeelEditText;
     private CardView postButton;
     private ImageView addPhotoImageView;
-
     private String photoBase64 = null;
 
     private String selectedMood = "Add Emotional State";
@@ -65,6 +75,23 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private Mood moodToEdit;
     private boolean isEditMode = false;
 
+    private LatLng selectedLatLng = null;
+
+
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * This method initializes Firebase Authentication and Firestore instances
+     * and inflates the layout for the fragment.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     *                 any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's
+     *                  UI should be attached to. The fragment should not add the view itself,
+     *                  but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,13 +101,42 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     }
 
 
-
-
-
-
+    /**
+     * Called when the fragment's view has been created. This method initializes UI components,
+     * sets up event listeners, and handles both "Post Mood" and "Edit Mood" modes.
+     *
+     * Key functionalities:
+     * - Listens for location selection results and updates the UI accordingly.
+     * - Initializes UI elements such as spinners, text views, and buttons.
+     * - Handles the "Add Mood" button click to open a mood selection dialog.
+     * - Handles the "Add Photo" button click to allow the user to pick an image.
+     * - Navigates to a location picker fragment when the "Add Location" button is clicked.
+     * - Configures the spinner for selecting social situations with a disabled default option.
+     * - Handles "Edit Mode" by pre-filling the UI with existing mood data.
+     * - Sets up the "Post" or "Edit" button to validate inputs, handle privacy settings,
+     *   and save the mood to the database.
+     *
+     * @param view The fragment's root view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        getParentFragmentManager().setFragmentResultListener("locationSelected", getViewLifecycleOwner(), (requestKey, result) -> {
+            double lat = result.getDouble("latitude");
+            double lng = result.getDouble("longitude");
+            selectedLatLng = new LatLng(lat, lng);
+            Toast.makeText(getContext(), "Location selected: " + lat + ", " + lng, Toast.LENGTH_SHORT).show();
+
+            CardView addLocationButton = view.findViewById(R.id.addLocationButton);
+            TextView buttonText = addLocationButton.findViewById(R.id.locationCardText);
+            buttonText.setText("Location Added ✅");
+
+
+        });
+
 
         optionalTriggerEditText = view.findViewById(R.id.triggerText);
         socialSituationSpinner = view.findViewById(R.id.socialSituationSpinner);
@@ -145,6 +201,14 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
+
+        CardView addLocationButton = view.findViewById(R.id.addLocationButton);
+        addLocationButton.setOnClickListener(v -> {
+            // You can choose either GPS or open a map fragment here
+            Navigation.findNavController(v).navigate(R.id.action_postMood_to_locationPickerFragment);
+        });
+
+
         // --- Handle Edit Mode ---
         if (args != null && args.containsKey("moodToEdit")) {
             isEditMode = true;
@@ -158,6 +222,15 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                 timeTextView.setText(moodToEdit.getTime());
                 optionalTriggerEditText.setText(moodToEdit.getTrigger());
                 setSpinnerToValue(socialSituationSpinner, moodToEdit.getSocialSituation());
+
+                if (moodToEdit.getLocation() != null) {
+                    selectedLatLng = new LatLng(
+                            moodToEdit.getLocation().getLatitude(),
+                            moodToEdit.getLocation().getLongitude()
+                    );
+                    TextView buttonText = view.findViewById(R.id.locationCardText);
+                    buttonText.setText("Location Added ✅");
+                }
 
                 toolbar.setTitle("Edit Mood");
                 TextView postText = postButton.findViewById(R.id.cardTextView);
@@ -214,7 +287,7 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         moodToEdit.setTrigger(optionalTriggerEditText.getText().toString());
                         moodToEdit.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                         moodToEdit.setPrivacy(privacySetting);
-
+                        moodToEdit.setPhoto(photoBase64);//added
                         firebaseDB.updateMoodInDB(moodToEdit);
                         Toast.makeText(requireContext(), "Mood updated!", Toast.LENGTH_SHORT).show();
 
@@ -230,6 +303,16 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
                         moodPost.setSocialSituation(socialSituationSpinner.getSelectedItem().toString());
                         moodPost.setTrigger(optionalTriggerEditText.getText().toString());
                         moodPost.setPrivacy(privacySetting);
+
+                        if (selectedLatLng != null) {
+                            LatLngLocation location = new LatLngLocation(selectedLatLng.latitude, selectedLatLng.longitude);
+                            moodPost.setLocation(location);
+
+                        }
+
+
+
+
                         //add for photo
                         if (photoBase64 != null) {
                             moodPost.setPhoto(photoBase64);

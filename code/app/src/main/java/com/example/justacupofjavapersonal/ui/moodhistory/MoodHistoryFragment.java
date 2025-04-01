@@ -34,6 +34,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * The MoodHistoryFragment class represents a fragment that displays a list of moods
+ * in a RecyclerView. It allows users to navigate to other fragments, filter moods,
+ * and delete moods from the list. The moods are fetched from a Firestore database.
+ */
 public class MoodHistoryFragment extends Fragment {
 
     private RecyclerView moodHistoryRecyclerView;
@@ -42,6 +47,23 @@ public class MoodHistoryFragment extends Fragment {
     private ArrayList<Mood> tempstorage = new ArrayList<>();
 
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater  The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                  The fragment should not add the view itself, but this can be used to generate
+     *                  the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     *                           saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     *
+     * This method sets up the UI for the Mood History screen, including:
+     * - Buttons for navigating to other fragments (calendar, map, and filter).
+     * - A RecyclerView for displaying a list of moods with an adapter for managing the data.
+     * - A filter dialog for applying filters to the mood list.
+     * - Loading all moods into the RecyclerView.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +74,12 @@ public class MoodHistoryFragment extends Fragment {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_navigation_moodHistory_to_home);
         });
+
+        Button mapButton = view.findViewById(R.id.btn_mymap);
+        mapButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_navigation_moodHistory_to_myMapFragment);
+        });
+
 
         Button filterButton = view.findViewById(R.id.filterbutton);
         filterButton.setOnClickListener(v -> {
@@ -72,6 +100,17 @@ public class MoodHistoryFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Loads all mood entries from the Firestore database for the currently logged-in user.
+     * 
+     * This method retrieves mood data from the "moods" collection in Firestore, filtering
+     * by the current user's UID and ordering the results by timestamp in descending order.
+     * The retrieved moods are added to the mood list and displayed using the mood adapter.
+     * 
+     * If the user is not logged in, a toast message is displayed, and the method exits early.
+     * If there is an error during the Firestore query, an error message is logged, and a
+     * toast message is shown to the user.
+     */
     private void loadAllMoods() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -103,6 +142,18 @@ public class MoodHistoryFragment extends Fragment {
                 });
     }
 
+    /**
+     * Deletes a mood entry from the mood list at the specified position.
+     * 
+     * @param position The index of the mood to be deleted. Must be within the bounds of the mood list.
+     * 
+     * This method performs the following actions:
+     * - Removes the mood at the specified position from the mood list.
+     * - Notifies the adapter that an item has been removed to update the UI.
+     * - Updates the temporary storage with the current state of the mood list.
+     * - Deletes the mood entry from the Firebase database.
+     * - Displays a toast message to confirm the deletion.
+     */
     private void deleteMood(int position) {
         if (position >= 0 && position < moodList.size()) {
             Mood moodToDelete = moodList.get(position);
@@ -116,6 +167,14 @@ public class MoodHistoryFragment extends Fragment {
         }
     }
 
+    /**
+     * Filters the list of moods based on the specified criteria and updates the mood adapter with the filtered list.
+     *
+     * @param recentWeek     If true, only moods from the last 7 days will be included in the filtered list.
+     * @param emotion        The emotion to filter by. If not null or empty, only moods containing this emotion (case-insensitive) will be included.
+     * @param reasonKeyword  A keyword to filter the reason/trigger by. If not null or empty, only moods whose trigger contains this keyword 
+     *                       as a whole word (case-insensitive) will be included.
+     */
     private void applyFilters(boolean recentWeek, String emotion, String reasonKeyword) {
         ArrayList<Mood> filteredList = new ArrayList<>();
 

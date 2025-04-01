@@ -27,6 +27,7 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <!-- Action to navigate to AddMoodEventFragment -->
+
         <action
             android:id="@+id/action_navigation_home_to_addMoodEventFragment"
             app:destination="@id/navigation_add_mood"
@@ -40,6 +41,11 @@
         <action
             android:id="@+id/action_navigation_home_to_moodHistory"
             app:destination="@id/navigation_moodhistory" />
+
+        <action
+            android:id="@+id/action_navigation_home_to_myMapFragment"
+            app:destination="@id/myMapFragment" />
+
 
     </fragment>
     <fragment
@@ -110,6 +116,10 @@
             android:id="@+id/action_navigation_moodHistory_to_home"
             app:destination="@id/navigation_home" />
 
+        <action
+            android:id="@+id/action_navigation_moodHistory_to_myMapFragment"
+            app:destination="@id/myMapFragment" />
+
 
     </fragment>
 
@@ -129,10 +139,40 @@
         android:id="@+id/navigation_post_mood"
         android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
         android:label="Post Mood"
-        tools:layout="@layout/fragment_post_mood"/>
+        tools:layout="@layout/fragment_post_mood">
+
+        <action
+            android:id="@+id/action_postMood_to_locationPickerFragment"
+            app:destination="@id/locationPickerFragment" />
+    </fragment>
+
     <action
         android:id="@+id/action_feedFragment_to_allFriendsFollowFragment"
         app:destination="@id/navigation_notifications" />
+
+    <fragment
+        android:id="@+id/locationPickerFragment"
+        android:name="com.example.justacupofjavapersonal.ui.location.LocationPickerFragment"
+        android:label="Location Picker"
+        tools:layout="@layout/fragment_location_picker" />
+
+    <fragment
+        android:id="@+id/myMapFragment"
+        android:name="com.example.justacupofjavapersonal.ui.map.MyMapFragment"
+        android:label="My Mood Map"
+        tools:layout="@layout/fragment_my_map" >
+
+        <action
+            android:id="@+id/action_myMapFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+
+        <action
+            android:id="@+id/action_myMapFragment_to_navigation_moodhistory"
+            app:destination="@id/navigation_moodhistory" />
+    </fragment>
+
+
+
 
 
 </navigation>
