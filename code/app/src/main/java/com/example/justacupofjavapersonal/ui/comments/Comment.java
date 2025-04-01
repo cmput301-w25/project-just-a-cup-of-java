@@ -6,7 +6,9 @@ import com.google.firebase.Timestamp;
 
 /**
  * Represents a comment in a mood.
- *
+ * @param userId The ID of the user who wrote the comment.
+ *               returns
+ * @return The ID of the user who wrote the comment.
  */
 public class Comment {
     private String userId;

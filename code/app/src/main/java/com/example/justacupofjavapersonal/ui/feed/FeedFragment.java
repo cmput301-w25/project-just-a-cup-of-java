@@ -39,6 +39,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
+//java docs
+/**
+ * @param recentWeek A boolean indicating whether to apply a recent week filter.
+ * @returns A fragment that displays a list of user moods.
+ */
 public class FeedFragment extends Fragment {
 
     private FragmentFeedBinding binding;
@@ -100,10 +106,7 @@ public class FeedFragment extends Fragment {
         });
 
         binding.allMoodsButton.setOnClickListener(v -> {
-            // Switch to recent moods view
-//            binding.recyclerView.setAdapter(moodDateAdapter);
-//            //loadFollowedUsers();
-//            loadRecentMoods();
+
             Navigation.findNavController(v).navigate(R.id.navigation_all_moods);
 
         });

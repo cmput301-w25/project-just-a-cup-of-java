@@ -21,6 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// java docs
+
+/**
+ * @param userIds A list of user IDs.
+ *                Each user ID corresponds to a user's unique identifier.
+ * @returns A RecyclerView adapter for displaying user moods.
+ */
 public class AllMoodsAdapter extends RecyclerView.Adapter<AllMoodsAdapter.UserMoodsViewHolder> {
 
     private List<String> userIds;

@@ -24,6 +24,14 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+//java docs code
+/**
+ * Represents a comment in a mood.
+ * @param userId The ID of the user who wrote the comment.
+ * @return The ID of the user who wrote the comment.
+ *
+ */
+
 public class CommentBottomSheet extends BottomSheetDialogFragment {
     private String moodId;
     private FirebaseDB db;
