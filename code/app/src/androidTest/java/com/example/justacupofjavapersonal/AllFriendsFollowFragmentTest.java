@@ -9,11 +9,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import android.view.View;
+
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.justacupofjavapersonal.R;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,16 +36,20 @@ public class AllFriendsFollowFragmentTest {
 
     @Before
     public void testLoginUser() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         onView(withId(R.id.loginButton)).perform(click());
 
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         onView(withId(R.id.emailEditText)).perform(replaceText("tester3@test.com"), closeSoftKeyboard());
         onView(withId(R.id.passwordEditText)).perform(replaceText("123456"), closeSoftKeyboard());
 
+        Thread.sleep(3000);
+
         onView(withId(R.id.loginButton)).perform(click());
+
+        Thread.sleep(3000);
 
         onView(withId(R.id.navigation_notifications)).perform(click());
     }
@@ -64,10 +76,27 @@ public class AllFriendsFollowFragmentTest {
         onView(withId(R.id.follower_requests_fragment)).check(matches(isDisplayed()));
     }
 
+    public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+        return new RecyclerViewMatcher(recyclerViewId);
+    }
 
     @Test
-    public void testFollowRequestToast() {
-        onView(withId(R.id.all_users_recyclerView));
+    public void testFollowRequest() {
+        onView(withId(R.id.all_users_recyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, RecyclerViewTestHelper.clickChildViewWithId(R.id.follow_button)));
 
+        onView(withRecyclerView(R.id.all_users_recyclerView)
+                .atPositionOnView(0, R.id.follow_button))
+                .check(matches(withText("Requested")));
+    }
+
+    @Test
+    public void testRemoveRequest() {
+        onView(withId(R.id.all_users_recyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, RecyclerViewTestHelper.clickChildViewWithId(R.id.follow_button)));
+
+        onView(withRecyclerView(R.id.all_users_recyclerView)
+                .atPositionOnView(0, R.id.follow_button))
+                .check(matches(withText("Follow")));
     }
 }
