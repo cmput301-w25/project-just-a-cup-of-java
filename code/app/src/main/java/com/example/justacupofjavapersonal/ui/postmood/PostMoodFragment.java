@@ -43,6 +43,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * The PostMoodFragment class is responsible for handling the UI and logic for posting or editing a mood entry.
+ * It allows users to select an emotional state, add optional details such as a trigger, social situation, 
+ * location, and photo, and choose a privacy setting (Private or Public) before posting or editing the mood entry.
+ * 
+ * This fragment interacts with Firebase for storing and updating mood data and supports both "Post" and "Edit" modes.
+ * 
+ */
 public class PostMoodFragment extends Fragment implements MoodSelectorDialogFragment.MoodSelectionListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText optionalTriggerEditText;
@@ -70,6 +78,20 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     private LatLng selectedLatLng = null;
 
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * This method initializes Firebase Authentication and Firestore instances
+     * and inflates the layout for the fragment.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     *                 any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's
+     *                  UI should be attached to. The fragment should not add the view itself,
+     *                  but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,6 +101,24 @@ public class PostMoodFragment extends Fragment implements MoodSelectorDialogFrag
     }
 
 
+    /**
+     * Called when the fragment's view has been created. This method initializes UI components,
+     * sets up event listeners, and handles both "Post Mood" and "Edit Mood" modes.
+     *
+     * Key functionalities:
+     * - Listens for location selection results and updates the UI accordingly.
+     * - Initializes UI elements such as spinners, text views, and buttons.
+     * - Handles the "Add Mood" button click to open a mood selection dialog.
+     * - Handles the "Add Photo" button click to allow the user to pick an image.
+     * - Navigates to a location picker fragment when the "Add Location" button is clicked.
+     * - Configures the spinner for selecting social situations with a disabled default option.
+     * - Handles "Edit Mode" by pre-filling the UI with existing mood data.
+     * - Sets up the "Post" or "Edit" button to validate inputs, handle privacy settings,
+     *   and save the mood to the database.
+     *
+     * @param view The fragment's root view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
