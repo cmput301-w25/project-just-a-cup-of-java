@@ -141,12 +141,14 @@ id imageView
 id imageView2
 id imageView3
 id linearLayout
+id linearLayout2
 id locationCardText
 id locationIcon
 id locationPickerFragment
 id loginButton
 id loginIllustration
 id loginText
+id mapFragment
 id mapTopButtons
 id mapView
 id map_Nearby
@@ -172,6 +174,7 @@ id navigation_home
 id navigation_login
 id navigation_map
 id navigation_moodhistory
+id navigation_nearby_map
 id navigation_notifications
 id navigation_post_mood
 id navigation_user_info
@@ -200,6 +203,7 @@ id text_notifications
 id timeTextView
 id toggleRecentButton
 id topAppBar
+id topButtonBar
 id triggerText
 id triggerTextView
 id userMoodRecyclerView
@@ -236,6 +240,7 @@ layout fragment_location_picker
 layout fragment_login
 layout fragment_map
 layout fragment_my_map
+layout fragment_nearby_map
 layout fragment_notifications
 layout fragment_post_mood
 layout fragment_userinfo

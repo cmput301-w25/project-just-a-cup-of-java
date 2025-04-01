@@ -109,8 +109,11 @@ public class FeedFragment extends Fragment {
         });
 
         binding.feedNearby.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.navigation_map);
+            Navigation.findNavController(v).navigate(R.id.navigation_nearby_map);
         });
+
+
+
 
         //binding.filterButton.setOnClickListener(v -> showFilterDialog());
 

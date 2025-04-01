@@ -228,6 +228,22 @@ public class MoodDateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             moodHolder.containsPhoto.setVisibility(mood.hasPhoto() ? View.VISIBLE : View.GONE);
             moodHolder.containsExplanation.setVisibility(mood.hasTrigger() ? View.VISIBLE : View.GONE);
             moodHolder.containsLocation.setVisibility(mood.hasLocation() ? View.VISIBLE : View.GONE);
+            ImageButton locationIcon = moodHolder.itemView.findViewById(R.id.locationIcon);
+            ImageButton viewImageButton = moodHolder.itemView.findViewById(R.id.viewImageButton);
+
+            if (mood.hasLocation()) {
+                locationIcon.setVisibility(View.VISIBLE);
+            } else {
+                locationIcon.setVisibility(View.GONE);
+            }
+
+            if (mood.hasPhoto()) {
+                viewImageButton.setVisibility(View.VISIBLE);
+            } else {
+                viewImageButton.setVisibility(View.GONE);
+            }
+
+
 
             // Handle comment button popup
 //            moodHolder.commentButton.setOnClickListener(view -> {

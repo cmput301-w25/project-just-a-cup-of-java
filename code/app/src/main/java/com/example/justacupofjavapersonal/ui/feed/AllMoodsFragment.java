@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,23 @@ public class AllMoodsFragment extends Fragment {
 
         // Optional: Confirm visually that it's being called
         Toast.makeText(getContext(), "All Moods Fragment Loaded", Toast.LENGTH_SHORT).show();
+
+        Button nearbyBtn = view.findViewById(R.id.feed_Nearby);
+        Button feedBtn = view.findViewById(R.id.feed_followingButton);
+        Button allBtn = view.findViewById(R.id.all_moods_button);
+
+        nearbyBtn.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.navigation_nearby_map);
+        });
+
+        feedBtn.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.navigation_feed);
+        });
+
+// allBtn can just refresh current view if you want
+        allBtn.setOnClickListener(v -> {
+            loadFollowedUserMoods(); // or do nothing
+        });
 
         // Optional: double-check mood loading from here too
         // loadFollowedUserMoods();

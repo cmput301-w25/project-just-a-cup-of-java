@@ -2,6 +2,12 @@ package com.example.justacupofjavapersonal.ui.comments;
 
 import com.google.firebase.Timestamp;
 
+//java docs code
+
+/**
+ * Represents a comment in a mood.
+ *
+ */
 public class Comment {
     private String userId;
     private String userName;

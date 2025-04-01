@@ -136,6 +136,12 @@
         tools:layout="@layout/fragment_map" />
 
     <fragment
+        android:id="@+id/navigation_nearby_map"
+        android:name="com.example.justacupofjavapersonal.ui.map.NearbyMapFragment"
+        android:label="Nearby Map"
+        tools:layout="@layout/fragment_nearby_map" />
+
+    <fragment
         android:id="@+id/navigation_post_mood"
         android:name="com.example.justacupofjavapersonal.ui.postmood.PostMoodFragment"
         android:label="Post Mood"

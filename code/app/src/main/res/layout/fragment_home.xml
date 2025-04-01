@@ -29,22 +29,22 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.136">
+        app:layout_constraintVertical_bias="0.147">
 
         <Button
             android:id="@+id/btn_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#E08E79"
-            android:text="Calendar"
+            android:layout_gravity="start"
             android:layout_marginEnd="8dp"
-            android:layout_gravity="start" />
+            android:backgroundTint="#E08E79"
+            android:text="Calendar" />
 
         <Button
             android:id="@+id/btn_moodhistory"
@@ -58,10 +58,10 @@
             android:id="@+id/btn_mymap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#5A9999"
-            android:text="My Map"
+            android:layout_gravity="end"
             android:layout_marginStart="8dp"
-            android:layout_gravity="end" />
+            android:backgroundTint="#5A9999"
+            android:text="My Map" />
 
     </LinearLayout>
     <!--        android:backgroundTint="#85BEC8"-->
