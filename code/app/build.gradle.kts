@@ -39,7 +39,6 @@ android {
 }
 
 dependencies {
-    implementation(files("C:\\Users\\bat16\\AppData\\Local\\Android\\Sdk\\platforms\\android-35\\android.jar"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
